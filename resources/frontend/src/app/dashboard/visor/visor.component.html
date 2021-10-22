@@ -1,0 +1,233 @@
+<section style="padding:10px;">
+    <!--div fxLayout="column" fxLayoutGap="15px">
+        <div fxLayout="row wrap" fxFlex="100">
+            <div style="padding:4px;" fxFlex="27">
+                <mat-card class="dashboard-total-item">
+                    <mat-card-header>
+                        <div mat-card-avatar><img src="assets/icons/dashboard.svg" alt="Icon"></div>
+                        <mat-card-title>23,596</mat-card-title>
+                        <mat-card-subtitle>Empleados Activos</mat-card-subtitle>
+                    </mat-card-header>
+                </mat-card>
+            </div>
+            <div style="padding:4px;" fxFlex="33">
+                <mat-card class="dashboard-total-item">
+                    <mat-card-header>
+                        <div mat-card-avatar><img src="assets/icons/dashboard.svg" alt="Icon"></div>
+                        <mat-card-title>596</mat-card-title>
+                        <mat-card-subtitle>Empleados Comision Sindical</mat-card-subtitle>
+                    </mat-card-header>
+                </mat-card>
+            </div>
+            <div style="padding:4px;" fxFlex="25">
+                <mat-card class="dashboard-total-item">
+                    <mat-card-header>
+                        <div mat-card-avatar><img src="assets/icons/dashboard.svg" alt="Icon"></div>
+                        <mat-card-title>4,465</mat-card-title>
+                        <mat-card-subtitle>CLUES Activas</mat-card-subtitle>
+                    </mat-card-header>
+                </mat-card>
+            </div>
+            <div style="padding:4px;" fxFlex="15">
+                <mat-card class="dashboard-total-item">
+                    <mat-card-header>
+                        <mat-card-title>{{ today | date:'dd/MM/yy' }}</mat-card-title>
+                        <mat-card-subtitle>{{ today | date:'HH:mm:ss' }}</mat-card-subtitle>
+                    </mat-card-header>
+                </mat-card>
+            </div>
+        </div>
+
+        <div fxFlex="100" fxLayout="row">
+            <div style="padding:4px;" fxFlex="20" fxLayout="column" fxLayoutAlign="space-between">
+                <mat-card fxFlex="30">Working</mat-card>
+                <mat-card fxFlex="30">Working</mat-card>
+                <mat-card fxFlex="30">Working</mat-card>
+            </div>
+            <div style="padding:4px;" fxFlex="60" fxLayout="column">
+                <mat-card fxFlex>Working</mat-card>
+            </div>
+            <div style="padding:4px;" fxFlex="20" fxLayout="column" fxLayoutAlign="space-between">
+                <mat-card fxFlex="48">Working</mat-card>
+                <mat-card fxFlex="48">Working</mat-card>
+            </div>
+        </div>
+    </div-->
+    <mat-grid-list *ngIf="myDashboard" cols="{{myDashboard.columns}}" gutterSize="10px" class="dashboard-grid">
+        <mat-grid-tile *ngFor="let item of myDashboard.items" colspan="{{item.colspan}}" rowspan="{{item.rowspan}}">
+            <div *ngIf="item.type == 'data'" class="simple-icon-item">
+                <div class="icon" *ngIf="item.data.icon"><img src="{{item.data.icon}}" alt="Icon"></div>
+                <div class="data">
+                    <div class="title">
+                        {{(item.data.title_format)?(item.data.title | number:'1.'):item.data.title}}
+                    </div>
+                    <div class="subtitle">
+                        {{(item.data.subtitle_format)?(item.data.subtitle | number:'1.'):item.data.subtitle}}
+                    </div>
+                </div>
+            </div>
+            <mat-list *ngIf="item.type == 'list'" role="list">
+                <mat-divider *ngIf="item.divider"></mat-divider>
+                <mat-list-item *ngFor="let listItem of item.data" role="listitem">
+                    <div class="simple-icon-item">
+                        <div class="icon" *ngIf="listItem.icon"><img src="{{listItem.icon}}" alt="Icon"></div>
+                        <div class="data">
+                            <div class="title">
+                                {{(listItem.title_format)?(listItem.title | number:'1.'):listItem.title}}
+                            </div>
+                            <div class="subtitle">
+                                {{(listItem.subtitle_format)?(listItem.subtitle | number:'1.'):listItem.subtitle}}
+                            </div>
+                        </div>
+                    </div>
+                    <mat-divider *ngIf="item.divider" [inset]="true"></mat-divider>
+                </mat-list-item>
+            </mat-list>
+            <div *ngIf="item.type == 'chart'" id="{{ item.chart.id }}" style="display:block; height: 100%;"></div>
+        </mat-grid-tile>
+    </mat-grid-list>
+<!--
+    <mat-grid-list cols="16" gutterSize="10px" class="dashboard-grid">
+        <mat-grid-tile colspan="4">
+            <div class="simple-icon-item">
+                <div class="icon"><img src="assets/icons/no_face_nobody.svg" alt="Icon"></div>
+                <div class="data">
+                    <div class="title">
+                        23,596
+                    </div>
+                    <div class="subtitle">
+                        Empleados Activos
+                    </div>
+                </div>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="5">
+            <div class="simple-icon-item">
+                <div class="icon"><img src="assets/icons/no_face_nobody.svg" alt="Icon"></div>
+                <div class="data">
+                    <div class="title">
+                        596
+                    </div>
+                    <div class="subtitle">
+                        Empleados Comision Sindical
+                    </div>
+                </div>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="4">
+            <div class="simple-icon-item">
+                <div class="icon"><img src="assets/icons/no_face_nobody.svg" alt="Icon"></div>
+                <div class="data">
+                    <div class="title">
+                        4,465
+                    </div>
+                    <div class="subtitle">
+                        CLUES Activas
+                    </div>
+                </div>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="3">
+            <div class="simple-icon-item">
+                <div class="icon"><img src="assets/icons/no_face_nobody.svg" alt="Icon"></div>
+                <div class="data">
+                    <div class="title">
+                        {{ today | date:'HH:mm:ss' }}
+                    </div>
+                    <div class="subtitle">
+                        {{ today | date:'dd/MM/yy' }}
+                    </div>
+                </div>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="12" rowspan="6">
+            <div id="main-chart" style="display:block; height: 100%;"></div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="4" rowspan="2">
+            <mat-list>
+                <mat-list-item>
+                    <div class="simple-icon-item">
+                        <div class="list-icon"><img src="assets/icons/no_face_nobody.svg" alt="Icon"></div>
+                        <div class="data">
+                            <div class="title">
+                                4,465
+                            </div>
+                            <div class="subtitle">
+                                Datos y Datos
+                            </div>
+                        </div>
+                    </div>
+                </mat-list-item>
+                <mat-list-item>
+                    <button mat-raised-button color="accent" style="width: 100%;">Generar Algo...</button>
+                </mat-list-item>
+            </mat-list>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="4">
+            <div class="simple-icon-item">
+                <div class="data">
+                    <div class="title">
+                        123
+                    </div>
+                    <div class="subtitle">
+                        Mas datos
+                    </div>
+                </div>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="4" rowspan="3">
+            <mat-list role="list">
+                <mat-divider></mat-divider>
+                <mat-list-item role="listitem">
+                    <div class="simple-icon-item">
+                        <div class="data">
+                            <div class="title">
+                                Elemento 1
+                            </div>
+                            <div class="subtitle">
+                                45,654,6548
+                            </div>
+                        </div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                </mat-list-item>
+                <mat-list-item role="listitem">
+                    <div class="simple-icon-item">
+                        <div class="data">
+                            <div class="title">
+                                Elemento 2
+                            </div>
+                            <div class="subtitle">
+                                45,654,6548
+                            </div>
+                        </div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                </mat-list-item>
+                <mat-list-item role="listitem">
+                    <div class="simple-icon-item">
+                        <div class="data">
+                            <div class="title">
+                                Elemento 3
+                            </div>
+                            <div class="subtitle">
+                                45,654,6548
+                            </div>
+                        </div>
+                    </div>
+                    <mat-divider [inset]="true"></mat-divider>
+                </mat-list-item>
+            </mat-list>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="8" rowspan="4">
+            <div id="container" style="display:block;"></div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="4">
+            Charts 2
+        </mat-grid-tile>
+        <mat-grid-tile colspan="4">
+            Charts 3
+        </mat-grid-tile>
+    </mat-grid-list>
+-->
+</section>
