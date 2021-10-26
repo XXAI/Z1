@@ -23,18 +23,18 @@ class CluesController extends Controller
             $clues = Clues::whereNull("deleted_at");
 
             if(!$access->is_admin){
-                $clues = $clues->whereIn('clues', $access->lista_clues);
+                $clues = $clues->whereIn('clues', $access->lista_clues)->with('catalogo_localidad', 'catalogo_microrregion');
             }
             
             if(isset($parametros['query'])){
                 $clues = $clues->where(function($query)use($parametros){
                     return $query->where('clues','LIKE','%'.$parametros['query'].'%')
-                                ->orWhere('nombre_unidad','LIKE','%'.$parametros['query'].'%');
+                                ->orWhere('descripcion','LIKE','%'.$parametros['query'].'%');
                 });
             }
             
             if(isset($parametros['page'])){
-                $clues = $clues->orderBy('clues');
+                $clues = $clues->orderBy('clues')->with('catalogo_localidad', 'catalogo_microrregion');
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
                 $clues = $clues->paginate($resultadosPorPagina);
             }
@@ -53,13 +53,13 @@ class CluesController extends Controller
     {
         try{
             $access = $this->getUserAccessData();
-            $clues = Clues::where("clues", "=", $id);
+            $clues = Clues::where("clues", "=", $id)->with('catalogo_localidad', 'catalogo_microrregion');
             
             if(!$access->is_admin){
-                $clues = $clues->whereIn('clues', $access->lista_clues);
+                $clues = $clues->whereIn('clues', $access->lista_clues)->with('catalogo_localidad', 'catalogo_microrregion');
             }
 
-            $clues = $clues->first();
+            $clues = $clues->with('catalogo_localidad', 'catalogo_microrregion')->first();
 
             return response()->json(['data'=>$clues],HttpResponse::HTTP_OK);
         }catch(\Exception $e){

@@ -30,35 +30,87 @@
                     <div class="edit-container">
                         <div class="loading-shade" *ngIf="isLoading && clues">No se encontraron los datos del empleado</div>
                         <section>
-                            <div fxLayout="row" fxLayout.xs="column">
+                            <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
                                 <mat-form-field fxFlex="30" fxFlex.xs="100">
                                     <input matInput formControlName="clues" placeholder="Clues" type="text">
                                     <mat-error *ngIf="cluesForm.get('clues').invalid && (cluesForm.get('clues').dirty || cluesForm.get('clues').touched)">
-                                        <span *ngIf="cluesForm.get('clues').errors.required">El Nombre es obligatorio</span>
+                                        <span *ngIf="cluesForm.get('clues').errors.required">El Campo es obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
                                 <mat-form-field fxFlex="70" fxFlex.xs="100">
-                                    <input matInput formControlName="nombre_unidad" placeholder="Nombre Unidad" type="text">
-                                    <mat-error *ngIf="cluesForm.get('nombre_unidad').invalid && (cluesForm.get('nombre_unidad').dirty || cluesForm.get('nombre_unidad').touched)">
-                                        <span *ngIf="cluesForm.get('nombre_unidad').errors.required">El Nombre es obligatorio</span>
+                                    <input matInput formControlName="descripcion" placeholder="Nombre Unidad" type="text">
+                                    <mat-error *ngIf="cluesForm.get('descripcion').invalid && (cluesForm.get('descripcion').dirty || cluesForm.get('descripcion').touched)">
+                                        <span *ngIf="cluesForm.get('descripcion').errors.required">El Campo es obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
                              </div>
-                             <div fxLayout="row" fxLayout.xs="column">
+                             <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                                <mat-form-field fxFlex="70" fxFlex.xs="100">
+                                    <input matInput formControlName="direccion" placeholder="Dirección" type="text">
+                                    <mat-error *ngIf="cluesForm.get('direccion').invalid && (cluesForm.get('direccion').dirty || cluesForm.get('direccion').touched)">
+                                        <span *ngIf="cluesForm.get('direccion').errors.required">El Campo es obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
                                 <mat-form-field fxFlex="30" fxFlex.xs="100">
-                                    <input matInput formControlName="nivel_atencion" placeholder="Nivel de Atención" type="text">
-                                    <mat-error *ngIf="cluesForm.get('nivel_atencion').invalid && (cluesForm.get('nivel_atencion').dirty || cluesForm.get('nivel_atencion').touched)">
-                                        <span *ngIf="cluesForm.get('nivel_atencion').errors.required">El Nombre es obligatorio</span>
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field fxFlex="70" fxFlex.xs="100">
-                                    <input matInput formControlName="estatus" placeholder="Estatus" type="text">
-                                    <mat-error *ngIf="cluesForm.get('estatus').invalid && (cluesForm.get('estatus').dirty || cluesForm.get('estatus').touched)">
-                                        <span *ngIf="cluesForm.get('estatus').errors.required">El Nombre es obligatorio</span>
+                                    <input matInput formControlName="cp" placeholder="C.P." type="text">
+                                    <mat-error *ngIf="cluesForm.get('cp').invalid && (cluesForm.get('cp').dirty || cluesForm.get('cp').touched)">
+                                        <span *ngIf="cluesForm.get('cp').errors.required">El Campo es obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
                              </div>
-                             <div fxLayout="row" fxLayout.xs="column">
+                             <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                                <mat-form-field fxFlex="25" fxFlex.xs="100">
+                                    <input matInput formControlName="telefono" placeholder="C.P." type="number">
+                                    <mat-error *ngIf="cluesForm.get('telefono').invalid && (cluesForm.get('telefono').dirty || cluesForm.get('telefono').touched)">
+                                        <span *ngIf="cluesForm.get('telefono').errors.required">El Campo es obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                
+                                <mat-form-field fxFlex="25" fxFlex.xs="100">
+                                    <input matInput formControlName="nucleos_camas" placeholder="N° Camas" type="number">
+                                    <mat-error *ngIf="cluesForm.get('nucleos_camas').invalid && (cluesForm.get('nucleos_camas').dirty || cluesForm.get('nucleos_camas').touched)">
+                                        <span *ngIf="cluesForm.get('nucleos_camas').errors.required">El Campo es obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="25">
+                                    <mat-label>Fecha de Inicio de Operación: </mat-label>
+                                    <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker1" formControlName="inicio_operacion" placeholder="Fecha de Inicio de Operación" >
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+        
+                                <mat-form-field fxFlex="25">
+                                    <mat-label>Fecha de Acreditación (Hasta): </mat-label>
+                                    <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker2" formControlName="fecha_operacion" placeholder="Fecha de Acreditación" >
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+
+                             </div>
+
+
+                             <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                                <mat-form-field fxFlex="50" fxFlex.xs="100">
+                                    <input matInput formControlName="latitud" placeholder="Latitud" type="text">
+                                    <mat-error *ngIf="cluesForm.get('latitud').invalid && (cluesForm.get('latitud').dirty || cluesForm.get('latitud').touched)">
+                                        <span *ngIf="cluesForm.get('latitud').errors.required">El Campo es obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="50" fxFlex.xs="100">
+                                    <input matInput formControlName="longitud" placeholder="Dirección" type="text">
+                                    <mat-error *ngIf="cluesForm.get('longitud').invalid && (cluesForm.get('longitud').dirty || cluesForm.get('longitud').touched)">
+                                        <span *ngIf="cluesForm.get('longitud').errors.required">El Campo es obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+        
+                            </div>
+
+
+                             <!-- <div fxLayout="row" fxLayout.xs="column">
                                 <mat-form-field fxFlex="100" fxFlex.xs="100">
                                     <input matInput placeholder="Responsable" [matAutocomplete]="responsableAutocomplete" formControlName='responsable' required>
                                     <mat-autocomplete #responsableAutocomplete="matAutocomplete" [displayWith]="displayResponsableFn" [panelWidth]="'auto'">
@@ -70,8 +122,8 @@
                                         </ng-container>
                                     </mat-autocomplete>
                                     <input type="hidden" formControlName='responsable_id'>
-                                    <!--<mat-hint align="start" *ngIf="(cluesForm.get('responsable').value && cluesForm.get('responsable').value.grupo_funcion)">[{{cluesForm.get('responsable').value.grupo_funcion.grupo}}]</mat-hint>
-                                    <mat-hint align="end" *ngIf="cluesForm.get('responsable').value">[{{cluesForm.get('responsable_id').value.responsable_id}}]</mat-hint>-->
+                                    <mat-hint align="start" *ngIf="(cluesForm.get('responsable').value && cluesForm.get('responsable').value.grupo_funcion)">[{{cluesForm.get('responsable').value.grupo_funcion.grupo}}]</mat-hint>
+                                    <mat-hint align="end" *ngIf="cluesForm.get('responsable').value">[{{cluesForm.get('responsable_id').value.responsable_id}}]</mat-hint>
                                 </mat-form-field>
                                 <mat-form-field fxFlex="100" fxFlex.xs="100">
                                     <input matInput formControlName="cargo_responsable" placeholder="Cargo Responsable" type="text">
@@ -79,7 +131,7 @@
                                         <span *ngIf="cluesForm.get('cargo_responsable').errors.required">El Nombre es obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
-                             </div>
+                             </div> -->
                         </section>
                     </div>
                 </mat-card-content>

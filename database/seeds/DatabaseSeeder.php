@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'permissions',
             'roles',
             'role_user',
-            'permission_role'
+            'permission_role',
             'catalogo_localidad',
             'catalogo_municipio',
             
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'catalogo_sexo',
             'catalogo_tipo_camino',
             'catalogo_tipo_unidad',
-            'catalogo_ur'
+            'catalogo_ur',
             'trabajador',
             'catalogo_clues'
         ];

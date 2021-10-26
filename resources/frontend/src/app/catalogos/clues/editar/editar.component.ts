@@ -30,6 +30,10 @@ export class EditarComponent implements OnInit {
   responsableIsLoading: boolean = false;
   filteredResponsable: Observable<any[]>;
   
+  fechaActual:any = '';
+  maxDate:Date;
+  minDate:Date;
+
   constructor(
     private sharedService: SharedService, 
     private cluesService: CluesService,
@@ -43,12 +47,19 @@ export class EditarComponent implements OnInit {
   
   cluesForm = this.fb.group({
     'clues': ['',Validators.required],
-    'nombre_unidad': ['',Validators.required],
-    'nivel_atencion': ['',Validators.required],
-    'estatus': ['',Validators.required],
-    'responsable': ['',Validators.required],
-    'responsable_id': [''],
-    'cargo_responsable': ['',Validators.required],
+    'descripcion': ['',Validators.required],
+    'direccion': ['',Validators.required],
+    'cp': ['',Validators.required],
+    'telefono': ['',Validators.required],
+    'nucleos_camas': ['',Validators.required],
+    'inicio_operacion': ['',Validators.required],
+    'fecha_operacion': ['',Validators.required],
+    'latitud': ['',Validators.required],
+    'longitud': ['',Validators.required],
+
+    
+    // 'responsable_id': [''],
+    // 'cargo_responsable': ['',Validators.required],
   });
 
   ngOnInit() {
@@ -78,6 +89,15 @@ export class EditarComponent implements OnInit {
           ),
         ).subscribe(items => this.filteredResponsable = items);
     });
+
+    let fecha = new Date('YYYY-MM-D');
+    this.fechaActual = fecha;
+    //this.fechaActual = moment(fecha).format('YYYY-MM-D');
+    // this.maxDate = fecha;
+
+    // let fecha_inicio = new Date(2020, 0, 1);
+    // this.minDate = fecha_inicio;
+
   }
 
   loadCluesData(id:any)

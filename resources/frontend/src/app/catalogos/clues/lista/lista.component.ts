@@ -34,7 +34,7 @@ export class ListaComponent implements OnInit {
   pageSize: number = 20;
   selectedItemIndex: number = -1;
 
-  displayedColumns: string[] = ['Clues', 'Nombre', 'Nivel', 'Estatus','actions'];
+  displayedColumns: string[] = ['Clues', 'Localidad','Unidad', 'actions'];
   dataSource: any = [];
 
   constructor(private sharedService: SharedService, private cluesService: CluesService, public dialog: MatDialog, private fb: FormBuilder, public mediaObserver: MediaObserver) { }
@@ -63,6 +63,7 @@ export class ListaComponent implements OnInit {
 
     this.cluesService.getCluesList(params).subscribe(
       response =>{
+        console.log("aca",response);
         if(response.error) {
           let errorMessage = response.error.message;
           this.sharedService.showSnackBar(errorMessage, null, 3000);
