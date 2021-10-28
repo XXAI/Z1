@@ -9,7 +9,7 @@ class Microrregion extends Model
 {
     use SoftDeletes;
     protected $fillable = [''];
-    protected $table = 'catalogo_microrregion';
+    protected $table = 'catalogo_microregion';
     protected $primaryKey = 'id';
     public $incrementing = false;
 

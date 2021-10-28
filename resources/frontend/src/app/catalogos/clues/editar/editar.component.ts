@@ -20,6 +20,9 @@ export class EditarComponent implements OnInit {
   estatus_clues:boolean = false;
   datos_clues:any;
 
+  catalogos: any = {};
+  filteredCatalogs:any = {};
+
   puedeGuardar: boolean = true;
   puedeValidar: boolean = true;
   puedeTransferir: boolean = true;
@@ -56,6 +59,10 @@ export class EditarComponent implements OnInit {
     'fecha_operacion': ['',Validators.required],
     'latitud': ['',Validators.required],
     'longitud': ['',Validators.required],
+    'microrregion_id': ['',Validators.required],
+    'microrregiones': [''],
+    'localidad_id': ['',Validators.required],
+    'localidades': [''],
 
     
     // 'responsable_id': [''],
@@ -70,24 +77,24 @@ export class EditarComponent implements OnInit {
         this.loadCluesData(this.clues);
       }
 
-      this.cluesForm.get('responsable').valueChanges
-        .pipe(
-          debounceTime(300),
-          tap( () => {
-            this.responsableIsLoading = true;
-          } ),
-          switchMap(value => {
-              if(!(typeof value === 'object')){
-                return this.cluesService.buscarResponsable({busqueda_empleado:value}).pipe(
-                  finalize(() => this.responsableIsLoading = false )
-                );
-              }else{
-                this.responsableIsLoading = false;
-                return [];
-              }
-            }
-          ),
-        ).subscribe(items => this.filteredResponsable = items);
+      // this.cluesForm.get('responsable').valueChanges
+      //   .pipe(
+      //     debounceTime(300),
+      //     tap( () => {
+      //       this.responsableIsLoading = true;
+      //     } ),
+      //     switchMap(value => {
+      //         if(!(typeof value === 'object')){
+      //           return this.cluesService.buscarResponsable({busqueda_empleado:value}).pipe(
+      //             finalize(() => this.responsableIsLoading = false )
+      //           );
+      //         }else{
+      //           this.responsableIsLoading = false;
+      //           return [];
+      //         }
+      //       }
+      //     ),
+      //   ).subscribe(items => this.filteredResponsable = items);
     });
 
     let fecha = new Date('YYYY-MM-D');
@@ -97,7 +104,62 @@ export class EditarComponent implements OnInit {
 
     // let fecha_inicio = new Date(2020, 0, 1);
     // this.minDate = fecha_inicio;
+    this.IniciarCatalogos(null);
 
+  }
+
+  public IniciarCatalogos(obj:any)
+  {
+    this.isLoading = true;
+    let carga_catalogos = [
+      {nombre:'microrregiones',orden:'descripcion'},
+      {nombre:'localidades',orden:'descripcion'},
+    ];
+
+    this.cluesService.obtenerCatalogos(carga_catalogos).subscribe(
+      response => {
+
+        this.catalogos = response.data;
+
+        this.filteredCatalogs['microrregiones']    = this.cluesForm.get('microrregion_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'microrregiones','descripcion')));
+        this.filteredCatalogs['localidades']       = this.cluesForm.get('localidad_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'localidades','descripcion')));
+
+
+        if(obj)
+        {
+            console.log("asdasd", obj);
+           this.cluesForm.get('microrregion_id').setValue(obj.municipio);
+           this.cluesForm.get('microrregiones').setValue(obj.localidad.nombre);
+           this.cluesForm.get('localidad_id').setValue(obj.localidad);
+           this.cluesForm.get('localidades').setValue(obj.localidad.nombre);
+          //this.valor_unidad = parseInt(obj.tipo_unidad_id);
+        }
+        this.isLoading = false; 
+      } 
+    );
+
+  }
+
+  private _filter(value: any, catalog: string, valueField: string): string[] {
+    if(this.catalogos[catalog]){
+      let filterValue = '';
+      if(value){
+        if(typeof(value) == 'object'){
+          filterValue = value[valueField].toLowerCase();
+        }else{
+          filterValue = value.toLowerCase();
+        }
+      }
+      return this.catalogos[catalog].filter(option => option[valueField].toLowerCase().includes(filterValue));
+    }
+  }
+
+  getDisplayFn(label: string){
+    return (val) => this.displayFn(val,label);
+  }
+
+  displayFn(value: any, valueLabel: string){
+    return value ? value[valueLabel] : value;
   }
 
   loadCluesData(id:any)
@@ -138,12 +200,14 @@ export class EditarComponent implements OnInit {
     this.isLoading = true;
     let formData = JSON.parse(JSON.stringify(this.cluesForm.value));
     //console.log(formData);
-    if(formData.responsable)
+    if(formData.microrregion_id != null && formData.localidad_id != null )
     {
-      formData.responsable_id = formData.responsable.id;
+      formData.microrregion_id = formData.microrregion_id.id;
+      formData.localidad_id    = formData.localidad_id.id;
     }
 
-    delete formData.responsable;
+    delete formData.microrregiones;
+    delete formData.localidades;
 
     this.cluesService.actualizarClues(this.clues, formData).subscribe(
       respuesta => {

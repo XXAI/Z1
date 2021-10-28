@@ -76,6 +76,9 @@ class CluesController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        $object = $request->all();
+
         $mensajes = [
             
             'required'      => "required",
@@ -84,8 +87,8 @@ class CluesController extends Controller
         ];
 
         $reglas = [
-            'responsable_id'                => 'required',
-            'cargo_responsable'                => 'required',
+            'microrregion_id'             => 'required',
+            'localidad_id'                => 'required',
             
         ];
 
@@ -106,8 +109,19 @@ class CluesController extends Controller
         DB::beginTransaction();
         try {
             
-            $object->responsable_id              = $inputs['responsable_id'];
-            $object->cargo_responsable          = $inputs['cargo_responsable'];
+            $object->clues                          =    $inputs['clues'];
+            $object->descripcion                    =    $inputs['descripcion'];
+            $object->direccion                      =    $inputs['direccion'];
+            $object->cp                             =    $inputs['cp'];
+            $object->telefono                       =    $inputs['telefono'];
+            $object->nucleos_camas                  =    $inputs['nucleos_camas'];
+            $object->inicio_operacion               =    $inputs['inicio_operacion'];
+            $object->fecha_operacion                =    $inputs['fecha_operacion'];
+            $object->latitud                        =    $inputs['latitud'];
+            $object->longitud                       =    $inputs['longitud'];
+            $object->catalogo_microrregion_id       =    $inputs['microrregion_id'];
+            $object->catalogo_localidad_id          =    $inputs['localidad_id'];
+
 
             //return response()->json($object,HttpResponse::HTTP_OK);
 

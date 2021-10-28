@@ -22,14 +22,61 @@
     
     <section fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-evenly start" style="padding-top:5px;">
         <section fxFlex="90" fxLayout="column" [formGroup]="cluesForm">
-            <div class="loading-shade" *ngIf="isLoading">
+            <div class="edit-loading-shade" *ngIf="isLoading">
                 <mat-spinner *ngIf="isLoading"></mat-spinner>
             </div>
             <mat-card fxFlex>
                 <mat-card-content>
                     <div class="edit-container">
-                        <div class="loading-shade" *ngIf="isLoading && clues">No se encontraron los datos del empleado</div>
+                        <div class="edit-loading-shade" *ngIf="isLoading">No se encontraron los datos del empleado</div>
                         <section>
+
+                            <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                                <mat-form-field fxFlex fxFlex.xs="100" *ngIf="!catalogos['microrregiones']">
+                                    <mat-label>Microrregiones:</mat-label>
+                                    <input matInput formControlName="microrregiones" required>
+                                    <mat-hint>Escribe el nombre de la Microrregión</mat-hint>
+                                    <mat-error *ngIf="cluesForm.get('microrregiones').hasError('required')">Este campo es obligatorio</mat-error>
+                                    <!-- <mat-error *ngIf="pacienteForm.controls['atencion'].get('estado_actual_id').hasError('required')">Este campo es obligatorio</mat-error> -->
+                                </mat-form-field>
+            
+                                <mat-form-field fxFlex fxFlex.xs="100" *ngIf="catalogos['microrregiones']">
+                                    <mat-label>Microrregiones:</mat-label>
+                                    <input type="text" aria-label="microrregion_id" matInput formControlName="microrregion_id" [matAutocomplete]="microrregionAutocomplete" >
+                                    <mat-autocomplete #microrregionAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('descripcion')">
+                                        <mat-option *ngFor="let item of filteredCatalogs['microrregiones'] | async" [value]="item">
+                                            {{item.descripcion}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <!-- <mat-hint *ngIf="!pacienteForm.controls['atencion'].get('estado_actual_id').value">Selecciona un Estado de Salud Actual de la lista</mat-hint> -->
+                                    <mat-hint align="end" *ngIf="cluesForm.get('microrregion_id').value">Clave: [{{cluesForm.get('microrregion_id').value.clave_microregion}}]</mat-hint>
+                                    <!-- <mat-error *ngIf="pacienteForm.controls['atencion'].get('estado_actual_id').hasError('required')">Este campo es obligatorio</mat-error> -->
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex fxFlex.xs="100" *ngIf="!catalogos['localidades']">
+                                    <mat-label>Localidad</mat-label>
+                                    <input matInput formControlName="localidad" required>
+                                    <mat-hint>Escribe el nombre de la localidad</mat-hint>
+                                    <mat-error *ngIf="cluesForm.get('localidades').hasError('required')">Este campo es obligatorio</mat-error>
+                                </mat-form-field>
+                        
+                                <mat-form-field fxFlex fxFlex.xs="100" *ngIf="catalogos['localidades']">
+                                    <mat-label>Localidad</mat-label>
+                                    <input type="text" aria-label="localidad" matInput formControlName="localidad_id" [matAutocomplete]="localidadAutocomplete" >
+                                    <mat-autocomplete #localidadAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('descripcion')">
+                                        <mat-option *ngFor="let item of filteredCatalogs['localidades'] | async" [value]="item">
+                                            {{item.descripcion}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-hint *ngIf="!cluesForm.get('localidad_id').value">Selecciona una localidad de la lista</mat-hint>
+                                    <mat-hint align="end" *ngIf="cluesForm.get('localidad_id').value">Clave: [{{cluesForm.get('localidad_id').value.clave_localidad}}]</mat-hint>
+                                    <mat-error *ngIf="cluesForm.get('localidad_id').hasError('required')">Este campo es obligatorio</mat-error>
+                                </mat-form-field>
+
+
+                            </div>
+
                             <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
                                 <mat-form-field fxFlex="30" fxFlex.xs="100">
                                     <input matInput formControlName="clues" placeholder="Clues" type="text">
@@ -61,7 +108,7 @@
                              <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
 
                                 <mat-form-field fxFlex="25" fxFlex.xs="100">
-                                    <input matInput formControlName="telefono" placeholder="C.P." type="number">
+                                    <input matInput formControlName="telefono" placeholder="Teléfono" type="number">
                                     <mat-error *ngIf="cluesForm.get('telefono').invalid && (cluesForm.get('telefono').dirty || cluesForm.get('telefono').touched)">
                                         <span *ngIf="cluesForm.get('telefono').errors.required">El Campo es obligatorio</span>
                                     </mat-error>
@@ -101,13 +148,15 @@
                                 </mat-form-field>
 
                                 <mat-form-field fxFlex="50" fxFlex.xs="100">
-                                    <input matInput formControlName="longitud" placeholder="Dirección" type="text">
+                                    <input matInput formControlName="longitud" placeholder="Longitud" type="text">
                                     <mat-error *ngIf="cluesForm.get('longitud').invalid && (cluesForm.get('longitud').dirty || cluesForm.get('longitud').touched)">
                                         <span *ngIf="cluesForm.get('longitud').errors.required">El Campo es obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
         
                             </div>
+
+
 
 
                              <!-- <div fxLayout="row" fxLayout.xs="column">

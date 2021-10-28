@@ -9,8 +9,9 @@ import { map } from 'rxjs/operators';
 })
 export class CluesService {
 
-  url = `${environment.base_url}/clues`;
-  url_responsable = `${environment.base_url}/busqueda-responsable`;
+  url                     = `${environment.base_url}/clues`;
+  url_obtener_catalogos   =  `${environment.base_url}/catalogos`;
+  url_responsable         = `${environment.base_url}/busqueda-responsable`;
 
   constructor(private http: HttpClient) { }
 
@@ -20,6 +21,14 @@ export class CluesService {
         return response;
       })
     );
+  }
+
+  obtenerCatalogos(payload) {
+    return this.http.post<any>(this.url_obtener_catalogos,payload).pipe(
+      map( (response) => {
+        return response;
+      }
+    ));
   }
 
   actualizarClues(id:any, form:any):Observable<any> {

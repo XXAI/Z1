@@ -39,6 +39,7 @@ Route::group(['middleware'=>'auth'],function($router){
      */
     Route::apiResource('dashboard',                 'API\Modulos\DashboardController');
     Route::get('dashboard-activo',                  'API\Modulos\DashboardController@activeDashboard');
+    Route::post('catalogos',                        'API\Modulos\SearchCatalogsController@getCatalogs');
 
     /* Apis del sistema */
     Route::apiResource('clues',          'API\Modulos\CluesController');
