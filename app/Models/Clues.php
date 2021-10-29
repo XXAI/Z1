@@ -19,7 +19,7 @@ class Clues extends Model
     }
 
     public function catalogo_microrregion(){
-        return $this->belongsTo('App\Models\Localidad','catalogo_microrregion_id','id');
+        return $this->belongsTo('App\Models\Microrregion','catalogo_microrregion_id','id');
     }
 
     // public function cr(){

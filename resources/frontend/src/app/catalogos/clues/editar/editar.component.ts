@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { SharedService } from 'src/app/shared/shared.service';
 import { CluesService } from '../../clues.service';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, combineLatest, of, forkJoin } from 'rxjs';
 import { startWith, map, throwIfEmpty, debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
@@ -43,7 +43,8 @@ export class EditarComponent implements OnInit {
     private authService: AuthService, 
     private route: ActivatedRoute, 
     private fb: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public router: Router,
   ) { }
 
   isLoading:boolean = false;
@@ -128,10 +129,8 @@ export class EditarComponent implements OnInit {
         if(obj)
         {
             console.log("asdasd", obj);
-           this.cluesForm.get('microrregion_id').setValue(obj.municipio);
-           this.cluesForm.get('microrregiones').setValue(obj.localidad.nombre);
-           this.cluesForm.get('localidad_id').setValue(obj.localidad);
-           this.cluesForm.get('localidades').setValue(obj.localidad.nombre);
+           this.cluesForm.get('microrregion_id').setValue(obj.catalogo_microrregion);
+           this.cluesForm.get('localidad_id').setValue(obj.catalogo_localidad);
           //this.valor_unidad = parseInt(obj.tipo_unidad_id);
         }
         this.isLoading = false; 
@@ -174,6 +173,7 @@ export class EditarComponent implements OnInit {
 
         if(typeof response === 'object'){
           //this.datos_clues = response.data;
+          this.IniciarCatalogos(response.data);
           this.cluesForm.patchValue(response.data);
           this.estatus_clues = true;
           
@@ -212,7 +212,8 @@ export class EditarComponent implements OnInit {
     this.cluesService.actualizarClues(this.clues, formData).subscribe(
       respuesta => {
         this.isLoading = false;
-        this.sharedService.showSnackBar("Se ha guardado correctamente", "Correcto", 3000);
+        this.sharedService.showSnackBar("Se ha guardado correctamente", "Correcto", 4000);
+        this.router.navigate(['/catalogos/clues']);
       },
       errorResponse =>{
         console.log(errorResponse);
