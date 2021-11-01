@@ -33,4 +33,8 @@
     width: 100%;
 }
 
+agm-map { height: 300px; }
+
+.agm-map-container-inner { width: inherit; height: inherit; } .agm-map-content { display:none; }
+
   

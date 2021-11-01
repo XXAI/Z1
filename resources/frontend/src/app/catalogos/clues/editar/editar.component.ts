@@ -16,6 +16,10 @@ import { ConfirmActionDialogComponent } from '../../../utils/confirm-action-dial
 })
 export class EditarComponent implements OnInit {
 
+   
+  lat = 16.75;
+  long = -93.1167;
+
   clues:any;
   estatus_clues:boolean = false;
   datos_clues:any;
