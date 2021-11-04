@@ -4,18 +4,25 @@ import { CommonModule } from '@angular/common';
 import { AgmCoreModule } from '@agm/core';
 
 import { CluesRoutingModule } from './clues-routing.module';
-import { ListaComponent } from './lista/lista.component';
+
 import { SharedModule } from 'src/app/shared/shared.module';
 
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getEspPaginatorIntl } from '../../esp-paginator-intl';
+
+import { DetailsComponentClue } from './details-clue/details-clue.component'
 import { EditarComponent } from './editar/editar.component';
+import { ListaComponent } from './lista/lista.component';
 
 
 @NgModule({
-  declarations: [ListaComponent, EditarComponent],
+  declarations: [
+    ListaComponent,
+    EditarComponent,
+    DetailsComponentClue
+  ],
   imports: [
     CommonModule,
     SharedModule,

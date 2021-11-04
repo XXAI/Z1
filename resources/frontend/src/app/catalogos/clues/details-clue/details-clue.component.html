@@ -1,0 +1,768 @@
+<div *ngIf="isLoading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar><br>
+    <h3>Cargando datos del Paciente, Espere un momento...</h3>    
+</div>
+
+
+
+<div *ngIf="!isLoading">
+
+    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+        <h2 fxFlex><mat-icon>assignment_ind</mat-icon> Información del Paciente: </h2>
+    </div>
+
+    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Folio: </mat-label>
+            <input matInput value="{{dataPaciente.folio_paciente}}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>N° Expediente: </mat-label>
+            <input matInput value="{{ dataPaciente.numero_expediente }}" readonly>
+
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="dataPaciente.esDesconocido == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Identidad: </mat-label>
+            <input matInput value="{{(dataPaciente.esDesconocido == 1) ? 'DESCONOCIDA' :'N/A'}}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Alias: </mat-label>
+            <input matInput value="{{ dataPaciente.alias }} " readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Sexo: </mat-label>
+            <input matInput value="{{ dataPaciente.sexo }} " readonly>
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="dataPaciente.esDesconocido == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>¿Es Extrajero(a)?: </mat-label>
+            <input matInput value="{{(dataPaciente.esExtranjero == 1) ? 'SI' :'NO'}}" readonly>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="dataPaciente.esExtranjero == 1" fxFlex appearance="outline">
+            <mat-label>País de Procedencia: </mat-label>
+            <input matInput value="{{(dataPaciente.pais_origen != null) ? dataPaciente.pais_origen.nombre : 'N/A'}}" readonly>
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="dataPaciente.esDesconocido == 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex="75%" appearance="outline">
+            <mat-label>Nombre: </mat-label>
+            <input matInput value="{{ dataPaciente.nombre }} {{ dataPaciente.paterno }} {{ dataPaciente.materno }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Edad: </mat-label>
+            <input matInput value="{{ dataPaciente.edad }} {{ dataPaciente?.tipo_edad }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Fecha de Nacimiento: </mat-label>
+            <input matInput value="{{ dataPaciente.fecha_nacimiento | date: 'dd/MM/yyyy' }}" readonly>
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="dataPaciente.esExtranjero == 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>CURP: </mat-label>
+            <input matInput value="{{(dataPaciente.curp != null) ? dataPaciente.curp : 'NO ASIGNADO'}}" readonly>
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="dataPaciente.esExtranjero == 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Municipio: </mat-label>
+            <input matInput value="{{(dataPaciente.municipio != null) ? dataPaciente.municipio.nombre : 'NO ASIGNADO'}}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Localidad: </mat-label>
+            <input matInput value="{{(dataPaciente.localidad != null) ? dataPaciente.localidad.nombre : 'NO ASIGNADO'}}" readonly>
+        </mat-form-field>
+
+
+    </div>
+
+    <div *ngIf="dataPaciente.esExtranjero == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>País de Procedencia: </mat-label>
+            <input matInput value="{{(dataPaciente.pais_origen != null) ? dataPaciente.pais_origen.nombre : 'N/A'}}" readonly>
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="dataPaciente.esDesconocido == 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+        <h2 fxFlex><mat-icon>location_on</mat-icon>&nbsp;Dirección y Telefono:
+        </h2>
+    </div>
+
+    <div *ngIf="dataPaciente.esDesconocido == 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Télefono de Casa: </mat-label>
+            <input matInput value="{{(dataPaciente.telefono_casa != null) ? dataPaciente.telefono_casa : 'N/A'}}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Télefono Celular: </mat-label>
+            <input matInput value="{{(dataPaciente.telefono_celular != null) ? dataPaciente.telefono_celular : 'N/A'}}" readonly>
+        </mat-form-field>
+        
+    </div>
+
+    <div *ngIf="dataPaciente.esDesconocido == 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Calle: </mat-label>
+            <input matInput value="{{(dataPaciente.calle != null) ? dataPaciente.calle : 'N/A'}}" readonly>
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="dataPaciente.esDesconocido == 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label># Interior: </mat-label>
+            <input matInput value="{{(dataPaciente.no_interior != null) ? dataPaciente.no_interior : 'N/A'}}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label># Exterior: </mat-label>
+            <input matInput value="{{(dataPaciente.no_exterior != null) ? dataPaciente.no_exterior : 'N/A'}}" readonly>
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="dataPaciente.esDesconocido == 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Entre qué Calles: </mat-label>
+            <input matInput value="{{(dataPaciente.entreCalles != null) ? dataPaciente.entreCalles : 'N/A'}}" readonly>
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="dataPaciente.esDesconocido == 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Colonia: </mat-label>
+            <input matInput value="{{(dataPaciente.colonia != null) ? dataPaciente.colonia : 'N/A'}}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="outline">
+            <mat-label>Código Postal: </mat-label>
+            <input matInput value="{{(dataPaciente.cp != null) ? dataPaciente.cp : 'N/A'}}" readonly>
+        </mat-form-field>
+
+    </div>
+
+    <div *ngIf="dataPaciente.ultima_atencion != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+        <h2 fxFlex><mat-icon>follow_the_signs</mat-icon>&nbsp;Atenciones:
+        </h2>
+    </div>
+
+    <mat-accordion *ngIf="dataPaciente.ultima_atencion != null">
+        <mat-expansion-panel (opened)="panelAtencion = true" (closed)="panelAtencion = false">
+            <mat-expansion-panel-header>
+
+                <mat-panel-title fxHide.xs="xs" >
+                    
+                    Ultima Atención:
+
+                </mat-panel-title>
+
+                <mat-panel-title fxHide.xs="xs" >
+                    <mat-icon class="color-icono-atencion" >{{(panelAtencion == true)?'more_horiz':'more_vert'}}</mat-icon>
+                </mat-panel-title>
+                
+                <mat-panel-description>
+                    <i> FECHA DE LA ATENCIÓN: ( {{ dataPaciente.ultima_atencion.fecha_inicio_atencion | date: 'dd/MM/yyyy' }} ) </i>
+                </mat-panel-description>
+
+            </mat-expansion-panel-header>
+
+            <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                <mat-form-field fxFlex appearance="outline">
+                    <mat-label>Folio: </mat-label>
+                    <input matInput value="{{ (dataPaciente.ultima_atencion.folio_atencion != null) ? dataPaciente.ultima_atencion.folio_atencion : 'NO ASIGNADO' }}" readonly>
+                </mat-form-field>
+                
+                <mat-form-field fxFlex appearance="outline">
+                    <mat-label>Hora de la Atención: </mat-label>
+                    <input matInput value="{{  (dataPaciente.ultima_atencion.hora != null) ? (dataPaciente.ultima_atencion.hora) : 'NO ASIGNADO' }}" readonly>
+                </mat-form-field>
+
+
+            </div>
+
+            <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                <mat-form-field fxFlex appearance="outline">
+                    <mat-label>N° Cama/Descripción (Actual): </mat-label> 
+                    <input matInput value="{{(dataPaciente.ultima_atencion.cama_actual != null) ? dataPaciente.ultima_atencion.cama_actual.numero : 'NO TIENE CAMA ASIGNADA'}}" readonly>
+                </mat-form-field>
+
+                <mat-form-field fxFlex appearance="outline">
+                    <mat-label>Servicio (Actual): </mat-label> 
+                    <input matInput value="{{(dataPaciente.ultima_atencion.servicio_id != null) ? dataPaciente.ultima_atencion.servicio_actual.nombre : 'NO TIENE SERVICIO ASIGNADO'}}" readonly>
+                </mat-form-field>
+
+            </div>
+
+            <div *ngIf="dataPaciente.ultima_atencion.fueReferida == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                <mat-form-field fxFlex="15%" appearance="outline">
+                    <mat-label>¿Es referido(a)?: </mat-label>
+                    <input matInput value="{{(dataPaciente.ultima_atencion.fueReferida == 1) ? 'SI' : 'NO'}}" readonly>
+                </mat-form-field>
+
+                <mat-form-field fxFlex appearance="outline">
+                    <mat-label>Unidad Medica de Referencia: </mat-label>
+                    <input matInput value="{{ (dataPaciente.ultima_atencion.clues_referencia != null) ? '('+dataPaciente.ultima_atencion.clues_referencia.id+')'+' - '+dataPaciente.ultima_atencion.clues_referencia.nombre :'NO ASIGNADA' }}" readonly>
+                </mat-form-field>
+                
+            </div>
+
+            <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                <mat-form-field fxFlex appearance="outline">
+                    <mat-label>¿Esta dado(a) de Alta?: </mat-label>
+                    <input matInput value="{{(dataPaciente.ultima_atencion.dadodeAlta == 1) ? 'SI' : 'NO'}}" readonly>
+                </mat-form-field>
+
+                <mat-form-field fxFlex appearance="outline">
+                    <mat-label>Estado de Salud Actual del(la) Paciente: </mat-label>
+                    <input matInput value="{{(dataPaciente.ultima_atencion.estado_actual_id != null) ? dataPaciente.ultima_atencion.estado_actual.nombre : 'NO TIENE ESTADO DE SALUD ASIGNADO(A)'}}" readonly>
+                </mat-form-field>
+
+            </div>
+
+            <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Motivo de la Atencón: </mat-label>
+                    <textarea matInput value="{{(dataPaciente.ultima_atencion.motivo_atencion != null) ? dataPaciente.ultima_atencion.motivo_atencion : 'NO TIENE MOTIVO DE LA ATENCIÓN ASIGNADO(A)'}}" readonly></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Observaciones: </mat-label>
+                    <textarea matInput value="{{(dataPaciente.ultima_atencion.indicaciones != null) ? dataPaciente.ultima_atencion.indicaciones : 'NO TIENE INDICACIONES ASIGNADO(AS)'}}" readonly></textarea>
+                </mat-form-field>
+
+            </div>
+
+            <div *ngIf="dataPaciente.ultima_atencion.estaEmbarazada == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                <h3 fxFlex><mat-icon class="color-icono-embarazo">pregnant_woman</mat-icon>&nbsp;Embarazo:</h3>
+            </div>
+
+            <mat-accordion *ngIf="dataPaciente.ultima_atencion.estaEmbarazada == 1" >
+                <mat-expansion-panel (opened)="panelEmabarazo = true" (closed)="panelEmabarazo = false">
+                    <mat-expansion-panel-header>
+        
+                        <mat-panel-title fxHide.xs="xs" >
+                           
+                           Información del Embarazo
+                            
+                        </mat-panel-title>
+        
+                        <mat-panel-title fxHide.xs="xs" >
+                            <mat-icon color="warn" >pregnant_woman</mat-icon>
+                        </mat-panel-title>
+                        
+                        <!-- <mat-panel-description>
+                            <i> HORARIO DE LA GUARDIA: ( {{ fil.horario_filtro_sanitario.descripcion | uppercase }} ) </i>
+                        </mat-panel-description> -->
+        
+                    </mat-expansion-panel-header>
+
+                    <div *ngIf="dataPaciente.ultima_atencion.estaEmbarazada == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>¿Esta Embarazada?: </mat-label>
+                            <input matInput value="{{(dataPaciente.ultima_atencion.estaEmbarazada == 1) ? 'SI' : 'NO'}}" readonly>
+                        </mat-form-field>
+        
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Semanas Gestacionales: </mat-label>
+                            <input matInput value="{{ dataPaciente.ultima_atencion.semanas_gestacionales }}" readonly>
+                        </mat-form-field>
+        
+                    </div>
+        
+                    <div *ngIf="dataPaciente.ultima_atencion.estaEmbarazada == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Gestas: </mat-label>
+                            <input matInput value="{{ dataPaciente.ultima_atencion.gestas }}" readonly>
+                        </mat-form-field>
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Abortos: </mat-label>
+                            <input matInput value="{{ dataPaciente.ultima_atencion.abortos }}" readonly>
+                        </mat-form-field>
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Partos: </mat-label>
+                            <input matInput value="{{ dataPaciente.ultima_atencion.partos }}" readonly>
+                        </mat-form-field>
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Cesareas: </mat-label>
+                            <input matInput value="{{ dataPaciente.ultima_atencion.cesareas }}" readonly>
+                        </mat-form-field>
+                
+                    </div>
+        
+                    <div *ngIf="dataPaciente.ultima_atencion.estaEmbarazada == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+        
+                        <!-- <mat-form-field fxFlex appearance="outline">
+                            <mat-label>¿Se activo el Código Mater?: </mat-label>
+                            <input matInput value="{{ (atencion.codigoMatter == 1) ? 'SI' :'NO' }}" readonly>
+                        </mat-form-field> -->
+        
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Método Gestacional: </mat-label>
+                            <input matInput value="{{ (dataPaciente.ultima_atencion.metodo_gestacional_id != null) ? dataPaciente.ultima_atencion.metodo_gestacional.nombre :'NO ASIGNADO' }}" readonly>
+                        </mat-form-field>
+        
+                    </div>
+        
+                    <div *ngIf="dataPaciente.ultima_atencion.estaEmbarazada == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+        
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>¿Se activo el Código Mater?: </mat-label>
+                            <input matInput value="{{ (dataPaciente.ultima_atencion.codigoMatter == 1) ? 'SI' :'NO' }}" readonly>
+                        </mat-form-field>
+        
+                    </div>
+        
+                    <div *ngIf="dataPaciente.ultima_atencion.estaEmbarazada == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+        
+                        <!-- {{ atencion.fecha_inicio_atencion | date: 'dd/MM/yyyy' }} -->
+        
+                        <mat-form-field fxFlex="20%" appearance="outline">
+                            <mat-label>Ultima fecha de Atención de Embarazo: </mat-label>
+                            <input matInput value="{{ (dataPaciente.ultima_atencion.fecha_ultima_atencion_embarazo != null) ? (dataPaciente.ultima_atencion.fecha_ultima_atencion_embarazo | date: 'dd/MM/yyyy') :'NO ASIGNADO' }}" readonly>
+                        </mat-form-field>
+        
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Unidad Medica donde Atendieron su Embarazo: </mat-label>
+                            <input matInput value="{{ (dataPaciente.ultima_atencion.clues_control_embarazo != null) ? '('+dataPaciente.ultima_atencion.clues_control_embarazo.id+')'+' - '+dataPaciente.ultima_atencion.clue_atencion_embarazo.nombre :'NO ASIGNADO' }}" readonly>
+                        </mat-form-field>
+        
+                    </div>
+        
+                    <div *ngIf="dataPaciente.ultima_atencion.estaEmbarazada == 1" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+        
+                        <mat-form-field fxFlex="20%" appearance="outline">
+                            <mat-label>Ultima fecha del control de Embarazo: </mat-label>
+                            <input matInput value="{{ (dataPaciente.ultima_atencion.fecha_control_embarazo != null) ? (dataPaciente.ultima_atencion.fecha_control_embarazo | date: 'dd/MM/yyyy') :'NO ASIGNADA' }}" readonly>
+                        </mat-form-field>
+        
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Unidad Medica donde llevan el control de Embarazo: </mat-label>
+                            <input matInput value="{{ (dataPaciente.ultima_atencion.clues_control_embarazo != null) ? '('+dataPaciente.ultima_atencion.clues_control_embarazo.id+')'+' - '+dataPaciente.ultima_atencion.clues_control_embarazo.nombre :'NO ASIGNADA' }}" readonly>
+                        </mat-form-field>
+        
+                    </div>
+        
+                </mat-expansion-panel>
+        
+            </mat-accordion>
+
+            <div *ngIf="dataPaciente.ultima_atencion != null && dataPaciente.ultima_atencion.seguimientos.length > 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                <h3 fxFlex><mat-icon class="color-icono-seguimiento">airline_seat_flat</mat-icon>&nbsp;Seguimientos:</h3>
+            </div>
+
+            <div *ngIf="dataPaciente.ultima_atencion != null && dataPaciente.ultima_atencion.seguimientos.length == 0" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                <h3 fxFlex><mat-icon class="color-icono-embarazo">airline_seat_flat</mat-icon>&nbsp;La Atención no cuenta con Seguimientos:</h3>
+            </div>
+
+            <mat-accordion *ngIf="dataPaciente.ultima_atencion.seguimientos.length > 0">
+                <ng-container *ngFor="let seguimiento of dataPaciente.ultima_atencion.seguimientos; let j = index">
+
+
+                <mat-expansion-panel [expanded]="seguimiento.id === IdActual" (opened)="abrirPanel(seguimiento)" (closed)="panelSeguimiento = false">
+                    
+                    <mat-expansion-panel-header>
+
+                        <mat-panel-title fxHide.xs="xs" >
+                            
+                            Seguimiento N°: {{ j+1 }}
+        
+                        </mat-panel-title>
+        
+                        <mat-panel-title fxHide.xs="xs" >
+                            <!-- <mat-icon class="color-icono-seguimiento">airline_seat_flat</mat-icon> -->
+                            <mat-icon class="color-icono-seguimiento" >{{(panelSeguimiento == true)?'airline_seat_flat_angled':'airline_seat_flat'}}</mat-icon>
+                        </mat-panel-title>
+                        
+                        <mat-panel-description>
+                            <i> FECHA DEL SEGUIMIENTO: ( {{ seguimiento.fecha_seguimiento | date: 'dd/MM/yyyy' }} ) </i>
+                        </mat-panel-description>
+        
+                    </mat-expansion-panel-header>
+
+                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Folio del Seguimiento: </mat-label>
+                            <input matInput value="{{seguimiento.folio_seguimiento}}" readonly>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Hora del Seguimiento: </mat-label>
+                            <input matInput value="{{seguimiento.hora_seguimiento}}" readonly>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                        <mat-form-field fxFlex="20%" appearance="outline">
+                            <mat-label>N° Cama/Descripción: </mat-label> 
+                            <input matInput value="{{ (seguimiento.no_cama != null) ? seguimiento.no_cama :'FUE SEGUIMIENTO AMBULATORIO' }}" readonly>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Servicio en que se encuentra: </mat-label> 
+                            <input matInput value="{{ (seguimiento.servicio_id != null) ? seguimiento.servicio.nombre :'FUE SEGUIMIENTO AMBULATORIO' }}" readonly>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Estado de Salud Actual: </mat-label> 
+                            <input matInput value="{{ (seguimiento.estado_actual_id != null) ? seguimiento.estado_actual.nombre :'NO ASIGNADO' }}" readonly>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>¿Se activo el Código Mater?: </mat-label>
+                            <input matInput value="{{ (seguimiento.codigoMatter == 1) ? 'SI' :'NO' }}" readonly>
+                        </mat-form-field> 
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Enfermedad Respiratoria y/o COVID-19: </mat-label> 
+                            <input matInput value="{{ (seguimiento.factor_covid_id != null) ? seguimiento.factor_covid.nombre :'NO ASIGNADO' }}" readonly>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Observaciones: </mat-label>
+                            <textarea matInput value="{{seguimiento.observaciones}}" readonly></textarea>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Diagnosticos: </mat-label>
+                            <textarea matInput value="{{seguimiento.observaciones_diagnosticos}}" readonly></textarea>
+                        </mat-form-field>
+
+                    </div>
+
+
+                    <!-- <div *ngIf="seguimiento.diagnosticos.length > 0">
+
+
+                        <mat-list>
+                            <h3 mat-subheader>Diagnósticos del Seguimiento: </h3>
+        
+                            <mat-list-item *ngFor="let diag of seguimiento.diagnosticos; let d = index">
+        
+                              <mat-icon mat-list-icon>trip_origin</mat-icon>
+                              <h3 mat-line>{{diag.nombre}}</h3>
+                            </mat-list-item>
+        
+                            <mat-divider></mat-divider>
+        
+                          </mat-list>
+                    </div> -->
+                    
+        
+                </mat-expansion-panel>
+
+            </ng-container>
+        
+
+            </mat-accordion>
+
+            <div *ngIf="dataPaciente.ultima_atencion.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                <h3 fxFlex><mat-icon class="color-icono-seguimiento">hail</mat-icon>&nbsp;Alta/Egreso del Paciente:</h3>
+            </div>
+        
+            <mat-accordion>
+                <mat-expansion-panel *ngIf="dataPaciente.ultima_atencion.alta">
+                    <mat-expansion-panel-header>
+        
+                        <mat-panel-title fxHide.xs="xs" >
+                           
+                            Alta ó Egreso:
+                            
+                        </mat-panel-title>
+        
+                        <mat-panel-title fxHide.xs="xs" >
+                            <mat-icon class="color-icono-seguimiento">hail</mat-icon>
+                        </mat-panel-title>
+
+                        <mat-panel-description>
+                            <i> FECHA DEL ALTA Ó EGRESO: ( {{ dataPaciente.ultima_atencion.alta.fecha_alta | date: 'dd/MM/yyyy' }} ) </i>
+                        </mat-panel-description>
+                        
+                        <!-- <mat-panel-description>
+                            <i> HORARIO DE LA GUARDIA: ( {{ fil.horario_filtro_sanitario.descripcion | uppercase }} ) </i>
+                        </mat-panel-description> -->
+        
+                    </mat-expansion-panel-header>
+        
+                    <div *ngIf="dataPaciente.ultima_atencion.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+        
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Folio del Alta: </mat-label>
+                            <input matInput value="{{dataPaciente.ultima_atencion.alta.folio_alta}}" readonly>
+                        </mat-form-field>
+                
+                    </div>
+
+                    <!-- <div *ngIf="dataPaciente.ultima_atencion.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Fecha del Alta: </mat-label>
+                            <input matInput value="{{dataPaciente.ultima_atencion.alta.fecha_alta}}" readonly>
+                        </mat-form-field>
+
+                    </div> -->
+                    <div *ngIf="dataPaciente.ultima_atencion.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Hora del alta: </mat-label>
+                            <input matInput value="{{dataPaciente.ultima_atencion.alta.hora_alta}}" readonly>
+                        </mat-form-field>
+                        
+                        <mat-form-field fxFlex appearance="outline">
+
+                            <mat-label>Motivo de Egreso: </mat-label>
+                
+                            <div *ngIf="dataPaciente.ultima_atencion.alta.motivo_egreso_id == null">
+                                <input matInput value="No existe" readonly>
+                            </div>
+                
+                            <div *ngIf="dataPaciente.ultima_atencion.alta.motivo_egreso_id != null">
+                                <input matInput value="{{ dataPaciente.ultima_atencion.alta.motivo_egreso.nombre }}" readonly>
+                            </div>
+                        </mat-form-field>
+
+                    </div>
+                
+                    <div *ngIf="dataPaciente.ultima_atencion.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Observaciones del Alta/Egreso: </mat-label>
+                            <textarea matInput value="{{dataPaciente.ultima_atencion.alta.observaciones}}" readonly></textarea>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Diagnosticos: </mat-label>
+                            <textarea matInput value="{{dataPaciente.ultima_atencion.alta.observaciones_diagnosticos}}" readonly></textarea>
+                        </mat-form-field>
+                
+                    </div>
+                
+                    <!-- <div *ngIf="data.datos.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Condición de Egreso: </mat-label>
+                
+                            <div *ngIf="data.datos.alta.condicion_egreso_id == null">
+                                <input matInput value="No se capturo" readonly>
+                            </div>
+                            <div *ngIf="data.datos.alta.condicion_egreso_id != null">
+                                <input matInput value="{{ data.datos.alta.condicion_egreso.nombre }}" readonly>
+                            </div>
+                
+                        </mat-form-field>
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Estado de Egreso: </mat-label>
+                
+                            <div *ngIf="data.datos.alta.estado_actual_id == null">
+                                <input matInput value="No existe" readonly>
+                            </div>
+                
+                            <div *ngIf="data.datos.alta.estado_actual_id != null">
+                                <input matInput value="{{ data.datos.alta.estado_actual.nombre }}" readonly>
+                            </div>
+                        </mat-form-field>
+                
+                    </div> -->
+                
+                    <!-- <div *ngIf="dataPaciente.ultima_atencion.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Método Anticonceptivo: </mat-label>
+                
+                            <div *ngIf="data.datos.alta.metodo_anticonceptivo_id == null">
+                                <input matInput value="No acepto" readonly>
+                            </div>
+                            <div *ngIf="data.datos.alta.metodo_anticonceptivo_id != null">
+                                <input matInput value="{{ data.datos.alta.metodo_anticonceptivo.nombre }}" readonly>
+                            </div>
+                
+                        </mat-form-field>
+                    </div> -->
+        
+                    <!-- <div *ngIf="dataPaciente.ultima_atencion.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Fecha de Egreso ó Alta: </mat-label>
+                
+                            <div *ngIf="dataPaciente.ultima_atencion.alta.fecha_alta == null">
+                                <input matInput value="No fue proporcionado" readonly>
+                            </div>
+                            <div *ngIf="dataPaciente.ultima_atencion.alta.fecha_alta != null">
+                                <input matInput value="{{ dataPaciente.ultima_atencion.alta.fecha_alta | date: 'dd/MM/yyyy' }}" readonly>
+                            </div>
+                
+                        </mat-form-field>
+                
+                
+                    </div> -->
+                
+                    <!-- <div *ngIf="data.datos.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                
+                        <mat-form-field fxFlex appearance="outline">
+                
+                            <mat-label>Teléfono: </mat-label>
+                
+                            <div *ngIf="data.datos.alta.telefono == null">
+                                <input matInput value="No fue proporcionado" readonly>
+                            </div>
+                
+                            <div *ngIf="data.datos.alta.telefono != null">
+                                <input matInput value="{{ data.datos.alta.telefono }}" readonly>
+                            </div>
+                
+                
+                        </mat-form-field>
+                
+                
+                    </div> -->
+                
+                    <!-- <div *ngIf="data.datos.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                        
+                        <mat-form-field fxFlex appearance="outline">
+                
+                            <mat-label>Dirección: </mat-label>
+                    
+                            <div *ngIf="data.datos.alta.direccion_completa == null">
+                                <input matInput value="No fue proporcionada" readonly>
+                            </div>
+                    
+                            <div *ngIf="data.datos.alta.direccion_completa != null">
+                                <textarea matInput value="{{data.datos.alta.direccion_completa}}" readonly></textarea>
+                            </div>
+                    
+                        </mat-form-field>
+                
+                    </div>
+                
+                    <div *ngIf="data.datos.alta != null" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Municipio: </mat-label>
+                
+                            <div *ngIf="data.datos.alta.municipio_id == null">
+                                <input matInput value="No fue proporcionado" readonly>
+                            </div>
+                            <div *ngIf="data.datos.alta.municipio_id != null">
+                                <input matInput value="{{ data.datos.alta.municipio.nombre }}" readonly>
+                            </div>
+                
+                        </mat-form-field>
+                
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Localidad: </mat-label>
+                
+                            <div *ngIf="data.datos.alta.localidad_id == null">
+                                <input matInput value="No fue proporcionada" readonly>
+                            </div>
+                
+                            <div *ngIf="data.datos.alta.localidad_id != null">
+                                <input matInput value="{{ data.datos.alta.localidad.nombre }}" readonly>
+                            </div>
+                        </mat-form-field>
+                
+                    </div>
+        
+        
+        
+        
+        
+                    <div *ngIf="data.datos.alta.diagnosticos.length > 0">
+        
+                        <mat-list>
+                            <h3 mat-subheader>Diagnósticos de Alta: </h3>
+                
+                            <mat-list-item *ngFor="let diag of data.datos.alta.diagnosticos; let d = index">
+                
+                                <mat-icon mat-list-icon>add_alarm</mat-icon>
+                                <h4 mat-line>{{diag.nombre}}</h4>
+                
+                            </mat-list-item>
+                
+                            <mat-divider></mat-divider>
+                
+                        </mat-list>
+                
+                    </div> -->
+        
+                </mat-expansion-panel>
+        
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                </mat-expansion-panel>
+            </mat-accordion> 
+
+        </mat-expansion-panel>
+
+    </mat-accordion>
+
+
+
+    <mat-divider></mat-divider>
+
+
+    <div mat-dialog-actions>
+        <span fxFlex></span>
+        <button mat-raised-button (click)='onNoClick()' color="primary"> Aceptar</button>
+    </div>
+
+</div>

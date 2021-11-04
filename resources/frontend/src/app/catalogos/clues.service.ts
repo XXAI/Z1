@@ -12,12 +12,21 @@ export class CluesService {
   url                     = `${environment.base_url}/clues`;
   url_obtener_catalogos   =  `${environment.base_url}/catalogos`;
   url_responsable         = `${environment.base_url}/busqueda-responsable`;
+  url_info_clue       = `${environment.base_url}/ver-info-clue/`;
 
   constructor(private http: HttpClient) { }
 
   getCluesList(payload):Observable<any> {
     return this.http.get<any>(this.url,{params: payload}).pipe(
       map( response => {
+        return response;
+      })
+    );
+  }
+
+  verInfoClue(id:any,payload:any):Observable<any>{
+    return this.http.get<any>(this.url_info_clue + id, {params:payload}).pipe(
+      map( (response: any) => {
         return response;
       })
     );

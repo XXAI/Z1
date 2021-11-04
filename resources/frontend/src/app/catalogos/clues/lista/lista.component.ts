@@ -16,6 +16,8 @@ import { IfHasPermissionDirective } from 'src/app/shared/if-has-permission.direc
 
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
+import { DetailsComponentClue } from '../details-clue/details-clue.component';
+
 @Component({
   selector: 'app-lista',
   templateUrl: './lista.component.html',
@@ -24,7 +26,8 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 export class ListaComponent implements OnInit {
 
   isLoading: boolean = false;
-  
+  mediaSize: string;
+    
   showMyStepper:boolean = false;
   searchQuery: string = '';
 
@@ -100,4 +103,41 @@ export class ListaComponent implements OnInit {
     this.loadEmpleadosData(null);*/
     this.loadCluesData();
   }
+
+  verClue(id: number, index: number){
+    this.selectedItemIndex = index;
+    
+    let paginator = this.sharedService.getDataFromCurrentApp('paginator');
+    paginator.selectedIndex = index;
+    this.sharedService.setDataToCurrentApp('paginator',paginator);
+
+    let configDialog = {};
+    if(this.mediaSize == 'xs'){
+      configDialog = {
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        height: '100%',
+        width: '100%',
+        data:{id: id, scSize:this.mediaSize}
+      };
+    }else{
+      configDialog = {
+        width: '99%',
+        maxHeight: '90vh',
+        height: '643px',
+        data:{id: id}
+      }
+    }
+
+    const dialogRef = this.dialog.open(DetailsComponentClue, configDialog);
+
+    dialogRef.afterClosed().subscribe(valid => {
+      if(valid){
+        console.log('Aceptar');
+      }else{
+        console.log('Cancelar');
+      }
+    });
+  }
+
 }

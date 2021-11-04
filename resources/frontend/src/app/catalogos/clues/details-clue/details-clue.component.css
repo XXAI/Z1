@@ -1,0 +1,21 @@
+.color-icono-atencion{
+    color:#4CAF50;
+}
+
+.color-icono-embarazo{
+    color:#E91E63;
+}
+
+.color-icono-seguimiento{
+    color:#3F51B5;
+}
+
+h1 {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    color: rgb(00, 00, 00);
+    font-family: cursive;
+    text-align: center;
+  }
