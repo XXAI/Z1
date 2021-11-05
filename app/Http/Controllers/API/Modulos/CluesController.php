@@ -168,4 +168,19 @@ class CluesController extends Controller
 
         return $accessData;
     }
+
+    public function infoClue($id){
+        try{
+            //$params = $request->all();
+            //$access = $this->getUserAccessData();
+            $clues = Clues::where("clues", "=", $id)->with('catalogo_localidad', 'catalogo_microrregion');
+            if(!$clues){
+                throw new Exception("No se encontro la Clues que esta buscado", 1);
+            }
+            
+            return response()->json(['data'=>$clues],HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
 }

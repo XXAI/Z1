@@ -47,6 +47,37 @@ export class ListaComponent implements OnInit {
   @ViewChild(MatExpansionPanel) advancedFilter: MatExpansionPanel;
 
   ngOnInit() {
+    let appStoredData = this.sharedService.getArrayDataFromCurrentApp(['searchQuery','paginator','filter']);
+    console.log(appStoredData);
+
+    if(appStoredData['searchQuery']){
+      this.searchQuery = appStoredData['searchQuery'];
+    }
+
+    let event = null
+    if(appStoredData['paginator']){
+      this.currentPage = appStoredData['paginator'].pageIndex;
+      this.pageSize = appStoredData['paginator'].pageSize;
+      event = appStoredData['paginator'];
+
+      if(event.selectedIndex >= 0){
+        // console.log("siguiente", event);
+        this.selectedItemIndex = event.selectedIndex;
+      }
+    }else{
+      let dummyPaginator = {
+        length: 0,
+        pageIndex: this.currentPage,
+        pageSize: this.pageSize,
+        previousPageIndex: (this.currentPage > 0)?this.currentPage-1:0
+       };
+      this.sharedService.setDataToCurrentApp('paginator', dummyPaginator);
+    }
+
+    // if(appStoredData['filter']){
+    //   this.filterForm.patchValue(appStoredData['filter']);
+    // }
+
     this.loadCluesData(null);
   }
 
@@ -104,10 +135,13 @@ export class ListaComponent implements OnInit {
     this.loadCluesData();
   }
 
-  verClue(id: number, index: number){
+  verClue(id: string, index: number){
+    
+
     this.selectedItemIndex = index;
     
     let paginator = this.sharedService.getDataFromCurrentApp('paginator');
+    console.log(paginator);
     paginator.selectedIndex = index;
     this.sharedService.setDataToCurrentApp('paginator',paginator);
 

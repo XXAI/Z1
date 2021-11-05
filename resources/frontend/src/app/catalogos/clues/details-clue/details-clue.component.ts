@@ -7,7 +7,7 @@ import { Router, ActivatedRoute  } from '@angular/router';
 
 
 export interface FormDialogData {
-  id: number;
+  clues: any;
 }
 
 @Component({
@@ -43,13 +43,13 @@ export class DetailsComponentClue implements OnInit {
   ngOnInit() {
 
 
-    console.log("LOS DATOS", this.data.id);
+    console.log("LOS DATOS", this.data);
 
-    this.cargarDatosPaciente(this.data.id);
+    this.cargarDatosClue(this.data.clues);
   }
 
 
-  cargarDatosPaciente(id:any){
+  cargarDatosClue(id:any){
 
     let params = {};
     let query = this.sharedService.getDataFromCurrentApp('searchQuery');

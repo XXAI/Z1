@@ -42,7 +42,8 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::post('catalogos',                        'API\Modulos\SearchCatalogsController@getCatalogs');
 
     /* Apis del sistema */
-    Route::apiResource('clues',          'API\Modulos\CluesController');
+    Route::apiResource('clues',         'API\Modulos\CluesController');
+    Route::get('ver-info-clue/{id}',    'API\Modulos\CluesController@infoClue');
     Route::apiResource('profile',       'API\ProfileController')->only([ 'show', 'update']);
 });
 
