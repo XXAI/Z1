@@ -7,6 +7,7 @@ import { AuthGuard } from '../../auth/auth.guard';
 const routes: Routes = [
   { path: 'catalogos/colonias', component: ListaComponent, canActivate: [AuthGuard] },
   { path: 'catalogos/colonias/editar/:id', component: FormularioComponent, canActivate: [AuthGuard] },
+  { path: 'catalogos/colonias/agregar', component: FormularioComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

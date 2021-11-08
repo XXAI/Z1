@@ -11,21 +11,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::create([
+        /*\App\Models\User::create([
             'name' => 'Usuario Root',
             'username' => 'root',
             'password' => Hash::make('ssa.simoss#'),
             'email' => 'root@localhost',
             'is_superuser' => 1,
             'avatar' => '/assets/avatars/50-king.svg'
-        ]);
+        ]);*/
 
         //Carga de archivos CSV
         $lista_csv = [
-            'permissions',
+            /*'permissions',
             'roles',
             'role_user',
-            'permission_role'
+            'permission_role',*/
             'catalogo_localidad',
             'catalogo_municipio',
             
@@ -38,9 +38,9 @@ class DatabaseSeeder extends Seeder
             'catalogo_sexo',
             'catalogo_tipo_camino',
             'catalogo_tipo_unidad',
-            'catalogo_ur'
+            'catalogo_ur',
             'trabajador',
-            'catalogo_clues'
+            //'catalogo_clues'
         ];
 
         //DB::beginTransaction();

@@ -41,8 +41,15 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::get('dashboard-activo',                  'API\Modulos\DashboardController@activeDashboard');
 
     /* Apis del sistema */
-    Route::apiResource('clues',          'API\Modulos\CluesController');
-    Route::apiResource('profile',       'API\ProfileController')->only([ 'show', 'update']);
+    Route::apiResource('clues',                 'API\Modulos\CluesController');
+    Route::apiResource('catalogos',             'API\Modulos\CatalogosController');
+    Route::apiResource('colonias',              'API\Modulos\ColoniasController');
+    Route::apiResource('trabajador-salud',      'API\Modulos\TrabajadorSaludController');
+    Route::apiResource('trabajador-externo',    'API\Modulos\TrabajadorExternoController');
+    Route::get('catalogo-municipio/{id}',       'API\Modulos\CatalogosController@catalogoMunicipio');
+    Route::get('catalogo-localidad',            'API\Modulos\CatalogosController@catalogoLocalidad');
+    Route::get('catalogo-clues',                'API\Modulos\CatalogosController@catalogoClues');
+    Route::apiResource('profile',               'API\ProfileController')->only([ 'show', 'update']);
 });
 
 Route::middleware('auth')->get('/avatar-images', function (Request $request) {
