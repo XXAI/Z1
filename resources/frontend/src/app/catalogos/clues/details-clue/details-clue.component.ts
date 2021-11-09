@@ -7,7 +7,7 @@ import { Router, ActivatedRoute  } from '@angular/router';
 
 
 export interface FormDialogData {
-  clues: any;
+  id: any;
 }
 
 @Component({
@@ -28,6 +28,10 @@ export class DetailsComponentClue implements OnInit {
 
   ) {}
 
+  lat: any;
+  long: any;
+  zoom: number = 8;
+
   public dialog: MatDialog;
   panelAtencion     = false;
   panelSeguimiento  = false;
@@ -36,16 +40,16 @@ export class DetailsComponentClue implements OnInit {
 
   IdActual: number;
 
-  dataPaciente: any;
+  dataClues: any;
 
   isLoading:boolean = false;
 
   ngOnInit() {
 
 
-    console.log("LOS DATOS", this.data);
+    console.log("LOS DATOS", this.data.id);
 
-    this.cargarDatosClue(this.data.clues);
+    this.cargarDatosClue(this.data.id);
   }
 
 
@@ -62,11 +66,16 @@ export class DetailsComponentClue implements OnInit {
 
     this.cluesService.verInfoClue(id,params).subscribe(
       response =>{
-        console.log("en el response del DIALOG",response.data);
+        console.log("en el response del DIALOG",response);
         
-        this.dataPaciente = response.data;
+        this.dataClues            = response.data;
+        this.lat             = parseInt(this.dataClues.latitud);
+        this.long            = parseInt(this.dataClues.longitud);
 
-        console.log(this.dataPaciente);
+        console.log(this.lat);
+        console.log(this.long);
+
+        console.log(this.dataClues);
 
         this.isLoading = false;
       });

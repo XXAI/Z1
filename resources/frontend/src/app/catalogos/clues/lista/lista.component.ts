@@ -135,13 +135,13 @@ export class ListaComponent implements OnInit {
     this.loadCluesData();
   }
 
-  verClue(id: string, index: number){
+  verClue(id: any, index: number){
     
 
     this.selectedItemIndex = index;
     
     let paginator = this.sharedService.getDataFromCurrentApp('paginator');
-    console.log(paginator);
+    console.log(id);
     paginator.selectedIndex = index;
     this.sharedService.setDataToCurrentApp('paginator',paginator);
 
