@@ -174,8 +174,8 @@ class CluesController extends Controller
         try{
             //$params = $request->all();
             //$access = $this->getUserAccessData();
-            $clues = Clues::where("clues","=",$id)->with('catalogo_localidad', 'catalogo_microrregion')->first();
-
+            $clues = Clues::where("clues","=",$id)->with('catalogo_localidad', 'catalogo_microrregion', 'regionalizaciones.catalogo_localidad', 'regionalizaciones.catalogo_clues', 'regionalizaciones.catalogo_tipo_camino')->first();
+            
             if(!$clues){
                 throw new Exception("No se encontro la Clues que esta buscado", 1);
             }

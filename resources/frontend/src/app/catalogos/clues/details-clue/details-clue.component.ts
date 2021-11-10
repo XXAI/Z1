@@ -68,14 +68,20 @@ export class DetailsComponentClue implements OnInit {
       response =>{
         console.log("en el response del DIALOG",response);
         
+
+        var index = 0;
+        response.data.regionalizaciones.forEach(element => {
+
+         response.data.regionalizaciones[index].catalogo_localidad.latitud =  parseFloat(element.catalogo_localidad.latitud);
+         response.data.regionalizaciones[index].catalogo_localidad.longitud =  parseFloat(element.catalogo_localidad.longitud);
+          index++;
+        });
+        
         this.dataClues            = response.data;
-        this.lat             = parseInt(this.dataClues.latitud);
-        this.long            = parseInt(this.dataClues.longitud);
+        this.lat             = parseFloat(this.dataClues.latitud);
+        this.long            = parseFloat(this.dataClues.longitud);
 
-        console.log(this.lat);
-        console.log(this.long);
-
-        console.log(this.dataClues);
+        console.log(this.dataClues.regionalizaciones);
 
         this.isLoading = false;
       });

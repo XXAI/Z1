@@ -12,6 +12,7 @@ class Clues extends Model
     protected $table = 'catalogo_clues';
     protected $primaryKey = 'clues';
     public $incrementing = false;
+    protected $hidden = ["created_at", "updated_at", "deleted_at"];
 
 
     public function catalogo_localidad(){
@@ -21,6 +22,11 @@ class Clues extends Model
     public function catalogo_microrregion(){
         return $this->belongsTo('App\Models\Microrregion','catalogo_microrregion_id','id');
     }
+
+    public function regionalizaciones(){
+        return $this->hasMany('App\Models\RegionalizacionClues', 'clues');
+    }
+
 
     // public function cr(){
     //     return $this->hasMany('App\Models\Cr','clues','clues');

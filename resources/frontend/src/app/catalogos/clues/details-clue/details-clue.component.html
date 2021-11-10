@@ -92,27 +92,32 @@
 
     </div>
 
-    <agm-map 
-        style="height: 600px;width: 100%;"
+    <agm-map
+        *ngIf="!isLoading" 
+        style="height: 300px;width: 100%;"
         [latitude]="lat"
         [longitude]="long"
         [zoom]="zoom"
         [disableDefaultUI]="false"
+        [disableDoubleClickZoom]="true"
         [zoomControl]="false">
 
-        <agm-marker
-        [latitude]="lat"
-        [longitude]="long"
-        >
-        
-      <agm-info-window>
-        <strong>InfoWindow content</strong>
-      </agm-info-window>
-      
-    </agm-marker>
+        <agm-marker [latitude]="lat" [longitude]="long">
+            <agm-info-window>
+                <strong>InfoWindow content</strong>
+            </agm-info-window>
+        </agm-marker>
+
+        <agm-marker *ngFor="let reg of dataClues.regionalizaciones" [latitude]="reg.catalogo_localidad.latitud" [longitude]="reg.catalogo_localidad.longitud">
+    <p>{{ reg | json}}</p>
+            <agm-info-window>
+                <strong>InfoWindow content</strong>
+            </agm-info-window>
+    
+        </agm-marker>
+
 
     </agm-map>
-
 
     <mat-divider></mat-divider>
 
