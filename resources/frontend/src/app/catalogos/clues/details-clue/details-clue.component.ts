@@ -30,7 +30,7 @@ export class DetailsComponentClue implements OnInit {
 
   lat: any;
   long: any;
-  zoom: number = 8;
+  zoom: number = 10;
 
   public dialog: MatDialog;
   panelAtencion     = false;
@@ -40,9 +40,15 @@ export class DetailsComponentClue implements OnInit {
 
   IdActual: number;
 
-  dataClues: any;
+  dataClues: any = [];
 
   isLoading:boolean = false;
+
+  iconMap = {
+    url: '../../assets/icons/markerHospital_red.png',
+    iconHeigh: 10,
+    scaledSize: {height: 60, width: 60}
+  }
 
   ngOnInit() {
 
@@ -77,7 +83,7 @@ export class DetailsComponentClue implements OnInit {
           index++;
         });
         
-        this.dataClues            = response.data;
+        this.dataClues       = response.data;
         this.lat             = parseFloat(this.dataClues.latitud);
         this.long            = parseFloat(this.dataClues.longitud);
 

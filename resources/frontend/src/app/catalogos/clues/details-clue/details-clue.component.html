@@ -92,7 +92,9 @@
 
     </div>
 
-    <agm-map
+    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+        <agm-map
         *ngIf="!isLoading" 
         style="height: 300px;width: 100%;"
         [latitude]="lat"
@@ -102,25 +104,56 @@
         [disableDoubleClickZoom]="true"
         [zoomControl]="false">
 
-        <agm-marker [latitude]="lat" [longitude]="long">
+        <agm-marker 
+            [latitude]="lat"
+            [longitude]="long"
+            [iconUrl]="iconMap"
+
+
+            >
             <agm-info-window>
-                <strong>InfoWindow content</strong>
+                <strong>({{ dataClues.clues }}) - {{ dataClues.descripcion }}</strong>
+                <br>
+                <a>{{ dataClues.direccion }}</a>
+                <br>
+                <strong>C.P.: </strong>  {{ dataClues.cp }}
+                <br>
+                <strong>Latitud: </strong>  {{ dataClues.latitud }} <strong>Longitud: </strong>  {{ dataClues.longitud }}
+                <br>
+                <strong>Teléfono: </strong>  {{ dataClues.telefono }}
             </agm-info-window>
         </agm-marker>
 
-        <agm-marker *ngFor="let reg of dataClues.regionalizaciones" [latitude]="reg.catalogo_localidad.latitud" [longitude]="reg.catalogo_localidad.longitud">
-    <p>{{ reg | json}}</p>
-            <agm-info-window>
-                <strong>InfoWindow content</strong>
-            </agm-info-window>
-    
-        </agm-marker>
+        <div *ngFor="let reg of dataClues.regionalizaciones">
 
+            <agm-marker  [latitude]="reg.catalogo_localidad.latitud" [longitude]="reg.catalogo_localidad.longitud" >
+                <agm-info-window>
+                    <strong>Localidad: </strong> {{ reg.catalogo_localidad.descripcion }}
+                    <br>
+                </agm-info-window>
+        
+            </agm-marker>
+
+        </div>
 
     </agm-map>
 
-    <mat-divider></mat-divider>
+    <mat-list>
+        <div mat-subheader>Regionalización</div>
+        <mat-list-item *ngFor="let localidades of dataClues.regionalizaciones">
+          <mat-icon mat-list-icon>share_location</mat-icon>
+          <div mat-line>{{localidades.catalogo_localidad.descripcion}}</div>
+          <div mat-line> {{localidades.catalogo_localidad.descripcion}} </div>
+        </mat-list-item>
+    </mat-list>
 
+    </div>
+
+
+
+
+
+    <mat-divider></mat-divider>
 
     <div mat-dialog-actions>
         <span fxFlex></span>
