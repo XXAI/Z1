@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Trabajador extends Model
+class TrabajadorExterno extends Model
 {
     use SoftDeletes;
     protected $fillable = ['rfc', 'curp', 'nombre', 'apellido_paterno', 'apellido_materno', 'sexo_id', 'edad', 'catalogo_lengua_id'];
-    protected $table = 'trabajador';
+    protected $table = 'trabajador_externo';
 
     public function sexo(){
         return $this->belongsTo('App\Models\Sexo');

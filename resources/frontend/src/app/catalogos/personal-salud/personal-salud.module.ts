@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PersonalSaludRoutingModule } from './personal-salud-routing.module';
 
@@ -15,6 +17,8 @@ import { FormularioComponent } from './formulario/formulario.component';
 @NgModule({
   declarations: [ListaComponent, FormularioComponent],
   imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
     CommonModule,
     SharedModule,
     PersonalSaludRoutingModule,

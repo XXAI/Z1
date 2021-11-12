@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CatalogosRoutingModule } from './catalogos-routing.module';
-import { CluesModule } from './clues/clues.module';
 import { GruposModule } from './grupos/grupos.module';
 import { ColoniasModule } from './colonias/colonias.module';
 import { LocalidadModule } from './localidad/localidad.module';
@@ -21,7 +20,7 @@ import { CatalogosComponent } from './catalogos.component';
     CatalogosRoutingModule,
   ],
   exports:[
-    CluesModule,
+    
     GruposModule,
     ColoniasModule,
     LocalidadModule,

@@ -13,4 +13,8 @@ class Localidad extends Model
     protected $primaryKey = 'id';
     public $incrementing = false;
 
+
+    public function municipio(){
+        return $this->belongsto('App\Models\municipio','catalogo_municipio_id');
+    }
 }
