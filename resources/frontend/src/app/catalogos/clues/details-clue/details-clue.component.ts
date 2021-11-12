@@ -7,7 +7,7 @@ import { Router, ActivatedRoute  } from '@angular/router';
 
 
 export interface FormDialogData {
-  clues: any;
+  id: any;
 }
 
 @Component({
@@ -28,6 +28,10 @@ export class DetailsComponentClue implements OnInit {
 
   ) {}
 
+  lat: any;
+  long: any;
+  zoom: number = 10;
+
   public dialog: MatDialog;
   panelAtencion     = false;
   panelSeguimiento  = false;
@@ -36,16 +40,22 @@ export class DetailsComponentClue implements OnInit {
 
   IdActual: number;
 
-  dataPaciente: any;
+  dataClues: any = [];
 
   isLoading:boolean = false;
+
+  iconMap = {
+    url: '../../assets/icons/markerHospital_red.png',
+    iconHeigh: 10,
+    scaledSize: {height: 60, width: 60}
+  }
 
   ngOnInit() {
 
 
-    console.log("LOS DATOS", this.data);
+    console.log("LOS DATOS", this.data.id);
 
-    this.cargarDatosClue(this.data.clues);
+    this.cargarDatosClue(this.data.id);
   }
 
 
@@ -62,11 +72,22 @@ export class DetailsComponentClue implements OnInit {
 
     this.cluesService.verInfoClue(id,params).subscribe(
       response =>{
-        console.log("en el response del DIALOG",response.data);
+        console.log("en el response del DIALOG",response);
         
-        this.dataPaciente = response.data;
 
-        console.log(this.dataPaciente);
+        var index = 0;
+        response.data.regionalizaciones.forEach(element => {
+
+         response.data.regionalizaciones[index].catalogo_localidad.latitud =  parseFloat(element.catalogo_localidad.latitud);
+         response.data.regionalizaciones[index].catalogo_localidad.longitud =  parseFloat(element.catalogo_localidad.longitud);
+          index++;
+        });
+        
+        this.dataClues       = response.data;
+        this.lat             = parseFloat(this.dataClues.latitud);
+        this.long            = parseFloat(this.dataClues.longitud);
+
+        console.log(this.dataClues.regionalizaciones);
 
         this.isLoading = false;
       });
