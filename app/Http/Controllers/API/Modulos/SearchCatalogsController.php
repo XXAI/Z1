@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Microrregion;
 use App\Models\Localidad;
+use App\Models\TipoCamino;
 
 
 
@@ -101,6 +102,7 @@ class SearchCatalogsController extends Controller
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
     }
+    
 
     public function getCluesAutocomplete(Request $request)
     {
@@ -110,8 +112,8 @@ class SearchCatalogsController extends Controller
 
         try{
             $parametros = $request->all();
-            $unidades = Cr::select('cr', 'descripcion', 'clues', 'area', 'descripcion_actualizada')->with('clues');
-            $access = $this->getUserAccessData();
+            $unidades = Clues::select('id', 'descripcion');
+            //$access = $this->getUserAccessData();
             //Filtros, busquedas, ordenamiento
             if(isset($parametros['query']) && $parametros['query']){
                 $unidades = $unidades->where(function($query)use($parametros){
@@ -146,6 +148,7 @@ class SearchCatalogsController extends Controller
                 
                 'microrregiones'      => Microrregion::getModel(),
                 'localidades'         => Localidad::getModel(),
+                'tipos_caminos'       => TipoCamino::getModel(),
 
             ];
 

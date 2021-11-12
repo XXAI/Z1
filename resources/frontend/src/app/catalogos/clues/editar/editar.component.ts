@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { SharedService } from 'src/app/shared/shared.service';
 import { CluesService } from '../../clues.service';
 import { Router, ActivatedRoute  } from '@angular/router';
@@ -23,6 +23,8 @@ export class EditarComponent implements OnInit {
   clues:any;
   estatus_clues:boolean = false;
   datos_clues:any;
+  filteredClues: Observable<any[]>;
+  cluesIsLoading: boolean = false;
 
   catalogos: any = {};
   filteredCatalogs:any = {};
@@ -68,6 +70,9 @@ export class EditarComponent implements OnInit {
     'microrregiones': [''],
     'localidad_id': ['',Validators.required],
     'localidades': [''],
+    'tipo_camino_id': [''],
+    'tipos_regionalizacion_id':[''],
+    'regionalizaciones':this.fb.array([]),
 
     
     // 'responsable_id': [''],
@@ -110,6 +115,7 @@ export class EditarComponent implements OnInit {
     // let fecha_inicio = new Date(2020, 0, 1);
     // this.minDate = fecha_inicio;
     this.IniciarCatalogos(null);
+    this.buscarClue(0);
 
   }
 
@@ -119,6 +125,7 @@ export class EditarComponent implements OnInit {
     let carga_catalogos = [
       {nombre:'microrregiones',orden:'descripcion'},
       {nombre:'localidades',orden:'descripcion'},
+      {nombre:'tipos_caminos',orden:'descripcion'},
     ];
 
     this.cluesService.obtenerCatalogos(carga_catalogos).subscribe(
@@ -126,8 +133,9 @@ export class EditarComponent implements OnInit {
 
         this.catalogos = response.data;
 
-        this.filteredCatalogs['microrregiones']    = this.cluesForm.get('microrregion_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'microrregiones','descripcion')));
-        this.filteredCatalogs['localidades']       = this.cluesForm.get('localidad_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'localidades','descripcion')));
+        this.filteredCatalogs['microrregiones']           = this.cluesForm.get('microrregion_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'microrregiones','descripcion')));
+        this.filteredCatalogs['localidades']              = this.cluesForm.get('localidad_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'localidades','descripcion')));
+        this.filteredCatalogs['tipos_caminos']            = this.cluesForm.get('tipo_camino_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'tipos_caminos','descripcion')));        
 
 
         if(obj)
@@ -163,6 +171,63 @@ export class EditarComponent implements OnInit {
 
   displayFn(value: any, valueLabel: string){
     return value ? value[valueLabel] : value;
+  }
+
+  formValue(){
+    console.log("form", this.cluesForm.controls['regionalizaciones']['controls']);
+  }
+
+  initDatosRegion() {
+
+    return this.fb.group({
+      clues: [this.clues.clues, [Validators.required]],
+      catalogo_localidad_id: ['', [Validators.required]],
+      catalogo_tipo_camino_id: ['', [Validators.required]],
+      catalogo_tipo_regionalizacion_id: ['', [Validators.required]],
+      distancia: [''],
+      tiempo: [''],
+
+
+      // sub_categorias_cie10: this.fb.array([
+      //   this.initSubcatagoria()
+      // ])
+    })
+  }
+
+  buscarClue(index){
+
+    console.log("aca",index);
+
+    this.cluesForm.controls['regionalizaciones']['controls'][index]['controls'].clues.valueChanges
+    .pipe(
+      debounceTime(300),
+      tap( () => {
+        this.cluesIsLoading = true;
+      } ),
+      switchMap(value => {
+          if(!(typeof value === 'object')){
+            return this.cluesService.buscarClue({query:value}).pipe(
+              finalize(() => this.cluesIsLoading = false )
+            );
+          }else{
+            this.cluesIsLoading = false;
+            return [];
+          }
+        }
+      ),
+    ).subscribe(items => this.filteredClues = items);
+
+
+  }
+
+  agregarRegion() {
+    const a: FormArray = <FormArray>this.cluesForm.get('regionalizaciones');
+    a.controls.push(this.initDatosRegion());
+  }
+
+  quitarRegion(i: number) {
+    const control = <FormArray>this.cluesForm.get('regionalizaciones');
+    control.removeAt(i);
   }
 
   loadCluesData(id:any)

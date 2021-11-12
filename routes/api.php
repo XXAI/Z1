@@ -44,6 +44,7 @@ Route::group(['middleware'=>'auth'],function($router){
     /* Apis del sistema */
     Route::apiResource('clues',         'API\Modulos\CluesController');
     Route::get('ver-info-clue/{id}',    'API\Modulos\CluesController@infoClue');
+    Route::get('busqueda-clues',    'API\Modulos\SearchCatalogsController@getCluesAutocomplete');
     Route::apiResource('profile',       'API\ProfileController')->only([ 'show', 'update']);
 });
 

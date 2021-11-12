@@ -13,6 +13,7 @@ export class CluesService {
   url_obtener_catalogos   =  `${environment.base_url}/catalogos`;
   url_responsable         = `${environment.base_url}/busqueda-responsable`;
   url_info_clue       = `${environment.base_url}/ver-info-clue/`;
+  url_clue_catalogo     = `${environment.base_url}/busqueda-clues`;
 
   constructor(private http: HttpClient) { }
 
@@ -63,4 +64,13 @@ export class CluesService {
       })
     );
   };
+
+  buscarClue(payload):Observable<any>{
+    return this.http.get<any>(this.url_clue_catalogo,{params:payload}).pipe(
+      map( response => {
+        return response.data;
+      })
+    );
+  };
+
 }
