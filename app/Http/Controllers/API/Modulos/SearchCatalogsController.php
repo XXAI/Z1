@@ -7,7 +7,9 @@ use Illuminate\Http\Response as HttpResponse;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\Clues;
 use App\Models\Microrregion;
+use App\Models\Municipio;
 use App\Models\Localidad;
 use App\Models\TipoCamino;
 
@@ -102,7 +104,6 @@ class SearchCatalogsController extends Controller
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
     }
-    
 
     public function getCluesAutocomplete(Request $request)
     {
@@ -112,19 +113,14 @@ class SearchCatalogsController extends Controller
 
         try{
             $parametros = $request->all();
-            $unidades = Clues::select('id', 'descripcion');
-            //$access = $this->getUserAccessData();
+            $unidades = Clues::select('clues', 'descripcion');
+            
             //Filtros, busquedas, ordenamiento
             if(isset($parametros['query']) && $parametros['query']){
                 $unidades = $unidades->where(function($query)use($parametros){
                     return $query->where('descripcion','LIKE','%'.$parametros['query'].'%')
                                 ->orWhere('clues','LIKE','%'.$parametros['query'].'%');
                 });
-            }
-
-            if(!$access->is_admin)
-            {
-                $unidades = $unidades->whereIn("cr", $access->lista_cr);
             }
 
             if(isset($parametros['page'])){
@@ -146,7 +142,9 @@ class SearchCatalogsController extends Controller
         try {
             $listado_catalogos = [
                 
+                'clues'               => Clues::getModel(),
                 'microrregiones'      => Microrregion::getModel(),
+                'municipios'          => Municipio::getModel(),
                 'localidades'         => Localidad::getModel(),
                 'tipos_caminos'       => TipoCamino::getModel(),
 

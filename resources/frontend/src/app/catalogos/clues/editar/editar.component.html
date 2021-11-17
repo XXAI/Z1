@@ -155,7 +155,7 @@
                         </div>
                         <br>
                         <ng-container>
-                            <button mat-raised-button (click)="agregarRegion(); formValue();" color="primary"><mat-icon>add_circle_outline</mat-icon> Agregar Region</button>
+                            <button mat-raised-button (click)="showRegionesDialog();" color="primary"><mat-icon>add_circle_outline</mat-icon> Agregar Region</button>
                         </ng-container>
                         <br>
                         <br>
@@ -168,22 +168,6 @@
                                 <mat-card-content>
 
                                     <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
-
-
-                                        <mat-form-field fxFlex fxFlex.xs="100" >
-                                            <input matInput placeholder="Unidad Medica" [matAutocomplete]="cluesAutocomplete" formControlName='clues' (click)="buscarClue(i);">
-                                            <mat-autocomplete #cluesAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('descripcion')">
-                                                <mat-option *ngIf="cluesIsLoading" class="is-loading" ><mat-spinner diameter="25"></mat-spinner></mat-option>
-                                                <ng-container *ngIf="!cluesIsLoading">
-                                                    <mat-option *ngFor="let item of filteredClues" [value]="item">
-                                                        ({{ item.clues }}) - {{ item.descripcion }}
-                                                    </mat-option>
-                                                </ng-container>
-                                            </mat-autocomplete>
-                                            <input type="hidden" formControlName='clues'>
-                                        </mat-form-field>
-
-
 
                                         <mat-form-field fxFlex appearance="fill"  *ngIf="!catalogos['localidades']">
                                             <mat-label>Localidad:</mat-label>
@@ -272,7 +256,7 @@
                                             </mat-error>
                                         </mat-form-field>
 
-                                        <button mat-icon-button color="warn" matTooltip="Quitar Región" (click)="quitarRegion(i)"  ><mat-icon>delete</mat-icon></button>
+                                        <!-- <button mat-icon-button color="warn" matTooltip="Quitar Región" (click)="quitarRegion(i)"  ><mat-icon>delete</mat-icon></button> -->
 
 
                                     </div>

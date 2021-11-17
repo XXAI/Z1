@@ -4,10 +4,12 @@ import { SharedService } from 'src/app/shared/shared.service';
 import { CluesService } from '../../clues.service';
 import { Router, ActivatedRoute  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { Observable, combineLatest, of, forkJoin } from 'rxjs';
 import { startWith, map, throwIfEmpty, debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ConfirmActionDialogComponent } from '../../../utils/confirm-action-dialog/confirm-action-dialog.component';
+import { RegionesDialogComponent } from '../regiones-dialog/regiones-dialog.component';
 
 @Component({
   selector: 'app-editar',
@@ -19,6 +21,10 @@ export class EditarComponent implements OnInit {
    
   lat = 16.75;
   long = -93.1167;
+
+  mediaSize: string;
+  datosRegion:any = [];
+  dataSourceRegiones:any = new MatTableDataSource(this.datosRegion);
 
   clues:any;
   estatus_clues:boolean = false;
@@ -86,25 +92,6 @@ export class EditarComponent implements OnInit {
       if(this.clues){
         this.loadCluesData(this.clues);
       }
-
-      // this.cluesForm.get('responsable').valueChanges
-      //   .pipe(
-      //     debounceTime(300),
-      //     tap( () => {
-      //       this.responsableIsLoading = true;
-      //     } ),
-      //     switchMap(value => {
-      //         if(!(typeof value === 'object')){
-      //           return this.cluesService.buscarResponsable({busqueda_empleado:value}).pipe(
-      //             finalize(() => this.responsableIsLoading = false )
-      //           );
-      //         }else{
-      //           this.responsableIsLoading = false;
-      //           return [];
-      //         }
-      //       }
-      //     ),
-      //   ).subscribe(items => this.filteredResponsable = items);
     });
 
     let fecha = new Date('YYYY-MM-D');
@@ -115,7 +102,6 @@ export class EditarComponent implements OnInit {
     // let fecha_inicio = new Date(2020, 0, 1);
     // this.minDate = fecha_inicio;
     this.IniciarCatalogos(null);
-    this.buscarClue(0);
 
   }
 
@@ -173,62 +159,51 @@ export class EditarComponent implements OnInit {
     return value ? value[valueLabel] : value;
   }
 
-  formValue(){
-    console.log("form", this.cluesForm.controls['regionalizaciones']['controls']);
-  }
 
-  initDatosRegion() {
-
-    return this.fb.group({
-      clues: [this.clues.clues, [Validators.required]],
-      catalogo_localidad_id: ['', [Validators.required]],
-      catalogo_tipo_camino_id: ['', [Validators.required]],
-      catalogo_tipo_regionalizacion_id: ['', [Validators.required]],
-      distancia: [''],
-      tiempo: [''],
-
-
-      // sub_categorias_cie10: this.fb.array([
-      //   this.initSubcatagoria()
-      // ])
-    })
-  }
-
-  buscarClue(index){
-
-    console.log("aca",index);
-
-    this.cluesForm.controls['regionalizaciones']['controls'][index]['controls'].clues.valueChanges
-    .pipe(
-      debounceTime(300),
-      tap( () => {
-        this.cluesIsLoading = true;
-      } ),
-      switchMap(value => {
-          if(!(typeof value === 'object')){
-            return this.cluesService.buscarClue({query:value}).pipe(
-              finalize(() => this.cluesIsLoading = false )
-            );
+  showRegionesDialog(index_editable = null){
+    let configDialog = {};
+    let index = index_editable;
+    
+    if(this.mediaSize == 'xs'){
+      configDialog = {
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        height: '100%',
+        width: '100%',
+        data:{scSize:this.mediaSize, catalogos: this.catalogos, editable: this.datosRegion[index_editable] },
+      };
+    }else{
+      
+      configDialog = {
+        width: '95%',
+        data:{ catalogos: this.catalogos, editable: this.datosRegion[index_editable] },
+      }
+    }
+    const dialogRef = this.dialog.open(RegionesDialogComponent, configDialog);
+    dialogRef.afterClosed().subscribe(valid => {
+      if(valid){
+        if(valid.estatus){
+         
+          if(index != null)
+          {
+            this.datosRegion[index] = valid.datos;  
           }else{
-            this.cluesIsLoading = false;
-            return [];
+            if(this.datosRegion.length == 4)
+            {
+              let mensaje = "Solo se puede agregar hasta 4 grados escolares";
+              this.sharedService.showSnackBar(mensaje, "ERROR", 3000);
+            }else{
+              this.datosRegion.push(valid.datos);
+            }
+            
           }
+          this.dataSourceRegiones.data = this.datosRegion;
+          
         }
-      ),
-    ).subscribe(items => this.filteredClues = items);
-
-
+      }
+    });
   }
 
-  agregarRegion() {
-    const a: FormArray = <FormArray>this.cluesForm.get('regionalizaciones');
-    a.controls.push(this.initDatosRegion());
-  }
-
-  quitarRegion(i: number) {
-    const control = <FormArray>this.cluesForm.get('regionalizaciones');
-    control.removeAt(i);
-  }
 
   loadCluesData(id:any)
   {
