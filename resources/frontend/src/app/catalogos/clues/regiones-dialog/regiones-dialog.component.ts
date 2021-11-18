@@ -41,20 +41,24 @@ export class RegionesDialogComponent implements OnInit {
   ) { }
 
   public RegionesForm = this.fb.group({
+    clue: [''],
     clues: ['', [Validators.required]],
+    municipio:[''],
     catalogo_municipio_id: [''],
+    localidad:[''],
     catalogo_localidad_id: ['', [Validators.required]],
     catalogo_tipo_camino_id: ['', [Validators.required]],
+    microrregion:[''],
     catalogo_tipo_regionalizacion_id: ['', [Validators.required]],
     distancia: [''],
     tiempo: [''],
   });
 
   ngOnInit() {
-    this.cargarBuscadores();
+    console.log("DATOS", this.data);
     //this.cargarGrado();
     this.IniciarCatalogos(null);
-    this.RegionesForm.patchValue({cedula: 0});
+    //this.RegionesForm.patchValue({cedula: 0});
     if(this.data.editable != null)
     {
       this.cargarEditable();
@@ -77,9 +81,12 @@ export class RegionesDialogComponent implements OnInit {
 
         this.catalogos = response.data;
 
-        this.filteredCatalogs['municipios']              = this.RegionesForm.get('catalogo_municipio_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'municipios','descripcion')));
-        this.filteredCatalogs['microrregiones']          = this.RegionesForm.get('catalogo_tipo_regionalizacion_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'microrregiones','descripcion')));
-        this.filteredCatalogs['tipos_caminos']           = this.RegionesForm.get('catalogo_tipo_camino_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'tipos_caminos','descripcion')));        
+        this.filteredCatalogs['municipios']             = this.RegionesForm.get('catalogo_municipio_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'municipios','descripcion')));
+        this.filteredCatalogs['microrregiones']         = this.RegionesForm.get('catalogo_tipo_regionalizacion_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'microrregiones','descripcion')));
+        this.filteredCatalogs['tipos_caminos']          = this.RegionesForm.get('catalogo_tipo_camino_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'tipos_caminos','descripcion')));
+        this.filteredCatalogs['localidades']            = this.RegionesForm.get('catalogo_localidad_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'localidades','descripcion')));
+        this.filteredCatalogs['clues']                  = this.RegionesForm.get('clues').valueChanges.pipe(startWith(''),map(value => this._filter(value,'clues','descripcion')));
+
 
 
         // if(obj)
@@ -89,12 +96,12 @@ export class RegionesDialogComponent implements OnInit {
         //    this.cluesForm.get('localidad_id').setValue(obj.catalogo_localidad);
         //   //this.valor_unidad = parseInt(obj.tipo_unidad_id);
         // }
-        this.isLoading = false; 
+        this.isLoading = false;
       } 
     );
 
     
-    console.log(this.catalogos);
+    console.log("CATALOGOS",this.catalogos);
 
   }
 
@@ -120,98 +127,132 @@ export class RegionesDialogComponent implements OnInit {
     return value ? value[valueLabel] : value;
   }
 
+  checkAutocompleteValue(field_name) {
+    setTimeout(() => {
+      if (typeof(this.RegionesForm.get(field_name).value) != 'object') {
+        this.RegionesForm.get(field_name).reset();
+        if(field_name != 'catalogo_localidad_id'){
+          this.catalogos['localidades'] = false;
+          this.actualizarValidacionesCatalogos('localidades');  
+        }
+      } 
+    }, 300);
+  }
+
+  cargarLocalidades(event){
+    
+    this.isLoading = true;
+    let municipio = event.option.value;
+
+    let carga_catalogos = [
+      {nombre:'localidades',orden:'descripcion',filtro_id:{campo:'catalogo_municipio_id',valor:municipio.id}},
+    ];
+    this.catalogos['localidades'] = false;
+    this.RegionesForm.get('catalogo_localidad_id').reset();
+    this.RegionesForm.get('localidad').reset();
+
+    this.cluesService.obtenerCatalogos(carga_catalogos).subscribe(
+      response => {
+        if(response.data['localidades'].length > 0){
+          this.catalogos['localidades'] = response.data['localidades'];
+        }
+        else{
+         this.RegionesForm.get('localidad').disable();
+         this.RegionesForm.get('catalogo_localidad_id').disable();
+        }
+        
+        this.actualizarValidacionesCatalogos('localidades');
+        this.isLoading = false;
+      }
+    );
+  }
+
+  cargarClues(event){
+
+    this.isLoading = true;
+    let clues = event.option.value;
+
+    let carga_catalogos = [
+      {nombre:'clues',orden:'descripcion',filtro_id:{campo:'catalogo_localidad_id',valor:clues.id}},
+    ];
+
+    this.catalogos['clues'] = false;
+    this.RegionesForm.get('clue').reset();
+    this.RegionesForm.get('clues').reset();
+
+    this.cluesService.obtenerCatalogos(carga_catalogos).subscribe(
+      response => {
+        if(response.data['clues'].length > 0){
+          this.catalogos['clues'] = response.data['clues'];
+          this.actualizarValidacionesCatalogos('clues');
+        }else{
+         this.RegionesForm.get('clue').disable();
+         this.RegionesForm.get('clues').disable();
+        }
+        
+        this.isLoading = false;
+      }
+    );
+
+    console.log(this.RegionesForm);
+
+  }
+
+  actualizarValidacionesCatalogos(catalogo){
+    switch (catalogo) {
+      case 'municipios':
+        if(this.catalogos['municipios']){
+          this.RegionesForm.get('municipio').setValidators(null);
+          this.RegionesForm.get('catalogo_municipio_id').setValidators([Validators.required]);
+        }else{
+          this.RegionesForm.get('municipio').setValidators([Validators.required]);
+          this.RegionesForm.get('catalogo_municipio_id').setValidators(null);
+        }
+          this.RegionesForm.get('municipio').updateValueAndValidity();
+          this.RegionesForm.get('catalogo_municipio_id').updateValueAndValidity();
+        break;
+      case 'localidades':
+        if(this.catalogos['localidades']){
+          this.RegionesForm.get('localidad').setValidators(null);
+          this.RegionesForm.get('catalogo_localidad_id').setValidators([Validators.required]);
+        }else{
+          this.RegionesForm.get('localidad').setValidators([Validators.required]);
+          this.RegionesForm.get('catalogo_localidad_id').setValidators(null);
+        }    
+         this.RegionesForm.get('localidad').updateValueAndValidity();
+         this.RegionesForm.get('catalogo_localidad_id').updateValueAndValidity();
+        break;
+      case 'clues':
+        if(this.catalogos['clues']){
+          this.RegionesForm.get('clue').setValidators(null);
+          this.RegionesForm.get('clues').setValidators([Validators.required]);
+        }else{
+          this.RegionesForm.get('clue').setValidators([Validators.required]);
+          this.RegionesForm.get('clues').setValidators(null);
+        }    
+          this.RegionesForm.get('clue').updateValueAndValidity();
+          this.RegionesForm.get('clues').updateValueAndValidity();
+        break;
+      default:
+        break;
+    }
+  }
+
   cargarEditable():void
   {
-    this.RegionesForm.patchValue(this.data.editable);
-    this.texto_grado_seleccionado = this.data.editable.grado_academico.descripcion;
-    this.activar_otro_titulo(!this.data.editable.otro_estudio);
-    this.activar_otro_institucion(!this.data.editable.otro_institucion);
-    this.tiene_cedula(this.data.editable.cedula_profesional);
-    this.tiene_cedula(this.data.editable.cedula);
+    console.log("aaaaa",this.data.editable);
+    // this.RegionesForm.patchValue(this.data.editable);
+    // this.texto_grado_seleccionado = this.data.editable.grado_academico.descripcion;
+    // this.activar_otro_titulo(!this.data.editable.otro_estudio);
+    // this.activar_otro_institucion(!this.data.editable.otro_institucion);
+    // this.tiene_cedula(this.data.editable.cedula_profesional);
+    // this.tiene_cedula(this.data.editable.cedula);
   }
 
   cargarGrado():void
   {
     this.catalogos = this.data.catalogos;
-    console.log(this.catalogos);
-  }
 
-  
-  cargarBuscadores():void
-  { 
-
-    this.RegionesForm.get('clues').valueChanges
-    .pipe(
-      debounceTime(300),
-      tap( () => {
-        this.cluesIsLoading = true;
-      } ),
-      switchMap(value => {
-          if(!(typeof value === 'object')){
-            return this.cluesService.buscarClue({query:value}).pipe(
-              finalize(() => this.cluesIsLoading = false )
-            );
-          }else{
-            this.cluesIsLoading = false;
-            return [];
-          }
-        }
-      ),
-    ).subscribe(items => this.filteredClues = items);
-      // this.RegionesForm.get('clues').valueChanges
-      // .pipe(
-      //   debounceTime(300),
-      //   tap( () => {
-      //     //this.element.loading = true;
-      //       this.capacitacionIsLoading = true; 
-      //   } ),
-      //   switchMap(value => {
-      //       if(!(typeof value === 'object')){
-      //         this.capacitacionIsLoading = false; 
-      //         let grado = this.RegionesForm.get('grado_academico_id').value;
-      //         let descripcion = this.RegionesForm.get('nombre_estudio').value;
-      //         if( grado != '' && descripcion!="")
-      //         {
-      //           return this.cluesService.buscarClue({tipo: 2, query:value, grado_academico:grado }).pipe(finalize(() => this.capacitacionIsLoading = false ));
-      //         }else{
-      //           return [];
-      //         }
-               
-      //       }else{
-      //         this.capacitacionIsLoading = false; 
-      //         return [];
-      //       }
-      //     }
-      //   ),
-      // ).subscribe(items => this.filteredTitulo = items);
-      
-      // this.RegionesForm.get('institucion').valueChanges
-      // .pipe(
-      //   debounceTime(300),
-      //   tap( () => {
-      //     //this.element.loading = true;
-      //       this.institucionIsLoading = true; 
-      //   } ),
-      //   switchMap(value => {
-      //       if(!(typeof value === 'object')){
-      //         this.institucionIsLoading = false; 
-      //         let descripcion = this.RegionesForm.get('institucion').value;
-      //         if( descripcion!="")
-      //         {
-               
-      //           return this.cluesService.buscarClue({tipo: 3, query:value}).pipe(finalize(() => this.institucionIsLoading = false ));
-      //         }else{
-      //           return [];
-      //         }
-               
-      //       }else{
-      //         this.institucionIsLoading = false; 
-      //         return [];
-      //       }
-      //     }
-      //   ),
-      // ).subscribe(items => this.filteredInstitucion = items);
-      
   }
 
   tiene_cedula(valor):void{

@@ -170,17 +170,18 @@ export class EditarComponent implements OnInit {
         maxHeight: '100vh',
         height: '100%',
         width: '100%',
-        data:{scSize:this.mediaSize, catalogos: this.catalogos, editable: this.datosRegion[index_editable] },
+        data:{scSize:this.mediaSize, editable: this.datosRegion[index_editable] },
       };
     }else{
       
       configDialog = {
         width: '95%',
-        data:{ catalogos: this.catalogos, editable: this.datosRegion[index_editable] },
+        data:{ editable: this.datosRegion[index_editable] },
       }
     }
     const dialogRef = this.dialog.open(RegionesDialogComponent, configDialog);
     dialogRef.afterClosed().subscribe(valid => {
+      console.log(valid);
       if(valid){
         if(valid.estatus){
          
