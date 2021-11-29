@@ -13,6 +13,7 @@ export class PersonalExternoService {
   url                     = `${environment.base_url}/trabajador-externo`;
   url_catalogos           = `${environment.base_url}/catalogos`;
   url_clues               = `${environment.base_url}/catalogo-clues`;
+  url_localidad           = `${environment.base_url}/catalogo-localidad`;
 
   constructor(private http: HttpClient) { }
 
@@ -47,17 +48,16 @@ export class PersonalExternoService {
       })
     );
   }
-
-  /*getCatalogosMunicipio(distrito:any):Observable<any> {
-    return this.http.get<any>(this.url_catalogosMunicipio+"/"+distrito,{}).pipe(
+  
+  buscarLocalidad(obj:any):Observable<any> {
+    return this.http.get<any>(this.url_localidad,{params: obj}).pipe(
       map( response => {
         return response;
       })
     );
   }
 
-  */
-  
+
   saveTrabajador(payload:any):Observable<any> {
     return this.http.post<any>(this.url, payload).pipe(
       map( (response: any) => {        

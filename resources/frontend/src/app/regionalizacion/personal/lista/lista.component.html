@@ -1,0 +1,169 @@
+<section class="profile">
+    <div fxLayout="row" fxLayoutAlign="space-evenly center">
+        <section fxFlex="95" fxLayout="column" fxLayoutAlign="center">
+            <div class="data-loading-shade" *ngIf="isLoading">
+                <mat-spinner></mat-spinner>
+            </div>
+            <mat-card fxFlex.xs="100%" fxFlex="90%">
+                <div fxLayout="row" fxLayout.xs="column">
+                    <div fxFlex fxLayout="row wrap">
+                        <mat-form-field fxFill appearance="outline">
+                            <mat-label>Buscar</mat-label>
+                            <input matInput [(ngModel)]="searchQuery" (keyup.escape)="cleanSearch()" (keyup.enter)="applyFilter()" placeholder="Buscar">
+                            <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
+                                <mat-icon>close</mat-icon>
+                            </button>
+
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="none" fxFlex.xs="100">
+                        <div fxFlex></div>
+                        <section class="search-button">
+                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
+                                <mat-icon>search</mat-icon> Buscar
+                            </button>
+
+                            <button mat-raised-button color="primary" (click)="agregar()"><mat-icon>add_circle</mat-icon> Agregar Regionalización</button>
+                        </section>
+                    </div>
+                </div>
+            </mat-card>
+            <mat-tab-group>
+                <mat-tab label="PERSONAL SALUD">
+                    <mat-card fxFlex.xs="100%" fxFlex="100%">
+                        <mat-divider [inset]="true"></mat-divider>
+
+                        <div class="data-container ">
+                            <div class="data-table-container">
+                                <table #dataTable mat-table [dataSource]="dataSource" class="data-table" matSort>
+                                    <!-- ID Column -->
+                                    <ng-container matColumnDef="nombre">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRE </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <b>{{ row.nombre }} {{ row.apellido_paterno }} {{ row.apellido_materno }}</b>
+                                            <div style="font-size: 8pt;"> {{ row.rfc }}</div>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="tipo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>TIPO PERSONAL </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <span *ngIf="row.personal_salud">
+                                                {{ row.personal_salud.descripcion }}
+                                            </span>
+                                            <span *ngIf="!row.personal_salud">
+                                                SIN ASIGNAR
+                                            </span>
+                                            <!--{{ row.regionalizaciones_personal.length }}-->
+                                        </td>
+                                    </ng-container>
+                                    <!-- Username Column  -->
+                                    <ng-container matColumnDef="unidad">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>UNIDAD</th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <b>{{ row.rel_rh.clues.descripcion}}</b>
+                                            <div style="font-size: 8pt;"> {{ row.rel_rh.clues.clues }}</div>
+                                        </td>
+                                    </ng-container>
+                                    <!-- Username Column  -->
+
+
+                                    <ng-container matColumnDef="actions">
+                                        <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
+                                        <td mat-cell *matCellDef="let row; let i = index">
+                                            <button mat-mini-fab color="primary" mat-stroked-button [matMenuTriggerFor]="menu">
+                                                <mat-icon>menu</mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu">
+                                                <button mat-menu-item (click)="editar(row, 1)"><mat-icon color="primary">edit</mat-icon>Editar</button>
+                                                <button mat-menu-item (click)="eliminar(row, 1)"><mat-icon color="warn">close</mat-icon>Eliminar</button>
+                                            </mat-menu>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="noResultsFound">
+                                        <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                                            No se encontraron registros
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                    <tr mat-row [ngClass]="{'selected-item': i==selectedItemIndex}" *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+
+                                    <tr mat-footer-row *matFooterRowDef="['noResultsFound']" class="not-results-found" [ngClass]="{'hide':!(dataSource!=null && dataSource.length==0)}"></tr>
+                                </table>
+                            </div>
+                            <mat-paginator #paginator [pageSize]="pageSize" [pageIndex]="currentPage" [length]="resultsLength" [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons (page)="pageEvent = loadData($event)"></mat-paginator>
+                        </div>
+                    </mat-card>
+                </mat-tab>
+                <mat-tab label="PERSONAL EXTERNO">
+                    <mat-card fxFlex.xs="100%" fxFlex="100%">
+                        <mat-divider [inset]="true"></mat-divider>
+
+                        <div class="data-container ">
+                            <div class="data-table-container">
+                                <table #dataTable mat-table [dataSource]="dataSourceExterno" class="data-table" matSort>
+                                    <!-- ID Column -->
+                                    <ng-container matColumnDef="nombre">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRE </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <b>{{ row.nombre }} {{ row.apellido_paterno }} {{ row.apellido_materno }}</b>
+                                            <div style="font-size: 8pt;"> {{ row.rfc }}</div>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="tipo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>TIPO PERSONAL </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <span *ngIf="row.personal_externo">
+                                                {{ row.personal_externo.descripcion }}
+                                            </span>
+                                            <span *ngIf="!row.personal_externo">
+                                                SIN ASIGNAR
+                                            </span>
+                                        </td>
+                                    </ng-container>
+                                    <!-- Username Column  -->
+                                    <ng-container matColumnDef="localidad">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>LOCALIDAD</th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <b>{{ row.rel_rh.localidad.descripcion}}</b>
+                                            <div style="font-size: 8pt;">{{ row.rel_rh.localidad.municipio.descripcion}} </div>
+                                        </td>
+                                    </ng-container>
+                                    <!-- Username Column  -->
+
+
+                                    <ng-container matColumnDef="actions">
+                                        <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
+                                        <td mat-cell *matCellDef="let row; let i = index">
+                                            <button mat-mini-fab color="primary" mat-stroked-button [matMenuTriggerFor]="menu">
+                                                <mat-icon>menu</mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu">
+                                                <button mat-menu-item (click)="editar(row, 2)"><mat-icon color="primary">edit</mat-icon>Editar</button>
+                                                <button mat-menu-item (click)="eliminar(row, 2)"><mat-icon color="warn">close</mat-icon>Eliminar</button>
+                                            </mat-menu>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="noResultsFound">
+                                        <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedExternoColumns.length">
+                                            No se encontraron registros
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedExternoColumns; sticky: true"></tr>
+                                    <tr mat-row [ngClass]="{'selected-item': i==selectedItemIndex}" *matRowDef="let row; let i = index; columns: displayedExternoColumns;"></tr>
+
+                                    <tr mat-footer-row *matFooterRowDef="['noResultsFound']" class="not-results-found" [ngClass]="{'hide':!(dataSourceExterno!=null && dataSourceExterno.length==0)}"></tr>
+                                </table>
+                            </div>
+                            <mat-paginator #paginator [pageSize]="pageSize" [pageIndex]="currentPage" [length]="resultsLength" [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons (page)="pageEvent = loadData($event)"></mat-paginator>
+                        </div>
+                    </mat-card>
+                </mat-tab>
+            </mat-tab-group>
+
+        </section>
+    </div>
+</section>

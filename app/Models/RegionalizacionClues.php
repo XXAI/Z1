@@ -26,13 +26,4 @@ class RegionalizacionClues extends Model
     public function catalogo_tipo_camino(){
         return $this->belongsTo('App\Models\TipoCamino','catalogo_tipo_camino_id','id');
     }
-
-
-    // public function cr(){
-    //     return $this->hasMany('App\Models\Cr','clues','clues');
-    // }
-
-    // public function responsable(){
-    //     return $this->hasOne('App\Models\Empleado','id','responsable_id');
-    // }
 }

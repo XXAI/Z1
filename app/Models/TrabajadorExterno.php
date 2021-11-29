@@ -19,11 +19,15 @@ class TrabajadorExterno extends Model
         return $this->belongsTo('App\Models\Lengua');
     }
     
-    public function UR(){
-        return $this->belongsTo('App\Models\UR');
+    public function rel_regionalizacion_rh(){
+        return $this->hasOne('App\Models\RelRegionalizacionRh')->where("tipo_trabajador_id", "2");
     }
 
-    public function rel_regionalizacion_rh(){
-        return $this->hasOne('App\Models\RelRegionalizacionRh')->where("tipo_trabajador_id", "1");
+    public function personal_externo(){
+        return $this->hasOne('App\Models\TipoTrabajador', "id","tipo_personal_id")->where("tipo", "2");
+    }
+
+    public function rel_rh(){
+        return $this->hasOne('App\Models\RelRegionalizacionRh', "trabajador_id", "id");
     }
 }

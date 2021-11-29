@@ -18,9 +18,9 @@ class CreateRegionalizacion extends Migration
             $table->string("clues", 15);
             $table->smallInteger("catalogo_localidad_id");
             $table->smallInteger("catalogo_tipo_camino_id");
-            $table->smallInteger("catalogo_tipo_regionalizacion_id");
+            //$table->smallInteger("catalogo_tipo_regionalizacion_id");
             $table->decimal("distancia", 15,2);
-            $table->time("tiempo");
+            $table->decimal("tiempo", 15,2);
             $table->timestamps();
             $table->softDeletes();
         });

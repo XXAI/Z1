@@ -15,6 +15,8 @@ export class CluesService {
   url_info_clue       = `${environment.base_url}/ver-info-clue/`;
   url_clue_catalogo     = `${environment.base_url}/busqueda-clues`;
 
+  url_localidad           = `${environment.base_url}/localidad`;
+
   constructor(private http: HttpClient) { }
 
   getCluesList(payload):Observable<any> {

@@ -17,4 +17,8 @@ class Localidad extends Model
     public function municipio(){
         return $this->belongsto('App\Models\municipio','catalogo_municipio_id');
     }
+
+    public function regionalizacion(){
+        return $this->belongsTo('App\Models\RegionalizacionClues', "id", "catalogo_localidad_id");
+    }
 }

@@ -1,0 +1,175 @@
+<h1 mat-dialog-title style="background-color: #3f51b5; color: white; padding: 5pt 10pt; border-bottom: 3px solid #CFCFCF; margin: 0pt;">REGIONALIZACIÓN</h1>
+<!--<hr style="border: 1px solid #3f51b5;">-->
+<div mat-dialog-content>
+    <mat-tab-group [(selectedIndex)]="indexTab">
+        <mat-tab label="REGISTRO">
+            <form [formGroup]="regionalizacionForm" >
+                <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                        <div fxFlex="100" fxFlex.xs="100">
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                                    <mat-label>MUNICIPIO</mat-label>
+                                    <mat-select formControlName="municipio_id" required >
+                                        <mat-option *ngFor="let item of catalogo['municipio']" [value]="item.id">
+                                            {{item.descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="regionalizacionForm.get('municipio_id').invalid && (regionalizacionForm.get('municipio_id').dirty || regionalizacionForm.get('municipio_id').touched)">
+                                        <span *ngIf="regionalizacionForm.get('municipio_id').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                                    <mat-label>LOCALIDAD</mat-label>
+                                    <input matInput placeholder="LOCALIDAD" [matAutocomplete]="localidadAutocomplete" formControlName='localidad_id'>
+                                    <mat-autocomplete #localidadAutocomplete="matAutocomplete" [displayWith]="displayLocalidadFn" [panelWidth]="'auto'">
+                                        <mat-option *ngIf="localidadIsLoading" class="is-loading"><mat-spinner diameter="25"></mat-spinner></mat-option>
+                                        <ng-container *ngIf="!localidadIsLoading">
+                                            <mat-option *ngFor="let item of filteredLocalidad" [value]="item">
+                                                [{{item.clave_localidad }}] {{ item.descripcion }}
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="regionalizacionForm.get('localidad_id').invalid && (regionalizacionForm.get('localidad_id').dirty || regionalizacionForm.get('localidad_id').touched)">
+                                        <span *ngIf="regionalizacionForm.get('localidad_id').errors.required">Campo obligatorio</span>
+                                    </mat-error> 
+                                </mat-form-field>
+                            </div>   
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">    
+                        <div fxFlex="100" fxFlex.xs="100">
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">     
+                                <mat-form-field fxFlex="33" fxFlex.xs="100"  appearance="fill">
+                                    <mat-label>TIPO CAMINO</mat-label>
+                                    <mat-select formControlName="catalogo_tipo_camino_id" required >
+                                        <mat-option *ngFor="let item of catalogo['camino']" [value]="item.id">
+                                            {{item.descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="regionalizacionForm.get('catalogo_tipo_camino_id').invalid && (regionalizacionForm.get('catalogo_tipo_camino_id').dirty || regionalizacionForm.get('catalogo_tipo_camino_id').touched)">
+                                        <span *ngIf="regionalizacionForm.get('catalogo_tipo_camino_id').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="33" fxFlex.xs="100"  appearance="fill">
+                                    <mat-label>DISTANCIA</mat-label>
+                                    <input matInput  autocomplete="off" formControlName="distancia" placeholder="DISTANCIA">
+                                    <mat-error *ngIf="regionalizacionForm.get('distancia').invalid && (regionalizacionForm.get('distancia').dirty || regionalizacionForm.get('distancia').touched)">
+                                        <span *ngIf="regionalizacionForm.get('distancia').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="33" fxFlex.xs="100"  appearance="fill">
+                                    <mat-label>TIEMPO</mat-label>
+                                    <input matInput autocomplete="off" formControlName="tiempo" placeholder="TIEMPO">
+                                    <mat-error *ngIf="regionalizacionForm.get('tiempo').invalid && (regionalizacionForm.get('tiempo').dirty || regionalizacionForm.get('tiempo').touched)">
+                                        <span *ngIf="regionalizacionForm.get('tiempo').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>    
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">    
+                        <div fxFlex="100" fxFlex.xs="100">
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px"> 
+                                <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!regionalizacionForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>  
+                                <button mat-raised-button (click)="cancelar()" *ngIf="edicion" color="warn" ><mat-icon>close</mat-icon> Cancelar</button>  
+                                <button mat-raised-button (click)="cerrar()" *ngIf="id_editar==0" color="warn" ><mat-icon>close</mat-icon> Cerrar</button>  
+                            </div>
+                        </div>
+                    </div>            
+                        
+                </section>
+            </form>
+        </mat-tab>
+        <mat-tab label="LOCALIDADES REGIONALIZADAS" [disabled]="edicion">
+            <section class="profile" >
+                <div fxLayout="row" fxLayoutAlign="space-evenly center">
+                    <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
+                        <div class="data-loading-shade" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
+                        <mat-card fxFlex.xs="100%" fxFlex="100%">
+                            <div fxLayout="row" fxLayout.xs="column">
+                                <div fxFlex fxLayout="row wrap">
+                                    <mat-form-field fxFill appearance="outline">
+                                        <mat-label>Buscar</mat-label>
+                                        <input matInput [(ngModel)]="searchQuery" (keyup.escape)="cleanSearch()" (keyup.enter)="applyFilter()" placeholder="Buscar">
+                                        <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
+                                            <mat-icon>close</mat-icon>
+                                        </button>
+                                        
+                                    </mat-form-field>
+                                </div>
+                                <div fxFlex="none" fxFlex.xs="100">
+                                    <div fxFlex></div>
+                                    <section class="search-button">
+                                        <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
+                                            <mat-icon>search</mat-icon> Buscar
+                                        </button>
+                                    </section>
+                                </div>
+                            </div>
+                        </mat-card>
+                       
+                        <mat-card fxFlex.xs="100%" fxFlex="90%">
+                            <mat-divider [inset]="true"></mat-divider>
+                            
+                            <div class="data-container ">
+                                <div class="data-table-container">
+                                    <table #dataTable mat-table [dataSource]="dataSource" class="data-table" matSort>
+                                        <ng-container matColumnDef="localidad">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> LOCALIDAD </th>
+                                            <td mat-cell *matCellDef="let row"> 
+                                                <b>{{ row.descripcion }}</b>
+                                                <div style="font-size: 8pt;">{{ row.municipio.descripcion }} </div>
+                                                    
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="camino">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO CAMINO </th>
+                                            <td mat-cell *matCellDef="let row"> 
+                                                {{ row.regionalizacion.catalogo_tipo_camino.descripcion }}
+                                                
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="distancia">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> DISTANCIA (KM) / TIEMPO (HR) </th>
+                                            <td mat-cell *matCellDef="let row"> 
+                                                {{ row.regionalizacion.distancia }} / {{ row.regionalizacion.tiempo }}   
+                                            </td>
+                                        </ng-container>
+            
+                                        <ng-container matColumnDef="actions">
+                                            <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
+                                            <td mat-cell *matCellDef="let row; let i = index">
+                                                <button mat-mini-fab color="primary" mat-stroked-button [matMenuTriggerFor]="menu">
+                                                    <mat-icon>menu</mat-icon>
+                                                </button>
+                                                <mat-menu #menu="matMenu">
+                                                        <button mat-menu-item (click)="editar(row)"><mat-icon color="primary">edit</mat-icon>Editar</button>              
+                                                        <button mat-menu-item (click)="eliminar(row)" ><mat-icon color="warn">delete</mat-icon>Eliminar</button>              
+                                                </mat-menu>
+                                            </td>
+                                        </ng-container>
+            
+                                        <ng-container matColumnDef="noResultsFound">
+                                            <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                                                No se encontraron registros 
+                                            </td>
+                                        </ng-container>
+                                        
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                        <tr mat-row [ngClass]="{'selected-item': i==selectedItemIndex}" *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+            
+                                        <tr mat-footer-row *matFooterRowDef="['noResultsFound']" class="not-results-found" [ngClass]="{'hide':!(dataSource!=null && dataSource.length==0)}"></tr>
+                                    </table>
+                                </div>
+                                <mat-paginator #paginator [pageSize]="pageSize" [pageIndex]="currentPage" [length]="resultsLength" [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons (page)="pageEvent = cargarDatos($event)"></mat-paginator>
+                            </div>
+                        </mat-card>
+                    </section>
+                </div>
+            </section>    
+        </mat-tab>
+      </mat-tab-group> 
+</div>   

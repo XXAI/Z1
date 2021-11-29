@@ -1,0 +1,109 @@
+<h1 mat-dialog-title style="background-color: #3f51b5; color: white; padding: 5pt 10pt; border-bottom: 3px solid #CFCFCF; margin: 0pt;">REGIONALIZACIÓN</h1>
+<!--<hr style="border: 1px solid #3f51b5;">-->
+<div mat-dialog-content>
+    <form [formGroup]="regionalizacionForm">
+        <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                <div fxFlex="100" fxFlex.xs="100">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                            <mat-label>TIPO TRABAJADOR</mat-label>
+                            <mat-select formControlName="tipo_trabajador_id" required #tipo (selectionChange)="cargaForm(tipo.value)" [disabled]="edicion">
+                                <mat-option [value]="1">SALUD</mat-option>
+                                <mat-option [value]="2">EXTERNO</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="regionalizacionForm.get('tipo_trabajador_id').invalid && (regionalizacionForm.get('tipo_trabajador_id').dirty || regionalizacionForm.get('tipo_trabajador_id').touched)">
+                                <span *ngIf="regionalizacionForm.get('tipo_trabajador_id').errors.required">Campo obligatorio</span>
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                            <mat-label>PERSONAL</mat-label>
+                            <input matInput placeholder="PERSONAL" [matAutocomplete]="localidadAutocomplete" formControlName='personal_id' [readonly]="edicion">
+                            <mat-autocomplete #localidadAutocomplete="matAutocomplete" [displayWith]="displayPersonalFn" [panelWidth]="'auto'">
+                                <mat-option *ngIf="personalIsLoading" class="is-loading">
+                                    <mat-spinner diameter="25"></mat-spinner>
+                                </mat-option>
+                                <ng-container *ngIf="!personalIsLoading">
+                                    <mat-option *ngFor="let item of filteredPersonal" [value]="item">
+                                        {{ item.nombre }} {{ item.apellido_paterno }} {{ item.apellido_materno }}
+                                    </mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="regionalizacionForm.get('personal_id').invalid && (regionalizacionForm.get('personal_id').dirty || regionalizacionForm.get('personal_id').touched)">
+                                <span *ngIf="regionalizacionForm.get('personal_id').errors.required">Campo obligatorio</span>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px" *ngIf="(tipo.value == 2)">
+                <div fxFlex="100" fxFlex.xs="100">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                            <mat-label>MUNICIPIO </mat-label>
+                            <mat-select formControlName="municipio_id" required>
+                                <mat-option *ngFor="let item of catalogo['municipio']" [value]="item.id">
+                                    {{item.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="regionalizacionForm.get('municipio_id').invalid && (regionalizacionForm.get('municipio_id').dirty || regionalizacionForm.get('municipio_id').touched)">
+                                <span *ngIf="regionalizacionForm.get('municipio_id').errors.required">Campo obligatorio</span>
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="100" fxFlex.xs="100" appearance="fill">
+                            <mat-label>LOCALIDAD</mat-label>
+                            <input matInput placeholder="CLUES" [matAutocomplete]="localidad" formControlName='localidad_id'>
+                            <mat-autocomplete #localidad="matAutocomplete" [displayWith]="displayLocalidadFn" [panelWidth]="'auto'">
+                                <mat-option *ngIf="localidadIsLoading" class="is-loading">
+                                    <mat-spinner diameter="25"></mat-spinner>
+                                </mat-option>
+                                <ng-container *ngIf="!localidadIsLoading">
+                                    <mat-option *ngFor="let item of filteredLocalidad" [value]="item">
+                                        [{{item.clave_localidad}}] {{ item.descripcion }}
+                                    </mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="regionalizacionForm.get('localidad_id').invalid && (regionalizacionForm.get('localidad_id').dirty || regionalizacionForm.get('localidad_id').touched)">
+                                <span *ngIf="regionalizacionForm.get('localidad_id').errors.required">Campo obligatorio</span>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px" *ngIf="(tipo.value == 1)">
+                <div fxFlex="100" fxFlex.xs="100">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                        <mat-form-field fxFlex="100" fxFlex.xs="100" appearance="fill">
+                            <mat-label>CLUES</mat-label>
+                            <input matInput placeholder="CLUES" [matAutocomplete]="cluesAutocomplete" formControlName='clues'>
+                            <mat-autocomplete #cluesAutocomplete="matAutocomplete" [displayWith]="displayCluesFn" [panelWidth]="'auto'">
+                                <mat-option *ngIf="cluesIsLoading" class="is-loading">
+                                    <mat-spinner diameter="25"></mat-spinner>
+                                </mat-option>
+                                <ng-container *ngIf="!cluesIsLoading">
+                                    <mat-option *ngFor="let item of filteredClues" [value]="item">
+                                        [{{item.clues}}] {{ item.descripcion }}
+                                    </mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="regionalizacionForm.get('clues').invalid && (regionalizacionForm.get('clues').dirty || regionalizacionForm.get('clues').touched)">
+                                <span *ngIf="regionalizacionForm.get('clues').errors.required">Campo obligatorio</span>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                <div fxFlex="100" fxFlex.xs="100">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                        <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!regionalizacionForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
+
+                        <button mat-raised-button (click)="cerrar()" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </form>
+</div>

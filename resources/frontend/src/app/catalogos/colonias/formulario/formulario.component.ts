@@ -46,13 +46,14 @@ export class FormularioComponent implements OnInit {
     'municipio_id': ['',[Validators.required]],
     'localidad_id': ['',[Validators.required]],
     'clave_colonia': ['',[Validators.required]],
-    'colonia': ['',[Validators.required]]
+    'colonia': ['',[Validators.required]],
+    'latitud': ['',[Validators.required]],
+    'longitud': ['',[Validators.required]]
     
   });
 
   ngOnInit(): void {
     this.cargarCatalogos();
-    
   }
 
   cargarDatos()
@@ -63,7 +64,14 @@ export class FormularioComponent implements OnInit {
         let obj = response.data;
         //console.log(obj);
         this.cargaMunicipio(obj.localidad.municipio.catalogo_distrito_id, obj, 0);
-        this.coloniaForm.patchValue({distrito_id:obj.localidad.municipio.catalogo_distrito_id, colonia: obj.descripcion, clave_colonia: obj.clave_colonia, localidad_id:obj.localidad});
+        this.coloniaForm.patchValue({
+          distrito_id:obj.localidad.municipio.catalogo_distrito_id, 
+          colonia: obj.descripcion, 
+          clave_colonia: obj.clave_colonia, 
+          localidad_id:obj.localidad,
+          latitud: obj.latitud,
+          longitud: obj.longitud
+        });
         
       },
       responsError =>{
@@ -102,7 +110,7 @@ export class FormularioComponent implements OnInit {
               let municipio = this.coloniaForm.get('municipio_id').value;
               if( distrito != '' && municipio!="")
               {
-                return this.coloniasService.buscarLocalidad({distrito_id:distrito, municipio_id:municipio }).pipe(finalize(() => this.localidadIsLoading = false ));
+                return this.coloniasService.buscarLocalidad({distrito_id:distrito, municipio_id:municipio, query:value }).pipe(finalize(() => this.localidadIsLoading = false ));
               }else{
                 return [];
               }

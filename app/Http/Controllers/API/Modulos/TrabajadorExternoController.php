@@ -18,9 +18,13 @@ class TrabajadorExternoController extends Controller
             //$access = $this->getUserAccessData();
             $parametros = $request->all();
             $objeto = TrabajadorExterno::join("regionalizacion_rh", "regionalizacion_rh.trabajador_id", "=", "trabajador_externo.id")
-                                ->join("catalogo_clues", "catalogo_clues.clues", "regionalizacion_rh.clues")
+                                ->join("catalogo_localidad", "regionalizacion_rh.catalogo_localidad_id", "catalogo_localidad.id")
+                                ->join("catalogo_municipio", "catalogo_municipio.id", "catalogo_localidad.catalogo_municipio_id")
+                                ->join("catalogo_tipo_trabajador", "trabajador_externo.tipo_personal_id", "catalogo_tipo_trabajador.id")
                                     ->where("regionalizacion_rh.tipo_trabajador_id", 2)->whereNull("trabajador_externo.deleted_at")
-                                    ->select("trabajador_externo.id", "rfc", "curp", "nombre", "apellido_paterno", "apellido_materno", "regionalizacion_rh.clues", "catalogo_clues.descripcion");
+                                    ->select("trabajador_externo.id", "rfc", "curp", "nombre", "apellido_paterno", "apellido_materno", 
+                                    "catalogo_localidad.descripcion as localidad", "catalogo_municipio.descripcion as municipio", 
+                                    "catalogo_tipo_trabajador.abreviatura as abreviatura", "catalogo_tipo_trabajador.descripcion as tipo_trabajador");
 
            
             if(isset($parametros['page'])){
@@ -39,7 +43,7 @@ class TrabajadorExternoController extends Controller
         try{
             $params = $request->all();
 
-            $objeto = TrabajadorExterno::with("lengua", "sexo", "UR", "rel_regionalizacion_rh.clues")->find($id);
+            $objeto = TrabajadorExterno::with("lengua", "sexo", "rel_regionalizacion_rh.localidad.municipio")->find($id);
             return response()->json(["data"=>$objeto],HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
@@ -67,7 +71,7 @@ class TrabajadorExternoController extends Controller
             'edad'                  => 'required',
             'sexo_id'               => 'required',
             'catalogo_lengua_id'    => 'required',
-            'ur'    => 'required',
+            'tipo_personal'    => 'required',
         ];
         
         
@@ -88,12 +92,12 @@ class TrabajadorExternoController extends Controller
             $object->apellido_materno =     \Str::upper($inputs['apellido_materno']);
             $object->edad             =     $inputs['edad'];
             $object->sexo_id          =     $inputs['sexo_id'];
-            $object->catalogo_lengua_id          =     $inputs['catalogo_lengua_id'];
-            $object->ur                      =     $inputs['ur'];
+            $object->catalogo_lengua_id     = $inputs['catalogo_lengua_id'];
+            $object->tipo_personal_id       = $inputs['tipo_personal'];
             
             $object->save();
             $relacion = new RelRegionalizacionRh();
-            $relacion->clues = $inputs['clues']['clues'];
+            $relacion->catalogo_localidad_id = $inputs['localidad_id']['id'];
             $relacion->trabajador_id = $object->id;
             $relacion->tipo_trabajador_id = 2;
             $relacion->save();
@@ -128,8 +132,9 @@ class TrabajadorExternoController extends Controller
             'edad'                  => 'required',
             'sexo_id'               => 'required',
             'catalogo_lengua_id'    => 'required',
-            'ur'    => 'required',
+            'tipo_personal'    => 'required',
         ];
+        
         
         DB::beginTransaction();
 
@@ -154,14 +159,11 @@ class TrabajadorExternoController extends Controller
             $object->edad             =     $inputs['edad'];
             $object->sexo_id          =     $inputs['sexo_id'];
             $object->catalogo_lengua_id          =     $inputs['catalogo_lengua_id'];
-            $object->ur                      =     $inputs['ur'];
+            $object->tipo_personal_id       = $inputs['tipo_personal'];
             
             $object->save();
             
-            $object = TrabajadorExterno::find($id)->rel_regionalizacion_rh()->update(['clues' =>$inputs['clues']['clues']]);
-            //$relacion = RelRegionalizacionRh::where("trabajador_id", "=",$object->id);
-            //$relacion->clues = $inputs['clues']['clues'];
-            //$relacion->save();
+            $object = TrabajadorExterno::find($id)->rel_regionalizacion_rh()->update(['catalogo_localidad_id' =>$inputs['localidad_id']['id']]);
 
             DB::commit();
             

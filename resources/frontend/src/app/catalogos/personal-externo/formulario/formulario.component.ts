@@ -2,7 +2,6 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -25,10 +24,10 @@ export interface FormularioComponentData {
 export class FormularioComponent implements OnInit {
 
   catalogo:any = [];
-  cluesIsLoading: boolean = false;
-  filteredClues: Observable<any[]>;
   isLoading:boolean = false;
-  
+  localidadIsLoading: boolean = false;
+  filteredLocalidad: Observable<any[]>;
+
   constructor(
     private sharedService: SharedService, 
     private personalExternoService: PersonalExternoService,
@@ -50,9 +49,10 @@ export class FormularioComponent implements OnInit {
     'curp': ['',[Validators.required]],
     'edad': ['',[Validators.required]],
     'sexo_id': ['',[Validators.required]],
-    'ur': ['',[Validators.required]],
+    'tipo_personal': ['',[Validators.required]],
     'catalogo_lengua_id': ['',[Validators.required]],
-    'clues': ['',[Validators.required]],
+    'municipio_id': ['',[Validators.required]],
+    'localidad_id': ['',[Validators.required]],
     
   });
 
@@ -67,18 +67,17 @@ export class FormularioComponent implements OnInit {
       response => {
         
         let obj = response.data;
-        //console.log(obj);
-        //this.cargaMunicipio(obj.localidad.municipio.catalogo_distrito_id, obj, 0);
-        this.trabajadorForm.patchValue({nombre:obj.nombre, 
+       this.trabajadorForm.patchValue({nombre:obj.nombre, 
           apellido_paterno: obj.apellido_paterno, 
           apellido_materno: obj.apellido_materno, 
           rfc:obj.rfc, 
           curp: obj.curp,
           sexo_id: obj.sexo_id,
-          ur: obj.ur,
+          tipo_personal: obj.tipo_personal_id,
           edad: obj.edad,
           catalogo_lengua_id: obj.catalogo_lengua_id,
-          clues: obj.rel_regionalizacion_rh.clues
+          municipio_id: obj.rel_regionalizacion_rh.localidad.municipio.id,
+          localidad_id: obj.rel_regionalizacion_rh.localidad
         });
         
       },
@@ -87,6 +86,8 @@ export class FormularioComponent implements OnInit {
         this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
       }
     );
+
+    
   }
 
   cargarCatalogos()
@@ -104,29 +105,31 @@ export class FormularioComponent implements OnInit {
         this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
       }
     );
-    this.trabajadorForm.get('clues').valueChanges
+
+    this.trabajadorForm.get('localidad_id').valueChanges
     .pipe(
       debounceTime(300),
       tap( () => {
-          this.cluesIsLoading = true; 
+          this.localidadIsLoading = true; 
       } ),
       switchMap(value => {
           if(!(typeof value === 'object')){
-            this.cluesIsLoading = false;
-            return this.personalExternoService.buscarClues({query:value}).pipe(finalize(() => this.cluesIsLoading = false ));
+            this.localidadIsLoading = false;
+            let municipio = this.trabajadorForm.get('municipio_id').value;
+            return this.personalExternoService.buscarLocalidad({query:value, municipio_id: municipio}).pipe(finalize(() => this.localidadIsLoading = false ));
            
              
           }else{
-            this.cluesIsLoading = false; 
+            this.localidadIsLoading = false; 
             return [];
           }
         }
       ),
-    ).subscribe(items => this.filteredClues = items);
-    
+    ).subscribe(items => this.filteredLocalidad = items);
   }
 
-  displayCluesFn(item: any) {
+  
+  displayLocalidadFn(item: any) {
     if (item) { return item.descripcion; }
   }
 
@@ -155,8 +158,6 @@ export class FormularioComponent implements OnInit {
           this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
         }
       );
-    }
-    
+    } 
   }
-
 }

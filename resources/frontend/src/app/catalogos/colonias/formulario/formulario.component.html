@@ -66,6 +66,22 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                        <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                            <mat-label>Latitud</mat-label>
+                            <input matInput  autocomplete="off" formControlName="latitud" placeholder="Colonia" appearance="fill">
+                            <mat-error *ngIf="coloniaForm.get('latitud').invalid && (coloniaForm.get('latitud').dirty || coloniaForm.get('latitud').touched)">
+                                <span *ngIf="coloniaForm.get('latitud').errors.required">Campo obligatorio</span>
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                            <mat-label>Longitud</mat-label>
+                            <input matInput  autocomplete="off" formControlName="longitud" placeholder="Colonia" appearance="fill">
+                            <mat-error *ngIf="coloniaForm.get('longitud').invalid && (coloniaForm.get('longitud').dirty || coloniaForm.get('longitud').touched)">
+                                <span *ngIf="coloniaForm.get('longitud').errors.required">Campo obligatorio</span>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
                     <!--<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
                         
                         
