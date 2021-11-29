@@ -14,4 +14,10 @@ class RelRegionalizacionRh extends Model
     public function clues(){
         return $this->hasOne('App\Models\Clues', 'clues', "clues");
     }
+
+    public function localidad(){
+        return $this->belongsTo('App\Models\Localidad','catalogo_localidad_id','id');
+    }
+
+    
 }

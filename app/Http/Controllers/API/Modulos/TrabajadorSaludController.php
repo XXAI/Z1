@@ -19,7 +19,9 @@ class TrabajadorSaludController extends Controller
             $parametros = $request->all();
             $objeto = Trabajador::join("regionalizacion_rh", "regionalizacion_rh.trabajador_id", "=", "trabajador.id")
                                 ->join("catalogo_clues", "catalogo_clues.clues", "regionalizacion_rh.clues")
-                                    ->where("regionalizacion_rh.tipo_trabajador_id", 1)->whereNull("trabajador.deleted_at")
+                                    ->where("regionalizacion_rh.tipo_trabajador_id", 1)
+                                    ->whereNull("trabajador.deleted_at")
+                                    ->whereNull("regionalizacion_rh.deleted_at")
                                     ->select("trabajador.id", "rfc", "curp", "nombre", "apellido_paterno", "apellido_materno", "regionalizacion_rh.clues", "catalogo_clues.descripcion");
 
             /*if(!$access->is_admin){
@@ -49,7 +51,7 @@ class TrabajadorSaludController extends Controller
         try{
             $params = $request->all();
 
-            $objeto = Trabajador::with("lengua", "sexo", "UR", "rel_regionalizacion_rh.clues")->find($id);
+            $objeto = Trabajador::with("lengua", "sexo", "ur", "rel_rh.clues")->find($id);
             return response()->json(["data"=>$objeto],HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
@@ -77,7 +79,7 @@ class TrabajadorSaludController extends Controller
             'edad'                  => 'required',
             'sexo_id'               => 'required',
             'catalogo_lengua_id'    => 'required',
-            'ur'    => 'required',
+            'ur'                    => 'required',
         ];
         
         
@@ -168,14 +170,16 @@ class TrabajadorSaludController extends Controller
             
             $object->save();
             
-            $object = Trabajador::find($id)->rel_regionalizacion_rh()->update(['clues' =>$inputs['clues']['clues']]);
-            //$relacion = RelRegionalizacionRh::where("trabajador_id", "=",$object->id);
-            //$relacion->clues = $inputs['clues']['clues'];
-            //$relacion->save();
-
+            /*if($inputs['clues']['clues'] != null)
+            {*/
+                $relacion = Trabajador::find($id)->rel_rh()->update(['clues' =>$inputs['clues']['clues']]);
+            /*}else{
+                //$relacion = Trabajador::find($id)->rel_clues()->update(['clues' =>"hola"]);
+            }*/
+                        
             DB::commit();
             
-        return response()->json(["data"=>$object/*, "r"=>$object_responsable/*, "d"=>$object_director*/],HttpResponse::HTTP_OK);
+        return response()->json(["data"=> $relacion],HttpResponse::HTTP_OK);
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -187,10 +191,11 @@ class TrabajadorSaludController extends Controller
     {
         try{
             
-            $object = Trabajador::find($id);
-            $object->delete();
+            $object = Trabajador::with("rel_rh")->find($id);
+            $relacion = RelRegionalizacionRh::find($object->rel_rh->id);
+            $relacion->delete();
 
-            return response()->json(['data'=>"Registro Eliminado"], HttpResponse::HTTP_OK);
+            return response()->json(['data'=>$object], HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }

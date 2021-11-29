@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             'catalogo_ur',
             'trabajador',*/
             //'catalogo_clues'
+            'catalogo_tipo_trabajador'
         ];
 
         //DB::beginTransaction();

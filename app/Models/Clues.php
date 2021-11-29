@@ -27,12 +27,8 @@ class Clues extends Model
         return $this->hasMany('App\Models\RegionalizacionClues', 'clues');
     }
 
+    public function regionalizaciones_personal(){
+        return $this->hasMany('App\Models\RelRegionalizacionRh', 'clues')->where("tipo_trabajador_id", "1");
+    }
 
-    // public function cr(){
-    //     return $this->hasMany('App\Models\Cr','clues','clues');
-    // }
-
-    // public function responsable(){
-    //     return $this->hasOne('App\Models\Empleado','id','responsable_id');
-    // }
 }

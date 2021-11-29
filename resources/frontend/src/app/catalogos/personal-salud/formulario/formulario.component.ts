@@ -66,7 +66,7 @@ export class FormularioComponent implements OnInit {
       response => {
         
         let obj = response.data;
-        //console.log(obj);
+        console.log(obj);
         //this.cargaMunicipio(obj.localidad.municipio.catalogo_distrito_id, obj, 0);
         this.trabajadorForm.patchValue({nombre:obj.nombre, 
           apellido_paterno: obj.apellido_paterno, 
@@ -74,10 +74,10 @@ export class FormularioComponent implements OnInit {
           rfc:obj.rfc, 
           curp: obj.curp,
           sexo_id: obj.sexo_id,
-          ur: obj.ur,
+          ur: obj.ur.ur,
           edad: obj.edad,
           catalogo_lengua_id: obj.catalogo_lengua_id,
-          clues: obj.rel_regionalizacion_rh.clues
+          clues: obj.rel_rh.clues
         });
         
       },

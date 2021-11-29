@@ -72,7 +72,9 @@ class ColoniasController extends Controller
         $reglas = [
             'catalogo_localidad_id'               => 'required',
             'clave_colonia'                     => 'required',
-            'colonia'                         => 'required'
+            'colonia'                         => 'required',
+            'latitud'                         => 'required',
+            'longitud'                         => 'required',
         ];
         
         
@@ -89,6 +91,8 @@ class ColoniasController extends Controller
             $object->catalogo_localidad_id =    $inputs['catalogo_localidad_id'];
             $object->clave_colonia =          \Str::upper($inputs['clave_colonia']);
             $object->descripcion =              \Str::upper($inputs['colonia']);
+            $object->latitud =              \Str::upper($inputs['latitud']);
+            $object->longitud =              \Str::upper($inputs['longitud']);
             
             $object->save();
             
@@ -120,7 +124,9 @@ class ColoniasController extends Controller
         $reglas = [
             'catalogo_localidad_id'               => 'required',
             'clave_colonia'                     => 'required',
-            'colonia'                         => 'required'
+            'colonia'                         => 'required',
+            'latitud'                         => 'required',
+            'longitud'                         => 'required',
         ];
         
         DB::beginTransaction();
@@ -141,6 +147,8 @@ class ColoniasController extends Controller
             $object->catalogo_localidad_id =    $inputs['catalogo_localidad_id'];
             $object->clave_colonia =          \Str::upper($inputs['clave_colonia']);
             $object->descripcion =              \Str::upper($inputs['colonia']);
+            $object->latitud =              \Str::upper($inputs['latitud']);
+            $object->longitud =              \Str::upper($inputs['longitud']);
             
             $object->save();
             

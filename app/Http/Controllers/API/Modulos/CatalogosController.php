@@ -14,6 +14,9 @@ use App\Models\UR;
 use App\Models\Sexo;
 use App\Models\Lengua;
 use App\Models\Clues;
+use App\Models\TipoTrabajador;
+use App\Models\TipoCamino;
+use App\Models\TipoLocalidad;
 
 class CatalogosController extends Controller
 {
@@ -22,16 +25,27 @@ class CatalogosController extends Controller
         try{
             $params = $request->all();
             
-            $distrito = Distrito::orderBy("id")->get();
-            $ur = UR::orderBy("descripcion")->get();
-            $sexo = Sexo::orderBy("id")->get();
-            $lengua = Lengua::orderBy("id")->get();
+            $distrito           = Distrito::orderBy("id")->get();
+            $ur                 = UR::orderBy("descripcion")->get();
+            $sexo               = Sexo::orderBy("id")->get();
+            $lengua             = Lengua::orderBy("id")->get();
+            $personalSalud      = TipoTrabajador::where("tipo", 1)->orderBy("id")->get();
+            $personalExterno    = TipoTrabajador::where("tipo", 2)->orderBy("id")->get();
+            $municipio          = Municipio::orderBy("descripcion")->get();
+            $camino             = TipoCamino::orderBy("descripcion")->get();
+            $camino             = TipoCamino::orderBy("descripcion")->get();
+            $tipoLocalidad      = TipoLocalidad::orderBy("descripcion")->get();
             
             $catalogos = [
-                "distrito" => $distrito,
-                "ur" => $ur,
-                "sexo" => $sexo,
-                "lengua" => $lengua
+                "distrito"          => $distrito,
+                "ur"                => $ur,
+                "sexo"              => $sexo,
+                "perosonalSalud"    => $personalSalud,
+                "personalExterno"   => $personalExterno,
+                'lengua'            => $lengua,
+                'municipio'         => $municipio,
+                'camino'            => $camino,
+                'tipoLocalidad'     => $tipoLocalidad,
             ];
 
             return response()->json($catalogos,HttpResponse::HTTP_OK);
@@ -57,8 +71,7 @@ class CatalogosController extends Controller
     {
         try{
             $params = $request->all();
-            //return response()->json($params,HttpResponse::HTTP_OK);
-            $obj = Localidad::where("catalogo_municipio_id", $params['municipio_id'])->orderBy("id")->get();
+            $obj = Localidad::where("catalogo_municipio_id", $params['municipio_id'])->where('descripcion','LIKE','%'.$params['query'].'%')->orderBy("descripcion")->get();
             
             return response()->json($obj,HttpResponse::HTTP_OK);
         }catch(\Exception $e){

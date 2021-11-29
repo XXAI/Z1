@@ -46,8 +46,18 @@
                             <ng-container matColumnDef="tipo">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO TRABAJADOR </th>
                                 <td mat-cell *matCellDef="let row"> 
-                                    {{ row.descripcion }}
-                                    <div style="font-size: 8pt;"> {{ row.clues }}</div>    
+                                    <b>{{ row.tipo_trabajador }}</b>
+                                    <div style="font-size: 8pt;">{{ row.abreviatura }}</div>
+                                    
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="localidad">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> LOCALIDAD </th>
+                                <td mat-cell *matCellDef="let row"> 
+                                    <b>{{ row.localidad }} </b>
+                                    <div style="font-size: 8pt;">{{ row.municipio }}</div>
+                                       
                                 </td>
                             </ng-container>
                 

@@ -12,7 +12,9 @@ export class CluesService {
   url                     = `${environment.base_url}/clues`;
   url_obtener_catalogos   =  `${environment.base_url}/catalogos`;
   url_responsable         = `${environment.base_url}/busqueda-responsable`;
-  url_info_clue       = `${environment.base_url}/ver-info-clue/`;
+  url_info_clue           = `${environment.base_url}/ver-info-clue/`;
+
+  url_localidad           = `${environment.base_url}/localidad`;
 
   constructor(private http: HttpClient) { }
 
@@ -63,4 +65,7 @@ export class CluesService {
       })
     );
   };
+
+  //////lOCALIDAD
+
 }

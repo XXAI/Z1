@@ -32,7 +32,7 @@ export const APPS:App [] = [
     { name:'Regionalizacion',         route: "regionalizacion",     icon: "assets/icons/regionalizacion.png",           isHub:true, hideHome:true, 
       children:[
         {name:'Unidades Médicas',            route:'regionalizacion/clues',            icon:'insert_drive_file', permission:""},
-        {name:'Localidad Colonia',           route:'regionalizacion/localidad-coloni',        icon:'insert_drive_file', permission:""},
+        /*{name:'Localidad Colonia',           route:'regionalizacion/localidad-coloni',        icon:'insert_drive_file', permission:""},*/
         {name:'Personal',                    route:'regionalizacion/personal',        icon:'insert_drive_file', permission:""},
     
       ],

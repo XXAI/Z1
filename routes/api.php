@@ -8,7 +8,7 @@ use Illuminate\Http\Response as HttpResponse;
 | API Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
+| Here is where you can register API routes for your application. Thes
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
@@ -42,18 +42,29 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::post('catalogos',                        'API\Modulos\SearchCatalogsController@getCatalogs');
 
     /* Apis del sistema */
-    Route::apiResource('clues',                     'API\Modulos\CluesController');
-    Route::get('ver-info-clue/{id}',                'API\Modulos\CluesController@infoClue');
-    Route::apiResource('profile',                   'API\ProfileController')->only([ 'show', 'update']);
-    Route::apiResource('clues',                 'API\Modulos\CluesController');
-    Route::apiResource('catalogos',             'API\Modulos\CatalogosController');
-    Route::apiResource('colonias',              'API\Modulos\ColoniasController');
-    Route::apiResource('trabajador-salud',      'API\Modulos\TrabajadorSaludController');
-    Route::apiResource('trabajador-externo',    'API\Modulos\TrabajadorExternoController');
-    Route::get('catalogo-municipio/{id}',       'API\Modulos\CatalogosController@catalogoMunicipio');
-    Route::get('catalogo-localidad',            'API\Modulos\CatalogosController@catalogoLocalidad');
-    Route::get('catalogo-clues',                'API\Modulos\CatalogosController@catalogoClues');
-    Route::apiResource('profile',               'API\ProfileController')->only([ 'show', 'update']);
+    Route::apiResource('clues',                         'API\Modulos\CluesController');
+    Route::get('ver-info-clue/{id}',                    'API\Modulos\CluesController@infoClue');
+    Route::apiResource('profile',                       'API\ProfileController')->only([ 'show', 'update']);
+    Route::apiResource('clues',                         'API\Modulos\CluesController');
+    Route::apiResource('catalogos',                     'API\Modulos\CatalogosController');
+    Route::apiResource('colonias',                      'API\Modulos\ColoniasController');
+    Route::apiResource('trabajador-salud',              'API\Modulos\TrabajadorSaludController');
+    Route::apiResource('trabajador-externo',            'API\Modulos\TrabajadorExternoController');
+    Route::get('catalogo-municipio/{id}',               'API\Modulos\CatalogosController@catalogoMunicipio');
+    Route::get('catalogo-localidad',                    'API\Modulos\CatalogosController@catalogoLocalidad');
+    Route::get('catalogo-clues',                        'API\Modulos\CatalogosController@catalogoClues');
+    Route::apiResource('profile',                       'API\ProfileController')->only([ 'show', 'update']);
+
+    Route::apiResource('reginalizacion-clues',          'API\Modulos\RegionalizacionCluesController');
+    Route::get('regionalizacion-localidades/{id}',      'API\Modulos\RegionalizacionCluesController@localidades');
+    Route::get('regionalizacion-localidades-filtro/{id}','API\Modulos\RegionalizacionCluesController@filtroLocalidades');
+    
+    Route::apiResource('reginalizacion-clues-personal',  'API\Modulos\RegionalizacionCluesPersonalController');
+    Route::apiResource('localidad',                      'API\Modulos\LocalidadController');
+    Route::get('regionalizacion-salud-filtro/{id}',      'API\Modulos\RegionalizacionCluesPersonalController@filtroSalud');
+    Route::get('regionalizacion-externo-filtro/{id}',    'API\Modulos\RegionalizacionCluesPersonalController@filtroExterno');
+    Route::get('delete-personal/{id}',                   'API\Modulos\RegionalizacionCluesPersonalController@deletePersonal');
+    Route::get('buscador-personal',                      'API\Modulos\RegionalizacionCluesPersonalController@buscarPersonal');
 });
 
 Route::middleware('auth')->get('/avatar-images', function (Request $request) {

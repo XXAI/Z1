@@ -31,6 +31,7 @@ import { SecurityModule } from './security/security.module';
 import { ProfileModule } from './profile/profile.module';
 import { DevToolsModule } from './dev-tools/dev-tools.module';
 import { CatalogosModule } from './catalogos/catalogos.module';
+import { RegionalizacionModule } from './regionalizacion/regionalizacion.module';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import { CatalogosModule } from './catalogos/catalogos.module';
     SecurityModule,
     DevToolsModule,
     CatalogosModule,
+    RegionalizacionModule,
     ProfileModule,
     AppRoutingModule,
     WildcardRoutingModule,
