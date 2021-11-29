@@ -13,6 +13,7 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getEspPaginatorIntl } from '../../esp-paginator-intl';
 
 import { DetailsComponentClue } from './details-clue/details-clue.component'
+import { RegionesDialogComponent } from './regiones-dialog/regiones-dialog.component';
 import { EditarComponent } from './editar/editar.component';
 import { ListaComponent } from './lista/lista.component';
 
@@ -21,7 +22,8 @@ import { ListaComponent } from './lista/lista.component';
   declarations: [
     ListaComponent,
     EditarComponent,
-    DetailsComponentClue
+    DetailsComponentClue,
+    RegionesDialogComponent
   ],
   imports: [
     CommonModule,

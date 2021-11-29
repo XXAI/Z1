@@ -153,12 +153,133 @@
                             </mat-form-field>
 
                         </div>
+                        <br>
+                        <ng-container>
+                            <button mat-raised-button (click)="showRegionesDialog();" color="primary"><mat-icon>add_circle_outline</mat-icon> Agregar Region</button>
+                        </ng-container>
+                        <br>
+                        <br>
+                        <div formArrayName="regionalizaciones" *ngFor="let region of cluesForm.get('regionalizaciones')['controls']; let i = index">
+
+                            <mat-card [formGroupName]="i">
+                                <mat-card-title>Región {{ i+1 }}</mat-card-title>
+                                <mat-card-subtitle>Datos de la Regionalización {{ i+1 }}</mat-card-subtitle>
+
+                                <mat-card-content>
+
+                                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                                        <mat-form-field fxFlex appearance="fill"  *ngIf="!catalogos['localidades']">
+                                            <mat-label>Localidad:</mat-label>
+                                            <input matInput formControlName="catalogo_localidad_id">
+                                            <mat-hint>Escribe el nombre de la localidad</mat-hint>
+                                            <!-- <mat-error *ngIf="pacienteForm.controls['seguimientos'].get('servicio_actual_id').hasError('required')">Este campo es obligatorio</mat-error> -->
+                                        </mat-form-field>
+                    
+                                        <mat-form-field fxFlex *ngIf="catalogos['localidades']">
+                                            <mat-label>Localidad:</mat-label>
+                                            <input type="text" aria-label="catalogo_localidad_id" matInput formControlName="catalogo_localidad_id" [matAutocomplete]="localidadAutocomplete">
+                                            <mat-autocomplete #localidadAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('descripcion')">
+                                                <mat-option *ngFor="let item of filteredCatalogs['localidades'] | async" [value]="item">
+                                                    {{item.descripcion}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-hint *ngIf="!cluesForm.controls['regionalizaciones']['controls'][i]['controls'].catalogo_localidad_id.value">Selecciona una Localidad de la lista</mat-hint>
+                                            <mat-hint align="end" *ngIf="cluesForm.controls['regionalizaciones']['controls'][i]['controls'].catalogo_localidad_id.value">Localidad: [{{cluesForm.controls['regionalizaciones']['controls'][i]['controls'].catalogo_localidad_id.value.descripcion}}]</mat-hint>
+                                            <!-- <mat-error *ngIf="pacienteForm.controls['seguimientos'].get('servicio_actual_id').hasError('required')">Este campo es obligatorio</mat-error> -->
+                                        </mat-form-field>
+
+
+                                        <mat-form-field fxFlex appearance="fill"  *ngIf="!catalogos['tipos_caminos']">
+                                            <mat-label>Tipo de Camino:</mat-label>
+                                            <input matInput formControlName="catalogo_tipo_camino_id">
+                                            <mat-hint>Escribe el nombre de la localidad</mat-hint>
+                                            <!-- <mat-error *ngIf="pacienteForm.controls['seguimientos'].get('servicio_actual_id').hasError('required')">Este campo es obligatorio</mat-error> -->
+                                        </mat-form-field>
+                    
+                                        <mat-form-field fxFlex *ngIf="catalogos['tipos_caminos']">
+                                            <mat-label>Tipo de Camino:</mat-label>
+                                            <input type="text" aria-label="catalogo_tipo_camino_id" matInput formControlName="catalogo_tipo_camino_id" [matAutocomplete]="tipoCaminoAutocomplete">
+                                            <mat-autocomplete #tipoCaminoAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('descripcion')">
+                                                <mat-option *ngFor="let item of filteredCatalogs['tipos_caminos'] | async" [value]="item">
+                                                    {{item.descripcion}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-hint *ngIf="!cluesForm.controls['regionalizaciones']['controls'][i]['controls'].catalogo_tipo_camino_id.value">Selecciona una Localidad de la lista</mat-hint>
+                                            <mat-hint align="end" *ngIf="cluesForm.controls['regionalizaciones']['controls'][i]['controls'].catalogo_tipo_camino_id.value">Descripción: [{{cluesForm.controls['regionalizaciones']['controls'][i]['controls'].catalogo_tipo_camino_id.value.descripcion}}]</mat-hint>
+                                            <!-- <mat-error *ngIf="pacienteForm.controls['seguimientos'].get('servicio_actual_id').hasError('required')">Este campo es obligatorio</mat-error> -->
+                                        </mat-form-field>
+
+                                        <!-- <mat-form-field fxFlex >
+                                            <mat-label>Localidad: {{i+1}} </mat-label>
+                                            <input matInput formControlName="catalogo_localidad_id" >
+                                        </mat-form-field>  -->
+
+                                    </div>
+
+                                    <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
+                                        <mat-form-field fxFlex fxFlex.xs="100" *ngIf="!catalogos['microrregiones']">
+                                            <mat-label>Tipo de Microrregión:</mat-label>
+                                            <input matInput formControlName="catalogo_tipo_regionalizacion_id">
+                                            <mat-hint>Escribe el nombre de la Microrregión</mat-hint>
+                                            <mat-error *ngIf="cluesForm.get('microrregiones').hasError('required')">Este campo es obligatorio</mat-error>
+                                        </mat-form-field>
+                    
+                                        <mat-form-field fxFlex fxFlex.xs="100" *ngIf="catalogos['microrregiones']">
+                                            <mat-label>Tipo de Microrregión:</mat-label>
+                                            <input type="text" aria-label="microrregion_id" matInput formControlName="catalogo_tipo_regionalizacion_id" [matAutocomplete]="microAutocomplete" >
+                                            <mat-autocomplete #microAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('descripcion')">
+                                                <mat-option *ngFor="let item of filteredCatalogs['microrregiones'] | async" [value]="item">
+                                                    {{item.descripcion}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-hint *ngIf="!cluesForm.controls['regionalizaciones']['controls'][i]['controls'].catalogo_tipo_regionalizacion_id.value">Selecciona una Microregión de la lista</mat-hint>
+                                            <mat-hint align="end" *ngIf="cluesForm.controls['regionalizaciones']['controls'][i]['controls'].catalogo_tipo_regionalizacion_id.value">Clave: [{{cluesForm.controls['regionalizaciones']['controls'][i]['controls'].catalogo_tipo_regionalizacion_id.value.descripcion_tipo}}]</mat-hint>
+                                            <!-- <mat-error *ngIf="pacienteForm.controls['atencion'].get('estado_actual_id').hasError('required')">Este campo es obligatorio</mat-error> -->
+                                        </mat-form-field>
+
+
+                                        <mat-form-field fxFlex>
+                                            <mat-label>Tiempo:</mat-label>
+                                            <input matInput formControlName="tiempo" placeholder="Tiempo" type="number">
+                                            <mat-error *ngIf="cluesForm.controls['regionalizaciones']['controls'][i]['controls'].tiempo.invalid && (cluesForm.controls['regionalizaciones']['controls'][i]['controls'].tiempo.dirty || cluesForm.controls['regionalizaciones']['controls'][i]['controls'].tiempo.touched)">
+                                                <span *ngIf="cluesForm.controls['regionalizaciones']['controls'][i]['controls'].tiempo.errors.required">El Campo es obligatorio</span>
+                                            </mat-error>
+                                        </mat-form-field>
+    
+                                        <mat-form-field fxFlex>
+                                            <mat-label>Distancia:</mat-label>
+                                            <input matInput formControlName="distancia" placeholder="Distancia" type="number">
+                                            <mat-error *ngIf="cluesForm.controls['regionalizaciones']['controls'][i]['controls'].distancia.invalid && (cluesForm.controls['regionalizaciones']['controls'][i]['controls'].distancia.dirty || cluesForm.controls['regionalizaciones']['controls'][i]['controls'].distancia.touched)">
+                                                <span *ngIf="cluesForm.controls['regionalizaciones']['controls'][i]['controls'].distancia.errors.required">El Campo es obligatorio</span>
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <!-- <button mat-icon-button color="warn" matTooltip="Quitar Región" (click)="quitarRegion(i)"  ><mat-icon>delete</mat-icon></button> -->
+
+
+                                    </div>
+
+
+
+                                </mat-card-content>
+
+                                <!-- formControlName="nombre" <button mat-icon-button color="warn" matTooltip="Quitar Diagnostico" (click)="removeGroup(i)"  ><mat-icon>delete</mat-icon></button> -->
+
+                                
+
+                                
+                            </mat-card>
+
+                            <br>
+                        </div>
 
                         
 
-                        <agm-map style="height: 600px;width: 100%;" [latitude]="lat" [longitude]="long" [disableDoubleClickZoom]="true" [zoom]="15">
+                        <!-- <agm-map style="height: 600px;width: 100%;" [latitude]="lat" [longitude]="long" [disableDoubleClickZoom]="true" [zoom]="15">
                             <agm-kml-layer> </agm-kml-layer>
-                        </agm-map>
+                        </agm-map> -->
 
 
 

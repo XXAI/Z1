@@ -1,13 +1,15 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { SharedService } from 'src/app/shared/shared.service';
 import { CluesService } from '../../clues.service';
 import { Router, ActivatedRoute  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { Observable, combineLatest, of, forkJoin } from 'rxjs';
 import { startWith, map, throwIfEmpty, debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ConfirmActionDialogComponent } from '../../../utils/confirm-action-dialog/confirm-action-dialog.component';
+import { RegionesDialogComponent } from '../regiones-dialog/regiones-dialog.component';
 
 @Component({
   selector: 'app-editar',
@@ -20,9 +22,15 @@ export class EditarComponent implements OnInit {
   lat = 16.75;
   long = -93.1167;
 
+  mediaSize: string;
+  datosRegion:any = [];
+  dataSourceRegiones:any = new MatTableDataSource(this.datosRegion);
+
   clues:any;
   estatus_clues:boolean = false;
   datos_clues:any;
+  filteredClues: Observable<any[]>;
+  cluesIsLoading: boolean = false;
 
   catalogos: any = {};
   filteredCatalogs:any = {};
@@ -68,6 +76,9 @@ export class EditarComponent implements OnInit {
     'microrregiones': [''],
     'localidad_id': ['',Validators.required],
     'localidades': [''],
+    'tipo_camino_id': [''],
+    'tipos_regionalizacion_id':[''],
+    'regionalizaciones':this.fb.array([]),
 
     
     // 'responsable_id': [''],
@@ -81,25 +92,6 @@ export class EditarComponent implements OnInit {
       if(this.clues){
         this.loadCluesData(this.clues);
       }
-
-      // this.cluesForm.get('responsable').valueChanges
-      //   .pipe(
-      //     debounceTime(300),
-      //     tap( () => {
-      //       this.responsableIsLoading = true;
-      //     } ),
-      //     switchMap(value => {
-      //         if(!(typeof value === 'object')){
-      //           return this.cluesService.buscarResponsable({busqueda_empleado:value}).pipe(
-      //             finalize(() => this.responsableIsLoading = false )
-      //           );
-      //         }else{
-      //           this.responsableIsLoading = false;
-      //           return [];
-      //         }
-      //       }
-      //     ),
-      //   ).subscribe(items => this.filteredResponsable = items);
     });
 
     let fecha = new Date('YYYY-MM-D');
@@ -119,6 +111,7 @@ export class EditarComponent implements OnInit {
     let carga_catalogos = [
       {nombre:'microrregiones',orden:'descripcion'},
       {nombre:'localidades',orden:'descripcion'},
+      {nombre:'tipos_caminos',orden:'descripcion'},
     ];
 
     this.cluesService.obtenerCatalogos(carga_catalogos).subscribe(
@@ -126,8 +119,9 @@ export class EditarComponent implements OnInit {
 
         this.catalogos = response.data;
 
-        this.filteredCatalogs['microrregiones']    = this.cluesForm.get('microrregion_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'microrregiones','descripcion')));
-        this.filteredCatalogs['localidades']       = this.cluesForm.get('localidad_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'localidades','descripcion')));
+        this.filteredCatalogs['microrregiones']           = this.cluesForm.get('microrregion_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'microrregiones','descripcion')));
+        this.filteredCatalogs['localidades']              = this.cluesForm.get('localidad_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'localidades','descripcion')));
+        this.filteredCatalogs['tipos_caminos']            = this.cluesForm.get('tipo_camino_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'tipos_caminos','descripcion')));        
 
 
         if(obj)
@@ -164,6 +158,53 @@ export class EditarComponent implements OnInit {
   displayFn(value: any, valueLabel: string){
     return value ? value[valueLabel] : value;
   }
+
+
+  showRegionesDialog(index_editable = null){
+    let configDialog = {};
+    let index = index_editable;
+    
+    if(this.mediaSize == 'xs'){
+      configDialog = {
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        height: '100%',
+        width: '100%',
+        data:{scSize:this.mediaSize, editable: this.datosRegion[index_editable] },
+      };
+    }else{
+      
+      configDialog = {
+        width: '95%',
+        data:{ editable: this.datosRegion[index_editable] },
+      }
+    }
+    const dialogRef = this.dialog.open(RegionesDialogComponent, configDialog);
+    dialogRef.afterClosed().subscribe(valid => {
+      console.log(valid);
+      if(valid){
+        if(valid.estatus){
+         
+          if(index != null)
+          {
+            this.datosRegion[index] = valid.datos;  
+          }else{
+            if(this.datosRegion.length == 4)
+            {
+              let mensaje = "Solo se puede agregar hasta 4 grados escolares";
+              this.sharedService.showSnackBar(mensaje, "ERROR", 3000);
+            }else{
+              this.datosRegion.push(valid.datos);
+            }
+            
+          }
+          this.dataSourceRegiones.data = this.datosRegion;
+          
+        }
+      }
+    });
+  }
+
 
   loadCluesData(id:any)
   {

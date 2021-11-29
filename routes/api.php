@@ -54,6 +54,10 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::get('catalogo-localidad',            'API\Modulos\CatalogosController@catalogoLocalidad');
     Route::get('catalogo-clues',                'API\Modulos\CatalogosController@catalogoClues');
     Route::apiResource('profile',               'API\ProfileController')->only([ 'show', 'update']);
+    Route::apiResource('clues',         'API\Modulos\CluesController');
+    Route::get('ver-info-clue/{id}',    'API\Modulos\CluesController@infoClue');
+    Route::get('busqueda-clues',    'API\Modulos\SearchCatalogsController@getCluesAutocomplete');
+    Route::apiResource('profile',       'API\ProfileController')->only([ 'show', 'update']);
 });
 
 Route::middleware('auth')->get('/avatar-images', function (Request $request) {
