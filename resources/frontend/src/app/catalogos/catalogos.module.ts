@@ -8,19 +8,17 @@ import { LocalidadModule } from './localidad/localidad.module';
 import { MicroregionModule } from './microregion/microregion.module';
 import { PersonalExternoModule } from './personal-externo/personal-externo.module';
 import { PersonalSaludModule } from './personal-salud/personal-salud.module';
+import { CluesModule } from './clues/clues.module';
 import { CatalogosComponent } from './catalogos.component';
-//import { ListaComponent } from './colonias/lista/lista.component';
-//import { FormularioComponent } from './colonias/formulario/formulario.component';
-
 
 @NgModule({
-  declarations: [CatalogosComponent/*, ListaComponent, FormularioComponent*/],
+  declarations: [CatalogosComponent],
   imports: [
     CommonModule,
     CatalogosRoutingModule,
   ],
   exports:[
-    
+    CluesModule,
     GruposModule,
     ColoniasModule,
     LocalidadModule,

@@ -27,8 +27,9 @@ class RegionalizacionCluesPersonalController extends Controller
 
             if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){
-                    return $query->where('descripcion','LIKE','%'.$parametros['query'].'%')
-                                ->orWhere('clues','LIKE','%'.$parametros['query'].'%');
+                    return $query->whereRaw(' concat(nombre," ", apellido_paterno, " ", apellido_materno) like "%'.$parametros['query'].'%"' )
+                                ->orWhere('curp','LIKE','%'.$parametros['query'].'%')
+                                ->orWhere('rfc','LIKE','%'.$parametros['query'].'%');
                 });
             }
             if(isset($parametros['page'])){
@@ -40,8 +41,9 @@ class RegionalizacionCluesPersonalController extends Controller
 
             if(isset($parametros['query'])){
                 $objeto_externo = $objeto_externo->where(function($query)use($parametros){
-                    return $query->where('descripcion','LIKE','%'.$parametros['query'].'%')
-                                ->orWhere('clues','LIKE','%'.$parametros['query'].'%');
+                    return $query->whereRaw(' concat(nombre," ", apellido_paterno, " ", apellido_materno) like "%'.$parametros['query'].'%"' )
+                                ->orWhere('curp','LIKE','%'.$parametros['query'].'%')
+                                ->orWhere('rfc','LIKE','%'.$parametros['query'].'%');
                 });
             }
             if(isset($parametros['page'])){
@@ -54,29 +56,7 @@ class RegionalizacionCluesPersonalController extends Controller
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
     }
-    /*public function index(Request $request)
-    {
-        try{
-            //$access = $this->getUserAccessData();
-            $parametros = $request->all();
-            $objeto = Clues::with("regionalizaciones_personal");
 
-            if(isset($parametros['query'])){
-                $objeto = $objeto->where(function($query)use($parametros){
-                    return $query->where('descripcion','LIKE','%'.$parametros['query'].'%')
-                                ->orWhere('clues','LIKE','%'.$parametros['query'].'%');
-                });
-            }
-            if(isset($parametros['page'])){
-                $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
-                $objeto = $objeto->paginate($resultadosPorPagina);
-            }
-
-            return response()->json(['data'=>$objeto],HttpResponse::HTTP_OK);
-        }catch(\Exception $e){
-            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
-        }
-    }*/
 
     public function show(Request $request, $id)
     {
@@ -103,7 +83,9 @@ class RegionalizacionCluesPersonalController extends Controller
             
             if($parametros['tipo'] == 1)
             {
-                $objeto = Trabajador::whereRaw("trabajador.id not in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=".$parametros['tipo']."  and deleted_at is null)");
+                $objeto = Trabajador::
+                whereRaw("trabajador.id not in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=".$parametros['tipo']."  and deleted_at is null)");
+            
             }else if($parametros['tipo'] == 2)
             {
                 $objeto = TrabajadorExterno::whereRaw("trabajador_externo.id not in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=".$parametros['tipo']." and deleted_at is null)");
@@ -119,6 +101,47 @@ class RegionalizacionCluesPersonalController extends Controller
             return response()->json($objeto,HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
+
+    public function transferirPersonal(Request $request)
+    {
+        $mensajes = [
+            
+            'required'      => "required",
+            'email'         => "email",
+            'unique'        => "unique"
+        ];
+        $inputs = $request->all();
+        $reglas = [
+            'clues'              => 'required',
+            'clues_anterior'     => 'required',
+            'trabajador_id'      => 'required',
+        ];
+        
+        DB::beginTransaction();
+        
+        $v = Validator::make($inputs, $reglas, $mensajes);
+        //busqueda de tramite actual
+        if ($v->fails()) {
+            return response()->json(['error' => "Hace falta campos obligatorios. ".$v->errors() ], HttpResponse::HTTP_CONFLICT);
+        }
+        try {
+            $object = RelRegionalizacionRh::where("clues", $inputs['clues_anterior'])->where("trabajador_id", $inputs['trabajador_id']);
+            $object->delete();
+            
+            $nuevo = new RelRegionalizacionRh();
+            $nuevo->clues               = $inputs['clues']['clues'];
+            $nuevo->tipo_trabajador_id  = 1;
+            $nuevo->trabajador_id       = $inputs['trabajador_id'];
+            $nuevo->save();
+            DB::commit();
+            
+        return response()->json(["data"=>$nuevo],HttpResponse::HTTP_OK);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return Response::json(['error' => $e->getMessage()], HttpResponse::HTTP_CONFLICT);
         }
     }
     /*

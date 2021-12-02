@@ -19,10 +19,11 @@ class CluesController extends Controller
     {
         try{
             $access = $this->getUserAccessData();
+            //return $access;
             $parametros = $request->all();
-
+            //return response()->json(['data'=>$access->lista_clues, "consulta"=>"hola"],HttpResponse::HTTP_OK);
             $clues = Clues::whereNull("deleted_at");
-
+            
             if(!$access->is_admin){
                 $clues = $clues->whereIn('clues', $access->lista_clues)->with('catalogo_localidad', 'catalogo_microrregion');
             }
@@ -39,9 +40,6 @@ class CluesController extends Controller
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
                 $clues = $clues->paginate($resultadosPorPagina);
             }
-
-            
-
 
             return response()->json(['data'=>$clues],HttpResponse::HTTP_OK);
         }catch(\Exception $e){
@@ -144,23 +142,20 @@ class CluesController extends Controller
             $loggedUser = auth()->userOrFail();
         }
         
-        //$loggedUser->load('perfilCr');
-        $loggedUser->load('gruposUnidades.listaCR');
-        
-        $lista_cr = [];
-        $lista_clues = [];
-        
-        foreach ($loggedUser->gruposUnidades as $grupo) {
-            $lista_unidades = $grupo->listaCR->pluck('clues','cr')->toArray();
-            
-            $lista_clues += $lista_clues + array_values($lista_unidades);
-            $lista_cr += $lista_cr + array_keys($lista_unidades);
-        }
-
+        $loggedUser->load('gruposUnidades.listaClues');
         $accessData = (object)[];
+        $lista_clues = [];
+        $distrito = [];
+        foreach ($loggedUser->gruposUnidades as $grupo) {
+            $lista_unidades = $grupo->listaClues->pluck('clues')->toArray();
+            $lista_clues += $lista_clues + array_values($lista_unidades);
+        }
+        
+        $distrito = $loggedUser->distrito->pluck("distrito_id");
+        
         $accessData->lista_clues = $lista_clues;
-        $accessData->lista_cr = $lista_cr;
-
+        $accessData->distrito = $distrito;
+        
         if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
             $accessData->is_admin = true;
         }else{

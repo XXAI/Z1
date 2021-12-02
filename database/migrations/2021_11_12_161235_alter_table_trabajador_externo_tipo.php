@@ -18,11 +18,11 @@ class AlterTableTrabajadorExternoTipo extends Migration
         });
 
         Schema::table('trabajador_externo', function (Blueprint $table) {
-            $table->smallInteger('tipo_personal_id')->after('apellido_paterno');
+            $table->smallInteger('tipo_personal_id')->after('apellido_materno');
         });
 
         Schema::table('trabajador', function (Blueprint $table) {
-            $table->smallInteger('tipo_personal_id')->after('apellido_paterno');
+            $table->smallInteger('tipo_personal_id')->after('apellido_materno');
         });
 
         Schema::table('catalogo_colonia', function (Blueprint $table) {

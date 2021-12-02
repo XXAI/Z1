@@ -30,7 +30,9 @@ export class EditarComponent implements OnInit {
   estatus_clues:boolean = false;
   datos_clues:any;
   filteredClues: Observable<any[]>;
+  filteredLocalidad: Observable<any[]>;
   cluesIsLoading: boolean = false;
+  localidadIsLoading: boolean = false;
 
   catalogos: any = {};
   filteredCatalogs:any = {};
@@ -62,6 +64,13 @@ export class EditarComponent implements OnInit {
   isLoading:boolean = false;
   
   cluesForm = this.fb.group({
+    //'tipos_regionalizacion_id':[''],
+    'microrregion_id': ['',Validators.required],
+    'microrregiones': [''],
+    'tipo_camino_id': [''],
+    'localidad': [''],
+    'localidad_id': ['',Validators.required],
+    'municipio_id': ['',Validators.required],
     'clues': ['',Validators.required],
     'descripcion': ['',Validators.required],
     'direccion': ['',Validators.required],
@@ -72,17 +81,7 @@ export class EditarComponent implements OnInit {
     'fecha_operacion': ['',Validators.required],
     'latitud': ['',Validators.required],
     'longitud': ['',Validators.required],
-    'microrregion_id': ['',Validators.required],
-    'microrregiones': [''],
-    'localidad_id': ['',Validators.required],
-    'localidades': [''],
-    'tipo_camino_id': [''],
-    'tipos_regionalizacion_id':[''],
-    'regionalizaciones':this.fb.array([]),
-
-    
-    // 'responsable_id': [''],
-    // 'cargo_responsable': ['',Validators.required],
+    //'regionalizaciones':this.fb.array([]),
   });
 
   ngOnInit() {
@@ -112,21 +111,20 @@ export class EditarComponent implements OnInit {
       {nombre:'microrregiones',orden:'descripcion'},
       {nombre:'localidades',orden:'descripcion'},
       {nombre:'tipos_caminos',orden:'descripcion'},
+      {nombre:'municipios',orden:'descripcion'},
     ];
 
     this.cluesService.obtenerCatalogos(carga_catalogos).subscribe(
       response => {
-
-        this.catalogos = response.data;
+        this.catalogos = response;
 
         this.filteredCatalogs['microrregiones']           = this.cluesForm.get('microrregion_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'microrregiones','descripcion')));
         this.filteredCatalogs['localidades']              = this.cluesForm.get('localidad_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'localidades','descripcion')));
         this.filteredCatalogs['tipos_caminos']            = this.cluesForm.get('tipo_camino_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'tipos_caminos','descripcion')));        
-
-
+        
         if(obj)
         {
-            console.log("asdasd", obj);
+         
            this.cluesForm.get('microrregion_id').setValue(obj.catalogo_microrregion);
            this.cluesForm.get('localidad_id').setValue(obj.catalogo_localidad);
           //this.valor_unidad = parseInt(obj.tipo_unidad_id);
@@ -134,6 +132,11 @@ export class EditarComponent implements OnInit {
         this.isLoading = false; 
       } 
     );
+
+  }
+
+  displayLocalidadFn()
+  {
 
   }
 
@@ -181,7 +184,7 @@ export class EditarComponent implements OnInit {
     }
     const dialogRef = this.dialog.open(RegionesDialogComponent, configDialog);
     dialogRef.afterClosed().subscribe(valid => {
-      console.log(valid);
+      
       if(valid){
         if(valid.estatus){
          
@@ -213,8 +216,8 @@ export class EditarComponent implements OnInit {
 
     this.cluesService.obtenerDatosClues(id,params).subscribe(
       response =>{
-        console.log(response);
-        this.cluesForm.reset();
+        console.log(response.data);
+        //this.cluesForm.reset();
 
         if(typeof response === 'object'){
           //this.datos_clues = response.data;
@@ -226,7 +229,7 @@ export class EditarComponent implements OnInit {
         this.isLoading = false;
       },
       errorResponse =>{
-        console.log(errorResponse);
+        //console.log(errorResponse);
         var errorMessage = "Ocurrió un error.";
         if(errorResponse.status == 409){
           errorMessage = errorResponse.error.error.message;

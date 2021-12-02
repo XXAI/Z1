@@ -1,0 +1,51 @@
+<h1 mat-dialog-title style="background-color: #3f51b5; color: white; padding: 5pt 10pt; border-bottom: 3px solid #CFCFCF; margin: 0pt;">TRANFERIR ( {{ rfc }} ) {{ nombre }}</h1>
+<!--<hr style="border: 1px solid #3f51b5;">-->
+<div mat-dialog-content>
+    <form [formGroup]="transferirForm">
+        <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+
+            </div>
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                <div fxFlex="100" fxFlex.xs="100">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                        <b>DE ( {{ clues }} )  {{nombre_unidad}}</b>
+                    </div>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                <div fxFlex="100" fxFlex.xs="100">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                        <mat-form-field fxFlex="100" fxFlex.xs="100" appearance="fill">
+                            <mat-label>CLUES</mat-label>
+                            <input matInput placeholder="CLUES" [matAutocomplete]="cluesAutocomplete" formControlName='clues'>
+                            <mat-autocomplete #cluesAutocomplete="matAutocomplete" [displayWith]="displayCluesFn" [panelWidth]="'auto'">
+                                <mat-option *ngIf="cluesIsLoading" class="is-loading">
+                                    <mat-spinner diameter="25"></mat-spinner>
+                                </mat-option>
+                                <ng-container *ngIf="!cluesIsLoading">
+                                    <mat-option *ngFor="let item of filteredClues" [value]="item">
+                                        [{{item.clues}}] {{ item.descripcion }}
+                                    </mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="transferirForm.get('clues').invalid && (transferirForm.get('clues').dirty || transferirForm.get('clues').touched)">
+                                <span *ngIf="transferirForm.get('clues').errors.required">Campo obligatorio</span>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                <div fxFlex="100" fxFlex.xs="100">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                        <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!transferirForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
+
+                        <button mat-raised-button (click)="cerrar()" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </form>
+</div>

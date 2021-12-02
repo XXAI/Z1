@@ -41,6 +41,8 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::get('dashboard-activo',                  'API\Modulos\DashboardController@activeDashboard');
     Route::post('catalogos',                        'API\Modulos\SearchCatalogsController@getCatalogs');
 
+    Route::apiResource('grupos_unidades',           'API\Modulos\GrupoUnidadesController');
+    
     /* Apis del sistema */
     Route::apiResource('clues',                     'API\Modulos\CluesController');
     Route::get('ver-info-clue/{id}',                'API\Modulos\CluesController@infoClue');
@@ -67,7 +69,7 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::apiResource('trabajador-salud',              'API\Modulos\TrabajadorSaludController');
     Route::apiResource('trabajador-externo',            'API\Modulos\TrabajadorExternoController');
     Route::get('catalogo-municipio/{id}',               'API\Modulos\CatalogosController@catalogoMunicipio');
-    Route::get('catalogo-localidad',                    'API\Modulos\CatalogosController@catalogoLocalidad');
+    //Route::get('catalogo-localidad',                    'API\Modulos\CatalogosController@catalogoLocalidad');
     Route::get('catalogo-clues',                        'API\Modulos\CatalogosController@catalogoClues');
     Route::apiResource('profile',                       'API\ProfileController')->only([ 'show', 'update']);
 
@@ -81,6 +83,7 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::get('regionalizacion-externo-filtro/{id}',    'API\Modulos\RegionalizacionCluesPersonalController@filtroExterno');
     Route::get('delete-personal/{id}',                   'API\Modulos\RegionalizacionCluesPersonalController@deletePersonal');
     Route::get('buscador-personal',                      'API\Modulos\RegionalizacionCluesPersonalController@buscarPersonal');
+    Route::post('transferir-personal',                    'API\Modulos\RegionalizacionCluesPersonalController@transferirPersonal');
 });
 
 Route::middleware('auth')->get('/avatar-images', function (Request $request) {

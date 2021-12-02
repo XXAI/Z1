@@ -181,6 +181,7 @@ export class FormularioComponent implements OnInit {
         this.dataSource = response.data.data;
         this.regionalizacionForm.patchValue({clues:this.data.clues});
         this.isLoading = false;
+        this.resultsLength = response.data.total;
       },
       responsError =>{
         this.isLoading = false;

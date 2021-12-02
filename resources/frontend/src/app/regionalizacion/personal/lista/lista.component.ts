@@ -12,6 +12,7 @@ import { map, startWith } from 'rxjs/operators';
 import { trigger, transition, animate, style } from '@angular/animations';
 import { MediaObserver } from '@angular/flex-layout';
 import { FormularioComponent } from '../formulario/formulario.component';
+import { TransferirComponent } from '../transferir/transferir.component';
 
 @Component({
   selector: 'app-lista',
@@ -25,11 +26,18 @@ export class ListaComponent implements OnInit {
   showMyStepper:boolean = false;
   searchQuery: string = '';
   mediaSize:string;
+  
   pageEvent: PageEvent;
   resultsLength: number = 0;
   currentPage: number = 0;
   pageSize: number = 20;
   selectedItemIndex: number = -1;
+
+  pageEventExterno: PageEvent;
+  resultsLengthExterno: number = 0;
+  currentPageExterno: number = 0;
+  pageSizeExterno: number = 20;
+  selectedItemIndexExterno: number = -1;
 
   displayedColumns: string[] = ['nombre','tipo','unidad','actions'];
   displayedExternoColumns: string[] = ['nombre','tipo','localidad','actions'];
@@ -97,6 +105,8 @@ export class ListaComponent implements OnInit {
         console.log(response);
         this.dataSource = response.salud.data;
         this.dataSourceExterno = response.externo.data;
+        this.resultsLength = response.salud.total;
+        this.resultsLengthExterno = response.externo.total;
         this.isLoading = false;
       },
       responsError =>{
@@ -154,6 +164,35 @@ export class ListaComponent implements OnInit {
     } 
     console.log(configDialog);
     const dialogRef = this.dialog.open(FormularioComponent, configDialog);
+    dialogRef.afterClosed().subscribe(valid => {
+      if(valid){
+        this.loadData();
+      }else{
+        console.log('Cancelar');
+      }
+    });
+  }
+
+  transferir(obj:any, tipo:number)
+  {
+    let configDialog = {};
+    let nombre = obj.nombre+" "+obj.apellido_paterno+" "+obj.apellido_materno;
+    if(this.mediaSize == 'xs'){
+      configDialog = {
+        maxWidth: '80vw',
+        maxHeight: '100vh',
+        data:{trabajador_id:obj.id, rfc: obj.rfc, nombre: nombre, clues: obj.rel_rh.clues.clues, unidad: obj.rel_rh.clues.descripcion}
+      };
+    }else{
+      configDialog = {
+        width: '80%',
+        maxWidth: '80vw',
+        maxHeight: '60vh',
+        data:{trabajador_id:obj.id, rfc: obj.rfc, nombre: nombre, clues: obj.rel_rh.clues.clues, unidad: obj.rel_rh.clues.descripcion}
+      }
+    } 
+    console.log(configDialog);
+    const dialogRef = this.dialog.open(TransferirComponent, configDialog);
     dialogRef.afterClosed().subscribe(valid => {
       if(valid){
         this.loadData();

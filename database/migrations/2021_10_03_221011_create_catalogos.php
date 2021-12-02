@@ -50,9 +50,9 @@ class CreateCatalogos extends Migration
         Schema::create('catalogo_clues', function (Blueprint $table) {
             $table->string("clues", 15)->primary()->index();
             $table->smallInteger("catalogo_microrregion_id");
-            $table->smallInteger("catalogo_municipio_id");
+            //$table->smallInteger("catalogo_municipio_id");
             $table->smallInteger("catalogo_localidad_id");
-            $table->smallInteger("catalogo_distrito_id");
+            //$table->smallInteger("catalogo_distrito_id");
             $table->string("descripcion", 100);
             $table->string("direccion", 100);
             $table->string("telefono", 50);

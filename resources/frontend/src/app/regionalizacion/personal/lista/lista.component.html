@@ -75,6 +75,7 @@
                                             </button>
                                             <mat-menu #menu="matMenu">
                                                 <button mat-menu-item (click)="editar(row, 1)"><mat-icon color="primary">edit</mat-icon>Editar</button>
+                                                <button mat-menu-item (click)="transferir(row, 1)"><mat-icon color="primary">call_split</mat-icon>Transferir</button>
                                                 <button mat-menu-item (click)="eliminar(row, 1)"><mat-icon color="warn">close</mat-icon>Eliminar</button>
                                             </mat-menu>
                                         </td>
@@ -153,12 +154,12 @@
                                     </ng-container>
 
                                     <tr mat-header-row *matHeaderRowDef="displayedExternoColumns; sticky: true"></tr>
-                                    <tr mat-row [ngClass]="{'selected-item': i==selectedItemIndex}" *matRowDef="let row; let i = index; columns: displayedExternoColumns;"></tr>
+                                    <tr mat-row [ngClass]="{'selected-item': i==selectedItemIndexExterno}" *matRowDef="let row; let i = index; columns: displayedExternoColumns;"></tr>
 
                                     <tr mat-footer-row *matFooterRowDef="['noResultsFound']" class="not-results-found" [ngClass]="{'hide':!(dataSourceExterno!=null && dataSourceExterno.length==0)}"></tr>
                                 </table>
                             </div>
-                            <mat-paginator #paginator [pageSize]="pageSize" [pageIndex]="currentPage" [length]="resultsLength" [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons (page)="pageEvent = loadData($event)"></mat-paginator>
+                            <mat-paginator #paginator [pageSize]="pageSize" [pageIndex]="currentPage" [length]="resultsLengthExterno" [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons (page)="pageEventExterno = loadData($event)"></mat-paginator>
                         </div>
                     </mat-card>
                 </mat-tab>

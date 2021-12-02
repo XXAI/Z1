@@ -79,14 +79,14 @@ export class RegionesDialogComponent implements OnInit {
     this.cluesService.obtenerCatalogos(carga_catalogos).subscribe(
       response => {
 
-        this.catalogos = response.data;
+        /*this.catalogos = response.data;
 
         this.filteredCatalogs['municipios']             = this.RegionesForm.get('catalogo_municipio_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'municipios','descripcion')));
         this.filteredCatalogs['microrregiones']         = this.RegionesForm.get('catalogo_tipo_regionalizacion_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'microrregiones','descripcion')));
         this.filteredCatalogs['tipos_caminos']          = this.RegionesForm.get('catalogo_tipo_camino_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'tipos_caminos','descripcion')));
         this.filteredCatalogs['localidades']            = this.RegionesForm.get('catalogo_localidad_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'localidades','descripcion')));
         this.filteredCatalogs['clues']                  = this.RegionesForm.get('clues').valueChanges.pipe(startWith(''),map(value => this._filter(value,'clues','descripcion')));
-
+*/
 
 
         // if(obj)
@@ -153,7 +153,7 @@ export class RegionesDialogComponent implements OnInit {
 
     this.cluesService.obtenerCatalogos(carga_catalogos).subscribe(
       response => {
-        if(response.data['localidades'].length > 0){
+        /*if(response.data['localidades'].length > 0){
           this.catalogos['localidades'] = response.data['localidades'];
         }
         else{
@@ -161,7 +161,7 @@ export class RegionesDialogComponent implements OnInit {
          this.RegionesForm.get('catalogo_localidad_id').disable();
         }
         
-        this.actualizarValidacionesCatalogos('localidades');
+        this.actualizarValidacionesCatalogos('localidades');*/
         this.isLoading = false;
       }
     );
@@ -182,14 +182,14 @@ export class RegionesDialogComponent implements OnInit {
 
     this.cluesService.obtenerCatalogos(carga_catalogos).subscribe(
       response => {
-        if(response.data['clues'].length > 0){
+        /*if(response.data['clues'].length > 0){
           this.catalogos['clues'] = response.data['clues'];
           this.actualizarValidacionesCatalogos('clues');
         }else{
          this.RegionesForm.get('clue').disable();
          this.RegionesForm.get('clues').disable();
         }
-        
+        */
         this.isLoading = false;
       }
     );

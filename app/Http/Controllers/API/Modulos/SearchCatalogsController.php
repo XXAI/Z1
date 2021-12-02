@@ -191,16 +191,16 @@ class SearchCatalogsController extends Controller
             $loggedUser = auth()->userOrFail();
         }
         
-        $loggedUser->load('gruposUnidades.listaCR', 'gruposUnidades.listaFirmantes');
+        $loggedUser->load('gruposUnidades', 'gruposUnidades');
         
         $lista_cr = [];
         $lista_clues = [];
         
         foreach ($loggedUser->gruposUnidades as $grupo) {
-            $lista_unidades = $grupo->listaCR->pluck('clues','cr')->toArray();
+            $lista_unidades = $grupo->listaCR->pluck('clues')->toArray();
             
             $lista_clues += $lista_clues + array_values($lista_unidades);
-            $lista_cr += $lista_cr + array_keys($lista_unidades);
+            //$lista_cr += $lista_cr + array_keys($lista_unidades);
         }
 
         $accessData = (object)[];

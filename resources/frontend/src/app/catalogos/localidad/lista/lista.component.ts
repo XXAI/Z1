@@ -68,6 +68,7 @@ export class ListaComponent implements OnInit {
     this.localidadService.getLocaliadList(params).subscribe(
       response =>{
         this.dataSource = response.data.data;
+        this.resultsLength = response.data.total;
         this.isLoading = false;
       },
       errorResponse =>{

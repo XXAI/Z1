@@ -17,16 +17,20 @@ class RegionalizacionCluesController extends Controller
     public function index(Request $request)
     {
         try{
-            //$access = $this->getUserAccessData();
+            $access = $this->getUserAccessData();
             $parametros = $request->all();
             $objeto = Clues::with("regionalizaciones", "catalogo_microrregion");
 
-            /*if(isset($parametros['query'])){
+            if(!$access->is_admin){
+                $objeto = $objeto->whereIn('clues', $access->lista_clues);
+            }
+
+            if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){
-                    return $query->where('clave_colonia','LIKE','%'.$parametros['query'].'%')
+                    return $query->where('clues','LIKE','%'.$parametros['query'].'%')
                                 ->orWhere('descripcion','LIKE','%'.$parametros['query'].'%');
                 });
-            }*/
+            }
             if(isset($parametros['page'])){
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
                 $objeto = $objeto->paginate($resultadosPorPagina);
@@ -200,5 +204,33 @@ class RegionalizacionCluesController extends Controller
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
+    }
+
+    private function getUserAccessData($loggedUser = null){
+        if(!$loggedUser){
+            $loggedUser = auth()->userOrFail();
+        }
+        
+        $loggedUser->load('gruposUnidades.listaClues');
+        $accessData = (object)[];
+        $lista_clues = [];
+        $distrito = [];
+        foreach ($loggedUser->gruposUnidades as $grupo) {
+            $lista_unidades = $grupo->listaClues->pluck('clues')->toArray();
+            $lista_clues += $lista_clues + array_values($lista_unidades);
+        }
+        
+        $distrito = $loggedUser->distrito->pluck("distrito_id");
+        
+        $accessData->lista_clues = $lista_clues;
+        $accessData->distrito = $distrito;
+        
+        if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
+            $accessData->is_admin = true;
+        }else{
+            $accessData->is_admin = false;
+        }
+
+        return $accessData;
     }
 }

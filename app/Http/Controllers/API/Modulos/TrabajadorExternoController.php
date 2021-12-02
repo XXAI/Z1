@@ -15,7 +15,7 @@ class TrabajadorExternoController extends Controller
     public function index(Request $request)
     {
         try{
-            //$access = $this->getUserAccessData();
+            $access = $this->getUserAccessData();
             $parametros = $request->all();
             $objeto = TrabajadorExterno::join("regionalizacion_rh", "regionalizacion_rh.trabajador_id", "=", "trabajador_externo.id")
                                 ->join("catalogo_localidad", "regionalizacion_rh.catalogo_localidad_id", "catalogo_localidad.id")
@@ -26,6 +26,9 @@ class TrabajadorExternoController extends Controller
                                     "catalogo_localidad.descripcion as localidad", "catalogo_municipio.descripcion as municipio", 
                                     "catalogo_tipo_trabajador.abreviatura as abreviatura", "catalogo_tipo_trabajador.descripcion as tipo_trabajador");
 
+            if(!$access->is_admin){
+                $objeto = $objeto->whereIn('regionalizacion_rh.catalogo_localidad_id', $access->arreglo_distrito);
+            }
            
             if(isset($parametros['page'])){
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
@@ -186,5 +189,35 @@ class TrabajadorExternoController extends Controller
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
+    }
+
+    private function getUserAccessData($loggedUser = null){
+        if(!$loggedUser){
+            $loggedUser = auth()->userOrFail();
+        }
+        
+        //$loggedUser->load('gruposUnidades.listaClues');
+        $accessData = (object)[];
+        $lista_clues = [];
+        $distrito = [];
+        $string_distrito = "";
+        $distrito = $loggedUser->distrito->pluck("distrito_id");
+        
+        $accessData->lista_clues = $lista_clues;
+        
+        foreach ($distrito as $key => $value) {
+           if($key > 0){ $string_distrito .=",";}
+           $string_distrito .= $value;
+        }
+        $accessData->distrito = $string_distrito;
+        $accessData->arreglo_distrito = $distrito;
+        
+        if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
+            $accessData->is_admin = true;
+        }else{
+            $accessData->is_admin = false;
+        }
+
+        return $accessData;
     }
 }

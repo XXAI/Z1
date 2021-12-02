@@ -36,7 +36,7 @@ export class CluesService {
   }
 
   obtenerCatalogos(payload) {
-    return this.http.post<any>(this.url_obtener_catalogos,payload).pipe(
+    return this.http.get<any>(this.url_obtener_catalogos,payload).pipe(
       map( (response) => {
         return response;
       }

@@ -1,8 +1,10 @@
 <br>
-<section class="profile" >
+<section class="profile">
     <div fxLayout="row" fxLayoutAlign="space-evenly center">
         <section fxFlex="95" fxLayout="column" fxLayoutAlign="center">
-            <div class="data-loading-shade" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
+            <div class="data-loading-shade" *ngIf="isLoading">
+                <mat-spinner></mat-spinner>
+            </div>
             <mat-card fxFlex.xs="100%" fxFlex="90%">
                 <div fxLayout="row" fxLayout.xs="column">
                     <div fxFlex fxLayout="row wrap">
@@ -12,20 +14,28 @@
                             <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                 <mat-icon>close</mat-icon>
                             </button>
-                            
+
                         </mat-form-field>
                     </div>
-                    
+                    <div fxFlex="none" fxFlex.xs="100">
+                        <div fxFlex></div>
+                        <section class="search-button">
+                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
+                                <mat-icon>search</mat-icon> Buscar
+                            </button>
+
+                        </section>
+                    </div>
                 </div>
             </mat-card>
 
             <mat-accordion class="advanced-filter-container">
-                <mat-expansion-panel #advancedFilter  class="advanced-filter">
+                <mat-expansion-panel #advancedFilter class="advanced-filter">
                     <br>
-                   
+
                 </mat-expansion-panel>
             </mat-accordion>
-            
+
             <mat-card fxFlex.xs="100%" fxFlex="90%">
                 <mat-divider [inset]="true"></mat-divider>
 
@@ -33,7 +43,7 @@
                     <div class="data-table-container">
                         <table #dataTable mat-table [dataSource]="dataSource" class="data-table" matSort>
                             <!-- ID Column -->
-                            <ng-container matColumnDef="Clues" >
+                            <ng-container matColumnDef="Clues">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Clues </th>
                                 <td mat-cell *matCellDef="let row">{{ row.clues }}</td>
                             </ng-container>
@@ -41,9 +51,9 @@
                             <!-- Localidad Column  -->
                             <ng-container matColumnDef="Localidad">
                                 <th mat-header-cell *matHeaderCellDef> Localidad </th>
-                                <td mat-cell *matCellDef="let row"> {{(row.catalogo_localidad != null) ? row.catalogo_localidad.descripcion : 'NO ASIGNADO' | uppercase}} </td> 
+                                <td mat-cell *matCellDef="let row"> {{(row.catalogo_localidad != null) ? row.catalogo_localidad.descripcion : 'NO ASIGNADO' | uppercase}} </td>
                             </ng-container>
-                    
+
                             <!-- Unidad Medica Column  -->
                             <ng-container matColumnDef="Unidad">
                                 <th mat-header-cell *matHeaderCellDef> Nombre Unidad </th>
@@ -52,10 +62,10 @@
 
                             <ng-container matColumnDef="actions">
                                 <th mat-header-cell *matHeaderCellDef>Acciones</th>
-                                <td mat-cell *matCellDef="let row; let i = index" >
-
-
-                                    <button mat-button mat-stroked-button [matMenuTriggerFor]="menu">Opciones</button>
+                                <td mat-cell *matCellDef="let row; let i = index">
+                                    <button mat-mini-fab color="primary" mat-stroked-button [matMenuTriggerFor]="menu">
+                                        <mat-icon>menu</mat-icon>
+                                    </button>
                                     <mat-menu #menu="matMenu">
                                         <button mat-menu-item routerLink="/catalogos/clues/editar/{{row.clues}}" matTooltip="Editar Datos de la Clue"><mat-icon color="primary">edit</mat-icon>Editar</button>
                                         <button mat-menu-item (click)="verClue(row.clues,i)" matTooltip="Ver Detalle de la Clues"><mat-icon color="primary">remove_red_eye</mat-icon>Detalles</button>
@@ -66,10 +76,10 @@
 
                             <ng-container matColumnDef="noResultsFound">
                                 <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-                                    No se encontraron registros 
+                                    No se encontraron registros
                                 </td>
                             </ng-container>
-                            
+
                             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                             <tr mat-row [ngClass]="{'selected-item': i==selectedItemIndex}" *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
 

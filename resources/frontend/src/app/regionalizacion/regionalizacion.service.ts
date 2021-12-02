@@ -17,6 +17,7 @@ export class RegionalizacionService {
 
   url_personal              = `${environment.base_url}/reginalizacion-clues-personal`;
   url_buscador_personal     = `${environment.base_url}/buscador-personal`;
+  url_transferir_personal   = `${environment.base_url}/transferir-personal`;
   url_clues                 = `${environment.base_url}/catalogo-clues`;
   url_salud_filtro          = `${environment.base_url}/regionalizacion-salud-filtro`;
   url_personal_delete       = `${environment.base_url}/delete-personal`;
@@ -151,6 +152,15 @@ export class RegionalizacionService {
       }
     ));
   }
+
+  savePersonalTransferencia(payload:any, ):Observable<any> {
+    return this.http.post<any>(this.url_transferir_personal, payload).pipe(
+      map( (response: any) => {        
+        return response;
+      }
+    ));
+  }
+
   editPersonal(id:number, payload:any):Observable<any> {
     return this.http.put<any>(this.url_personal+"/"+id, payload).pipe(
       map( (response: any) => {        

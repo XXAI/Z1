@@ -31,7 +31,7 @@ class CreateRegionalizacion extends Migration
             $table->smallInteger("catalogo_localidad_id");
             $table->smallInteger("tipo_trabajador_id");
             $table->smallInteger("trabajador_id");
-            $table->boolean("responsable_id");
+            //$table->boolean("responsable_id");
             $table->timestamps();
             $table->softDeletes();
         });

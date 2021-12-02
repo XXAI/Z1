@@ -14,13 +14,15 @@ class LocalidadController extends Controller
     public function index(Request $request)
     {
         try{
-            //$access = $this->getUserAccessData();
+            $access = $this->getUserAccessData();
             $parametros = $request->all();
             $objeto = Localidad::with("municipio.distrito");
 
-            /*if(!$access->is_admin){
-                $clues = $objeto->whereIn('clues', $access->lista_clues);
-            }*/
+            //return response()->json(['data'=>$access],HttpResponse::HTTP_OK);
+                
+            if(!$access->is_admin){
+                $objeto = $objeto->whereRaw("catalogo_localidad.catalogo_municipio_id in (select id from catalogo_municipio where catalogo_distrito_id in (".$access->distrito."))");
+            }
             
             if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){
@@ -174,5 +176,34 @@ class LocalidadController extends Controller
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
+    }
+
+    private function getUserAccessData($loggedUser = null){
+        if(!$loggedUser){
+            $loggedUser = auth()->userOrFail();
+        }
+        
+        //$loggedUser->load('gruposUnidades.listaClues');
+        $accessData = (object)[];
+        $lista_clues = [];
+        $distrito = [];
+        $string_distrito = "";
+        $distrito = $loggedUser->distrito->pluck("distrito_id");
+        
+        $accessData->lista_clues = $lista_clues;
+        
+        foreach ($distrito as $key => $value) {
+           if($key > 0){ $string_distrito .=",";}
+           $string_distrito .= $value;
+        }
+        $accessData->distrito = $string_distrito;
+        
+        if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
+            $accessData->is_admin = true;
+        }else{
+            $accessData->is_admin = false;
+        }
+
+        return $accessData;
     }
 }

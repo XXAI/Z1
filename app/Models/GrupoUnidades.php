@@ -16,14 +16,16 @@ class GrupoUnidades extends Model
     }
 
     public function listaCR(){
-        return $this->belongsToMany('App\Models\Cr', 'rel_clues_grupo_unidades', 'grupo_unidades_id', 'cr_id')->withPivot('clues');
+        return $this->belongsToMany('App\Models\Cr', 'rel_clues_grupo_unidades', 'grupo_unidades_id', 'clues')->withPivot('clues');
+    }
+
+    public function listaClues(){
+        return $this->belongsToMany('App\Models\Clues', 'rel_clues_grupo_unidades', 'grupo_unidades_id', 'clues');
     }
 
     public function listaUsuarios(){
         return $this->belongsToMany('App\Models\User', 'rel_grupo_unidades_usuario', 'grupo_unidades_id', 'user_id');
     }
 
-    public function listaFirmantes(){
-        return $this->hasMany('App\Models\Firmantes', 'grupo_unidades_id');
-    }
+
 }

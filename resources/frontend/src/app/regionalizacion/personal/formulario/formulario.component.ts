@@ -67,7 +67,7 @@ export class FormularioComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarCatalogos();
-    console.log(this.data);
+    //console.log(this.data);
   }
 
 

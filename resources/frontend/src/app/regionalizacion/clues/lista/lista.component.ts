@@ -62,7 +62,7 @@ export class ListaComponent implements OnInit {
       configDialog = {
         width: '80%',
         maxWidth: '80vw',
-        maxHeight: '60vh',
+        maxHeight: '100vh',
         data:{clues:obj.clues}
       }
     }
@@ -132,6 +132,7 @@ export class ListaComponent implements OnInit {
         this.dataSource = response.data.data;
         console.log(this.dataSource);
         this.isLoading = false;
+        this.resultsLength = response.data.total;
       },
       errorResponse =>{
         var errorMessage = "Ocurrió un error.";
