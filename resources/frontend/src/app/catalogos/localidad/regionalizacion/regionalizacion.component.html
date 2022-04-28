@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>REGIONALIZACIÓN {{ titulo }} <br>
+    <b>LOCALIDAD:</b> {{ localidad }}
+
+</h1>
+<div mat-dialog-content [class.mat-dialog-content-fullscreen]="mediaSize=='xs'" style="height: 440px;">
+    <div fxLayout="column" fxLayout.xs="column">
+        <mat-list>
+            <mat-list-item *ngFor="let item of dataSource" style="border-bottom: 1px solid #CFCFCF; BACKGROUND-COLOR: lavender;">
+                <div *ngIf="!item.catalogo_clues"><b>{{ item.clues }}</b> ] {{ item.descripcion }}</div>
+                <div *ngIf="item.catalogo_clues"><b>{{ item.catalogo_clues.clues }}</b> ] {{ item.catalogo_clues.descripcion }}</div>
+                [
+            </mat-list-item>
+
+        </mat-list>
+    </div>
+</div>
+<!-- mat-tab-dialog-content -->
+<div mat-dialog-actions>
+    <button mat-raised-button color="info" (click)="dialogRef.close()">
+        <mat-icon>add_circle</mat-icon>
+        CERRAR
+    </button>
+</div>

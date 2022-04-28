@@ -1,4 +1,3 @@
-<br>
 <section class="profile">
     <div fxLayout="row" fxLayoutAlign="space-evenly center">
         <section fxFlex="95" fxLayout="column" fxLayoutAlign="center">
@@ -20,8 +19,8 @@
                     <div fxFlex="none" fxFlex.xs="100">
                         <div fxFlex></div>
                         <section class="search-button">
-                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
-                                <mat-icon>search</mat-icon> Buscar
+                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt; padding: 5pt;">
+                                <mat-icon >search</mat-icon> 
                             </button>
 
                         </section>
@@ -44,31 +43,31 @@
                         <table #dataTable mat-table [dataSource]="dataSource" class="data-table" matSort>
                             <!-- ID Column -->
                             <ng-container matColumnDef="Clues">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Clues </th>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> CLUES </th>
                                 <td mat-cell *matCellDef="let row">{{ row.clues }}</td>
                             </ng-container>
 
                             <!-- Localidad Column  -->
                             <ng-container matColumnDef="Localidad">
-                                <th mat-header-cell *matHeaderCellDef> Localidad </th>
+                                <th mat-header-cell *matHeaderCellDef> LOCALIDAD (SEDE)</th>
                                 <td mat-cell *matCellDef="let row"> {{(row.catalogo_localidad != null) ? row.catalogo_localidad.descripcion : 'NO ASIGNADO' | uppercase}} </td>
                             </ng-container>
 
                             <!-- Unidad Medica Column  -->
                             <ng-container matColumnDef="Unidad">
-                                <th mat-header-cell *matHeaderCellDef> Nombre Unidad </th>
+                                <th mat-header-cell *matHeaderCellDef> NOMBRE UNIDAD </th>
                                 <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                                <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
                                 <td mat-cell *matCellDef="let row; let i = index">
                                     <button mat-mini-fab color="primary" mat-stroked-button [matMenuTriggerFor]="menu">
                                         <mat-icon>menu</mat-icon>
                                     </button>
                                     <mat-menu #menu="matMenu">
                                         <button mat-menu-item routerLink="/catalogos/clues/editar/{{row.clues}}" matTooltip="Editar Datos de la Clue"><mat-icon color="primary">edit</mat-icon>Editar</button>
-                                        <button mat-menu-item (click)="verClue(row.clues,i)" matTooltip="Ver Detalle de la Clues"><mat-icon color="primary">remove_red_eye</mat-icon>Detalles</button>
+                                        <!--<button mat-menu-item (click)="verClue(row.clues,i)" matTooltip="Ver Detalle de la Clues"><mat-icon color="primary">remove_red_eye</mat-icon>Detalles</button>-->
                                     </mat-menu>
 
                                 </td>

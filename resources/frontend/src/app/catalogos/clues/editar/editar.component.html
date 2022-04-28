@@ -27,66 +27,15 @@
             </div>
             <mat-card fxFlex>
                 <h1 mat-dialog-title>
-                    <mat-icon>local_hospital</mat-icon>&nbsp;Unidad Hospitalaria</h1>
+                    <mat-icon>local_hospital</mat-icon>&nbsp;DATOS PRINCIPALES DE LA UNIDAD</h1>
                 <mat-card-content>
                     <section class="edit-container">
 
-                        <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
 
-                            <mat-form-field fxFlex fxFlex.xs="100" *ngIf="!catalogos['microrregiones']">
-                                <mat-label>Microrregiones:</mat-label>
-                                <input matInput formControlName="microrregiones" autocomplete="off">
-                                <mat-hint>Escribe el nombre de la Microrregión</mat-hint>
-                                <mat-error *ngIf="cluesForm.get('microrregiones').hasError('required')">Este campo es obligatorio</mat-error>
-                            </mat-form-field>
-
-                            <mat-form-field fxFlex fxFlex.xs="100" *ngIf="catalogos['microrregiones']">
-                                <mat-label>Microrregiones:</mat-label>
-                                <input type="text" aria-label="microrregion_id" matInput formControlName="microrregion_id" [matAutocomplete]="microrregionAutocomplete">
-                                <mat-autocomplete #microrregionAutocomplete="matAutocomplete" [displayWith]="getDisplayFn('descripcion')">
-                                    <mat-option *ngFor="let item of filteredCatalogs['microrregiones'] | async" [value]="item">
-                                        {{item.descripcion}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                                <mat-hint align="end" *ngIf="cluesForm.get('microrregion_id').value">Clave: [{{cluesForm.get('microrregion_id').value.clave_microregion}}]</mat-hint>
-                                <mat-error *ngIf="cluesForm.get('microrregion_id').hasError('required')">Este campo es obligatorio</mat-error>
-                            </mat-form-field>
-
-
-                            <mat-form-field fxFlex="33" fxFlex.xs="100">
-                                <mat-label>MUNICIPIO </mat-label>
-                                <mat-select formControlName="municipio_id" required>
-                                    <mat-option *ngFor="let item of catalogos['municipio']" [value]="item.id">
-                                        {{item.descripcion}}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error *ngIf="cluesForm.get('municipio_id').invalid && (cluesForm.get('municipio_id').dirty || cluesForm.get('municipio_id').touched)">
-                                    <span *ngIf="cluesForm.get('municipio_id').errors.required">Campo obligatorio</span>
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field fxFlex="33" fxFlex.xs="100">
-                                <mat-label>LOCALIDAD</mat-label>
-                                <input matInput placeholder="CLUES" [matAutocomplete]="localidad" formControlName='localidad_id'>
-                                <mat-autocomplete #localidad="matAutocomplete" [displayWith]="displayLocalidadFn" [panelWidth]="'auto'">
-                                    <mat-option *ngIf="localidadIsLoading" class="is-loading">
-                                        <mat-spinner diameter="25"></mat-spinner>
-                                    </mat-option>
-                                    <ng-container *ngIf="!localidadIsLoading">
-                                        <mat-option *ngFor="let item of filteredLocalidad" [value]="item">
-                                            [{{item.clave_localidad}}] {{ item.descripcion }}
-                                        </mat-option>
-                                    </ng-container>
-                                </mat-autocomplete>
-                                <mat-error *ngIf="cluesForm.get('localidad_id').invalid && (cluesForm.get('localidad_id').dirty || cluesForm.get('localidad_id').touched)">
-                                    <span *ngIf="cluesForm.get('localidad_id').errors.required">Campo obligatorio</span>
-                                </mat-error>
-                            </mat-form-field>
-
-
-                        </div>
 
                         <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
                             <mat-form-field fxFlex="30" fxFlex.xs="100">
+
                                 <input matInput formControlName="clues" placeholder="Clues" type="text">
                                 <mat-error *ngIf="cluesForm.get('clues').invalid && (cluesForm.get('clues').dirty || cluesForm.get('clues').touched)">
                                     <span *ngIf="cluesForm.get('clues').errors.required">El Campo es obligatorio</span>
@@ -115,8 +64,53 @@
                         </div>
                         <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
 
+                            <mat-form-field fxFlex fxFlex.xs="100" *ngIf="!catalogos['microrregiones']">
+                                <mat-label>Microrregiones:</mat-label>
+                                <mat-select formControlName="catalogo_microrregion_id" required>
+                                    <mat-option *ngFor="let item of catalogos['microrregion']" [value]="item.id">
+                                        {{item.descripcion_tipo}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field fxFlex="33" fxFlex.xs="100">
+                                <mat-label>MUNICIPIO </mat-label>
+                                <mat-select formControlName="municipio_id" required>
+                                    <mat-option *ngFor="let item of catalogos['municipio']" [value]="item.id">
+                                        {{item.descripcion}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="cluesForm.get('municipio_id').invalid && (cluesForm.get('municipio_id').dirty || cluesForm.get('municipio_id').touched)">
+                                    <span *ngIf="cluesForm.get('municipio_id').errors.required">Campo obligatorio</span>
+                                </mat-error>
+                            </mat-form-field>
+
+
+                            <mat-form-field fxFlex="20" fxFlex.xs="100">
+                                <mat-label>Localidad (SEDE)</mat-label>
+                                <input matInput placeholder="Localidad" [matAutocomplete]="localidadAutocomplete" formControlName='catalogo_localidad'>
+                                <mat-autocomplete #localidadAutocomplete="matAutocomplete" [displayWith]="displayLocalidadFn" [panelWidth]="'auto'">
+                                    <mat-option *ngIf="localidadIsLoading" class="is-loading">
+                                        <mat-spinner diameter="25"></mat-spinner>
+                                    </mat-option>
+                                    <ng-container *ngIf="!localidadIsLoading">
+                                        <mat-option *ngFor="let item of catalogos['localidades']" [value]="item">
+                                            [{{item.id}}] {{ item.descripcion }}
+                                        </mat-option>
+                                    </ng-container>
+                                </mat-autocomplete>
+                                <mat-hint *ngIf="cluesForm.get('catalogo_localidad').value"> [ {{cluesForm.get('catalogo_localidad').value.clave_localidad}} ] </mat-hint>
+                                <!--<input type="hidden" formControlName='municipio_nacimiento_id'>-->
+                                <mat-error *ngIf="cluesForm.get('catalogo_localidad').invalid && (cluesForm.get('catalogo_localidad').dirty || cluesForm.get('catalogo_localidad').touched)">
+                                    <span *ngIf="cluesForm.get('catalogo_localidad').errors.required">Campo obligatorio</span>
+                                </mat-error>
+
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
+
                             <mat-form-field fxFlex="25" fxFlex.xs="100">
-                                <input matInput formControlName="telefono" placeholder="Teléfono" type="number">
+                                <input matInput formControlName="telefono" placeholder="Teléfono">
                                 <mat-error *ngIf="cluesForm.get('telefono').invalid && (cluesForm.get('telefono').dirty || cluesForm.get('telefono').touched)">
                                     <span *ngIf="cluesForm.get('telefono').errors.required">El Campo es obligatorio</span>
                                 </mat-error>
@@ -131,14 +125,14 @@
 
                             <mat-form-field fxFlex="25">
                                 <mat-label>Fecha de Inicio de Operación: </mat-label>
-                                <input matInput [matDatepicker]="picker1" formControlName="inicio_operacion" placeholder="Fecha de Inicio de Operación">
+                                <input matInput [matDatepicker]="picker1" formControlName="inicio_operacion" placeholder="Fecha de Inicio de Operación" readonly="readonly">
                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
                             </mat-form-field>
 
                             <mat-form-field fxFlex="25">
                                 <mat-label>Fecha de Acreditación (Hasta): </mat-label>
-                                <input matInput [matDatepicker]="picker2" formControlName="fecha_operacion" placeholder="Fecha de Acreditación">
+                                <input matInput [matDatepicker]="picker2" formControlName="fecha_operacion" placeholder="Fecha de Acreditación" readonly="readonly">
                                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                 <mat-datepicker #picker2></mat-datepicker>
                             </mat-form-field>

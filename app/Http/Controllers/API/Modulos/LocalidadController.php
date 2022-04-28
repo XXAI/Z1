@@ -16,25 +16,27 @@ class LocalidadController extends Controller
         try{
             $access = $this->getUserAccessData();
             $parametros = $request->all();
-            $objeto = Localidad::with("municipio.distrito");
+            $objeto = Localidad::with("municipio.distrito", "poblacionInegi", "regionalizacion.catalogo_clues", "clues");
 
             //return response()->json(['data'=>$access],HttpResponse::HTTP_OK);
                 
-            if(!$access->is_admin){
+            /*if(!$access->is_admin){
                 $objeto = $objeto->whereRaw("catalogo_localidad.catalogo_municipio_id in (select id from catalogo_municipio where catalogo_distrito_id in (".$access->distrito."))");
+            }*/
+
+            if(isset($parametros['municipio'])){
+                $objeto = $objeto->where('catalogo_municipio_id',$parametros['municipio']);
             }
             
-            if(isset($parametros['query'])){
-                $objeto = $objeto->where(function($query)use($parametros){
-                    return $query->where('descripcion','LIKE','%'.$parametros['query'].'%')
-                                ->orWhere('clave_localidad','LIKE','%'.$parametros['query'].'%');
-                });
-            }
+            $objeto = $this->aplicarFiltros($objeto, $parametros);
             
             if(isset($parametros['page'])){
                 $objeto = $objeto->orderBy('descripcion');
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
                 $objeto = $objeto->paginate($resultadosPorPagina);
+            }else
+            {
+                $objeto = $objeto->get();
             }
 
             return response()->json(['data'=>$objeto],HttpResponse::HTTP_OK);
@@ -43,12 +45,54 @@ class LocalidadController extends Controller
         }
     }
 
+    private function aplicarFiltros($main_query, $parametros){
+        //Filtros, busquedas, ordenamiento
+        if(isset($parametros['query']) && $parametros['query']){
+            $main_query = $main_query->where(function($query)use($parametros){
+                return $query->where('descripcion','LIKE','%'.$parametros['query'].'%')
+                                ->orWhere('clave_localidad','LIKE','%'.$parametros['query'].'%');
+            });
+        }
+        
+        if(isset($parametros['active_filter']) && $parametros['active_filter']){
+            if(isset($parametros['municipio']) && $parametros['municipio']){
+                $main_query = $main_query->where('catalogo_municipio_id',$parametros['municipio']);
+            }
+
+            if(isset($parametros['tipo']) && $parametros['tipo']){
+                if($parametros['tipo'] == 1)
+                {
+                    $main_query = $main_query->whereRaw("catalogo_localidad.id in (select catalogo_localidad_id from catalogo_clues)");
+                }
+                
+            }
+
+            if(isset($parametros['regionalizado']) && $parametros['regionalizado']){
+                if($parametros['regionalizado'] == 1)
+                {
+                    $main_query = $main_query->where(function($query)use($parametros){
+                        return $query->whereRaw("catalogo_localidad.id in (select catalogo_localidad_id from catalogo_clues)")
+                                        ->orWhereRaw('catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues)');
+                    });
+                }else if($parametros['regionalizado'] == 2)
+                {
+                    $main_query = $main_query->where(function($query)use($parametros){
+                        return $query->whereRaw("catalogo_localidad.id not in (select catalogo_localidad_id from catalogo_clues)")
+                                        ->WhereRaw('catalogo_localidad.id not in (select catalogo_localidad_id from regionalizacion_clues)');
+                    });
+                }
+                
+            }
+        }
+        return $main_query;
+    }
+
     public function show(Request $request, $id)
     {
         try{
             $params = $request->all();
 
-            $objeto = Localidad::with("municipio.distrito")->find($id);
+            $objeto = Localidad::with("municipio.distrito", "poblacionInegi")->find($id);
             return response()->json(["data"=>$objeto],HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);

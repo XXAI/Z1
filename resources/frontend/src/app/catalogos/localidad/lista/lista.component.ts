@@ -6,10 +6,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatTable } from '@angular/material/table';
 import { ConfirmActionDialogComponent } from '../../../utils/confirm-action-dialog/confirm-action-dialog.component';
+import { RegionalizacionComponent } from '../regionalizacion/regionalizacion.component';
 
 import { FormBuilder } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
-import { trigger, transition, animate, style } from '@angular/animations';
+//import { map, startWith } from 'rxjs/operators';
+//import { trigger, transition, animate, style } from '@angular/animations';
 import { MediaObserver } from '@angular/flex-layout';
 import { FormularioComponent } from '../formulario/formulario.component';
 
@@ -22,6 +23,7 @@ export class ListaComponent implements OnInit {
 
   isLoading: boolean = false;
   
+  panel:boolean = true;
   showMyStepper:boolean = false;
   searchQuery: string = '';
   mediaSize:string;
@@ -30,8 +32,10 @@ export class ListaComponent implements OnInit {
   currentPage: number = 0;
   pageSize: number = 20;
   selectedItemIndex: number = -1;
+  filteredCatalogs:any = {};
+  filterCatalogs:any = {};
 
-  displayedColumns: string[] = ['localidad','municipio','actions'];
+  displayedColumns: string[] = ['localidad','sede', 'regionalizacion','actions'];
 
   dataSource: any = [];
 
@@ -41,9 +45,15 @@ export class ListaComponent implements OnInit {
   @ViewChild(MatTable) usersTable: MatTable<any>;
   @ViewChild(MatExpansionPanel) advancedFilter: MatExpansionPanel;
 
+  filterForm = this.fb.group({
+    'municipio': [undefined],
+    'tipo': [undefined],
+    'regionalizado': [undefined],
+  });
 
   ngOnInit(): void {
     this.loadData();
+    this.cargarMunicipios();
   }
 
   cleanSearch(){
@@ -55,7 +65,7 @@ export class ListaComponent implements OnInit {
     this.isLoading = true;
     let params:any;
     if(!event){
-      params = { page: 1, per_page: 20 }
+      params = { page: 1, per_page: this.pageSize }
     }else{
       params = {
         page: event.pageIndex+1,
@@ -63,7 +73,76 @@ export class ListaComponent implements OnInit {
       };
     }
 
+
+    
     params.query = this.searchQuery;
+
+    let filterFormValues = this.filterForm.value;
+    let countFilter = 0;
+
+    for(let i in filterFormValues){
+      console.log(i);
+      if(filterFormValues[i]){
+        if(i == 'municipio'){
+          params[i] = filterFormValues[i];
+        }else if(i == 'tipo'){
+          console.log("entro");
+         
+          params[i] = filterFormValues[i];
+          console.log(filterFormValues[i]);
+          console.log(params[i]);
+        }else if(i == 'regionalizado'){
+          params[i] = filterFormValues[i];
+        }else{ //profesion y rama (grupos)
+          params[i] = filterFormValues[i].id;
+        }
+        countFilter++;
+      }
+    }
+
+    if(countFilter > 0){
+      params.active_filter = true;
+    }
+
+    let dummyPaginator;
+    if(event){
+      this.sharedService.setDataToCurrentApp('paginator',event);
+    }else{
+      dummyPaginator = {
+        length: 0,
+        pageIndex: (this.paginator)?this.paginator.pageIndex:this.currentPage,
+        pageSize: (this.paginator)?this.paginator.pageSize:this.pageSize,
+        previousPageIndex: (this.paginator)?this.paginator.previousPage:((this.currentPage > 0)?this.currentPage-1:0)
+      };
+    }
+
+    let appStoredData = this.sharedService.getArrayDataFromCurrentApp(['searchQuery','paginator','filter']);
+    
+    if(appStoredData['searchQuery']){
+      this.searchQuery = appStoredData['searchQuery'];
+    }
+
+    if(appStoredData['paginator']){
+      this.currentPage = appStoredData['paginator'].pageIndex;
+      this.pageSize = appStoredData['paginator'].pageSize;
+      event = appStoredData['paginator'];
+
+    }else{
+      let dummyPaginator = {
+        length: 0,
+        pageIndex: this.currentPage,
+        pageSize: this.pageSize,
+        previousPageIndex: (this.currentPage > 0)?this.currentPage-1:0
+       };
+      this.sharedService.setDataToCurrentApp('paginator', dummyPaginator);
+    }
+
+    if(appStoredData['filter']){
+      this.filterForm.patchValue(appStoredData['filter']);
+    }
+
+    this.sharedService.setDataToCurrentApp('searchQuery',this.searchQuery);
+    this.sharedService.setDataToCurrentApp('filter',filterFormValues);
 
     this.localidadService.getLocaliadList(params).subscribe(
       response =>{
@@ -83,19 +162,29 @@ export class ListaComponent implements OnInit {
     return event;
   }
 
+  toggleAdvancedFilter(status){
+    if(status){
+      this.panel = false;
+      this.advancedFilter.open();
+    }else{
+      this.panel = true;
+      this.advancedFilter.close();
+    }
+  }
+
   agregar()
   {
     let configDialog = {};
     if(this.mediaSize == 'xs'){
       configDialog = {
-        maxWidth: '60vw',
+        maxWidth: '30vw',
         maxHeight: '100vh',
         data:{}
       };
     }else{
       configDialog = {
-        width: '60%',
-        maxHeight: '60vh',
+        width: '30%',
+        maxHeight: '65vh',
         data:{}
       }
     }
@@ -116,14 +205,14 @@ export class ListaComponent implements OnInit {
     let configDialog = {};
     if(this.mediaSize == 'xs'){
       configDialog = {
-        maxWidth: '60vw',
+        maxWidth: '30vw',
         maxHeight: '100vh',
         data:{id:obj.id}
       };
     }else{
       configDialog = {
-        width: '60%',
-        maxHeight: '60vh',
+        width: '30%',
+        maxHeight: '70vh',
         data:{id:obj.id}
       }
     }
@@ -133,6 +222,82 @@ export class ListaComponent implements OnInit {
     dialogRef.afterClosed().subscribe(valid => {
       if(valid){
         this.loadData();
+      }else{
+        console.log('Cancelar');
+      }
+    });
+  }
+
+  cargarMunicipios()
+  {
+      this.localidadService.catalogoMunicipio().subscribe(
+        response =>{
+          this.isLoading = false;
+          this.filterCatalogs['municipio'] = response;
+        },
+        errorResponse =>{
+          this.isLoading = false;
+          var errorMessage = "Ocurrió un error.";
+          if(errorResponse.status == 409){
+            errorMessage = errorResponse.error.error.message;
+          }
+          this.sharedService.showSnackBar(errorMessage, "ERROR", 3000); 
+        }
+      );
+  }
+
+  verUnidades(obj, tipo)
+  {
+    let configDialog = {};
+    let title = "";
+    if(tipo == 1)
+    {
+      title = "SEDES";
+    }else if(tipo == 2)
+    {
+      title = "REGIONALIZACION";
+    }
+
+    if(this.mediaSize == 'lg'){
+      configDialog = {
+        maxWidth: '100vw',
+        maxHeight: '91vh',
+        height: '460px',
+        width: '100%',
+        data:{titulo: title, localidad: "["+obj.municipio.clave_municipio+" - "+obj.clave_localidad+"] "+obj.descripcion, listado: obj.regionalizacion, clues: obj.clues, tipoUnidad: tipo}
+      }
+    }else if(this.mediaSize == "md"){
+      configDialog = {
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        height: '100%',
+        width: '100%',
+        data:{titulo: title, localidad: "["+obj.municipio.clave_municipio+" - "+obj.clave_localidad+"] "+obj.descripcion, listado: obj.regionalizacion, clues: obj.clues, tipoUnidad: tipo}
+      }
+    }else if(this.mediaSize == 'xs'){
+      configDialog = {
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        height: '72%',
+        width: '100%',
+        data:{titulo: title, localidad: "["+obj.municipio.clave_municipio+" - "+obj.clave_localidad+"] "+obj.descripcion, listado: obj.regionalizacion, clues: obj.clues, tipoUnidad: tipo}
+      };
+    }else{
+      configDialog = {
+        width: '99%',
+        maxHeight: '91vh',
+        height: '620px',
+        data:{titulo: title, localidad: "["+obj.municipio.clave_municipio+" - "+obj.clave_localidad+"] "+obj.descripcion, listado: obj.regionalizacion, clues: obj.clues, tipoUnidad: tipo}
+      }
+    }
+
+    //console.log(configDialog);
+
+    const dialogRef = this.dialog.open(RegionalizacionComponent, configDialog);
+
+    dialogRef.afterClosed().subscribe(valid => {
+      if(valid){
+        console.log('Aceptar');
       }else{
         console.log('Cancelar');
       }
@@ -170,7 +335,10 @@ export class ListaComponent implements OnInit {
   }
 
   applyFilter(){
-    this.loadData();
+    this.selectedItemIndex = -1;
+    this.paginator.pageIndex = 0;
+    this.paginator.pageSize = this.pageSize;
+    this.loadData(null);
   }
 
 }

@@ -8,6 +8,7 @@ import { CluesRoutingModule } from './clues-routing.module';
 
 import { ListaComponent } from './lista/lista.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { AgmCoreModule } from '@agm/core';
 
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -24,7 +25,10 @@ import { FormularioComponent } from './formulario/formulario.component';
     SharedModule,
     CluesRoutingModule,
     MatDatepickerModule,
-    MatNativeDateModule 
+    MatNativeDateModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyARYKzaXSeSg_CeqzNVLTz2xtPX-EzQZnY'
+    })
   ],
   providers:[
     { provide: MAT_DATE_LOCALE, useValue: 'es-MX'},

@@ -12,10 +12,11 @@ export class CluesService {
   url                     = `${environment.base_url}/clues`;
   url_obtener_catalogos   =  `${environment.base_url}/catalogos`;
   url_responsable         = `${environment.base_url}/busqueda-responsable`;
-  url_info_clue       = `${environment.base_url}/ver-info-clue/`;
-  url_clue_catalogo     = `${environment.base_url}/busqueda-clues`;
+  url_info_clue           = `${environment.base_url}/ver-info-clue/`;
+  url_clue_catalogo       = `${environment.base_url}/busqueda-clues`;
 
   url_localidad           = `${environment.base_url}/localidad`;
+
 
   constructor(private http: HttpClient) { }
 
@@ -35,8 +36,8 @@ export class CluesService {
     );
   }
 
-  obtenerCatalogos(payload) {
-    return this.http.get<any>(this.url_obtener_catalogos,payload).pipe(
+  obtenerCatalogos(payload:any = null) {
+    return this.http.get<any>(this.url_obtener_catalogos,{params:payload}).pipe(
       map( (response) => {
         return response;
       }
@@ -74,5 +75,15 @@ export class CluesService {
       })
     );
   };
+
+  obtenerLocalidades(payload):Observable<any> {
+    return this.http.get<any>(this.url_localidad,{params:payload}).pipe(
+      map( response => {
+        return response;
+      })
+    );
+  }
+  
+  
 
 }

@@ -3,14 +3,14 @@
 <div mat-dialog-content>
     <mat-tab-group [(selectedIndex)]="indexTab">
         <mat-tab label="REGISTRO">
-            <form [formGroup]="regionalizacionForm" >
+            <form [formGroup]="regionalizacionForm">
                 <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
                         <div fxFlex="100" fxFlex.xs="100">
                             <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                                <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                                <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
                                     <mat-label>MUNICIPIO</mat-label>
-                                    <mat-select formControlName="municipio_id" required >
+                                    <mat-select formControlName="municipio_id" required>
                                         <mat-option *ngFor="let item of catalogo['municipio']" [value]="item.id">
                                             {{item.descripcion}}
                                         </mat-option>
@@ -19,11 +19,13 @@
                                         <span *ngIf="regionalizacionForm.get('municipio_id').errors.required">Campo obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
-                                <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                                <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
                                     <mat-label>LOCALIDAD</mat-label>
                                     <input matInput placeholder="LOCALIDAD" [matAutocomplete]="localidadAutocomplete" formControlName='localidad_id'>
                                     <mat-autocomplete #localidadAutocomplete="matAutocomplete" [displayWith]="displayLocalidadFn" [panelWidth]="'auto'">
-                                        <mat-option *ngIf="localidadIsLoading" class="is-loading"><mat-spinner diameter="25"></mat-spinner></mat-option>
+                                        <mat-option *ngIf="localidadIsLoading" class="is-loading">
+                                            <mat-spinner diameter="25"></mat-spinner>
+                                        </mat-option>
                                         <ng-container *ngIf="!localidadIsLoading">
                                             <mat-option *ngFor="let item of filteredLocalidad" [value]="item">
                                                 [{{item.clave_localidad }}] {{ item.descripcion }}
@@ -32,17 +34,17 @@
                                     </mat-autocomplete>
                                     <mat-error *ngIf="regionalizacionForm.get('localidad_id').invalid && (regionalizacionForm.get('localidad_id').dirty || regionalizacionForm.get('localidad_id').touched)">
                                         <span *ngIf="regionalizacionForm.get('localidad_id').errors.required">Campo obligatorio</span>
-                                    </mat-error> 
+                                    </mat-error>
                                 </mat-form-field>
-                            </div>   
+                            </div>
                         </div>
                     </div>
-                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">    
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
                         <div fxFlex="100" fxFlex.xs="100">
-                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">     
-                                <mat-form-field fxFlex="33" fxFlex.xs="100"  appearance="fill">
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
                                     <mat-label>TIPO CAMINO</mat-label>
-                                    <mat-select formControlName="catalogo_tipo_camino_id" required >
+                                    <mat-select formControlName="catalogo_tipo_camino_id" required>
                                         <mat-option *ngFor="let item of catalogo['camino']" [value]="item.id">
                                             {{item.descripcion}}
                                         </mat-option>
@@ -51,14 +53,14 @@
                                         <span *ngIf="regionalizacionForm.get('catalogo_tipo_camino_id').errors.required">Campo obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
-                                <mat-form-field fxFlex="33" fxFlex.xs="100"  appearance="fill">
+                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
                                     <mat-label>DISTANCIA</mat-label>
-                                    <input matInput  autocomplete="off" formControlName="distancia" placeholder="DISTANCIA">
+                                    <input matInput autocomplete="off" formControlName="distancia" placeholder="DISTANCIA">
                                     <mat-error *ngIf="regionalizacionForm.get('distancia').invalid && (regionalizacionForm.get('distancia').dirty || regionalizacionForm.get('distancia').touched)">
                                         <span *ngIf="regionalizacionForm.get('distancia').errors.required">Campo obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
-                                <mat-form-field fxFlex="33" fxFlex.xs="100"  appearance="fill">
+                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
                                     <mat-label>TIEMPO</mat-label>
                                     <input matInput autocomplete="off" formControlName="tiempo" placeholder="TIEMPO">
                                     <mat-error *ngIf="regionalizacionForm.get('tiempo').invalid && (regionalizacionForm.get('tiempo').dirty || regionalizacionForm.get('tiempo').touched)">
@@ -67,25 +69,27 @@
                                 </mat-form-field>
                             </div>
                         </div>
-                    </div>    
-                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">    
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
                         <div fxFlex="100" fxFlex.xs="100">
-                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px"> 
-                                <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!regionalizacionForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>  
-                                <button mat-raised-button (click)="cancelar()" *ngIf="edicion" color="warn" ><mat-icon>close</mat-icon> Cancelar</button>  
-                                <button mat-raised-button (click)="cerrar()" *ngIf="id_editar==0" color="warn" ><mat-icon>close</mat-icon> Cerrar</button>  
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!regionalizacionForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
+                                <button mat-raised-button (click)="cancelar()" *ngIf="edicion" color="warn"><mat-icon>close</mat-icon> Cancelar</button>
+                                <button mat-raised-button (click)="cerrar()" *ngIf="id_editar==0" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
                             </div>
                         </div>
-                    </div>            
-                        
+                    </div>
+
                 </section>
             </form>
         </mat-tab>
         <mat-tab label="LOCALIDADES REGIONALIZADAS" [disabled]="edicion">
-            <section class="profile" >
+            <section class="profile">
                 <div fxLayout="row" fxLayoutAlign="space-evenly center">
                     <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
-                        <div class="data-loading-shade" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
+                        <div class="data-loading-shade" *ngIf="isLoading">
+                            <mat-spinner></mat-spinner>
+                        </div>
                         <mat-card fxFlex.xs="100%" fxFlex="100%">
                             <div fxLayout="row" fxLayout.xs="column">
                                 <div fxFlex fxLayout="row wrap">
@@ -95,7 +99,7 @@
                                         <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                             <mat-icon>close</mat-icon>
                                         </button>
-                                        
+
                                     </mat-form-field>
                                 </div>
                                 <div fxFlex="none" fxFlex.xs="100">
@@ -108,37 +112,37 @@
                                 </div>
                             </div>
                         </mat-card>
-                       
+
                         <mat-card fxFlex.xs="100%" fxFlex="90%">
                             <mat-divider [inset]="true"></mat-divider>
-                            
+
                             <div class="data-container ">
                                 <div class="data-table-container">
                                     <table #dataTable mat-table [dataSource]="dataSource" class="data-table" matSort>
                                         <ng-container matColumnDef="localidad">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> LOCALIDAD </th>
-                                            <td mat-cell *matCellDef="let row"> 
-                                                <b>{{ row.descripcion }}</b>
-                                                <div style="font-size: 8pt;">{{ row.municipio.descripcion }} </div>
-                                                    
+                                            <td mat-cell *matCellDef="let row">
+                                                <b>{{ row.catalogo_localidad.clave_localidad }} - {{ row.catalogo_localidad.descripcion }}</b>
+                                                <div style="font-size: 8pt;">{{ row.catalogo_localidad.municipio.clave_municipio }} {{ row.catalogo_localidad.municipio.descripcion }} </div>
+
                                             </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="camino">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO CAMINO </th>
-                                            <td mat-cell *matCellDef="let row"> 
-                                                {{ row.regionalizacion.catalogo_tipo_camino.descripcion }}
-                                                
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.catalogo_tipo_camino.descripcion }}
+
                                             </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="distancia">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> DISTANCIA (KM) / TIEMPO (HR) </th>
-                                            <td mat-cell *matCellDef="let row"> 
-                                                {{ row.regionalizacion.distancia }} / {{ row.regionalizacion.tiempo }}   
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.distancia }} / {{ row.tiempo }}
                                             </td>
                                         </ng-container>
-            
+
                                         <ng-container matColumnDef="actions">
                                             <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
                                             <td mat-cell *matCellDef="let row; let i = index">
@@ -146,21 +150,21 @@
                                                     <mat-icon>menu</mat-icon>
                                                 </button>
                                                 <mat-menu #menu="matMenu">
-                                                        <button mat-menu-item (click)="editar(row)"><mat-icon color="primary">edit</mat-icon>Editar</button>              
-                                                        <button mat-menu-item (click)="eliminar(row)" ><mat-icon color="warn">delete</mat-icon>Eliminar</button>              
+                                                    <button mat-menu-item (click)="editar(row)"><mat-icon color="primary">edit</mat-icon>Editar</button>
+                                                    <button mat-menu-item (click)="eliminar(row)"><mat-icon color="warn">delete</mat-icon>Eliminar</button>
                                                 </mat-menu>
                                             </td>
                                         </ng-container>
-            
+
                                         <ng-container matColumnDef="noResultsFound">
                                             <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-                                                No se encontraron registros 
+                                                No se encontraron registros
                                             </td>
                                         </ng-container>
-                                        
+
                                         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                                         <tr mat-row [ngClass]="{'selected-item': i==selectedItemIndex}" *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
-            
+
                                         <tr mat-footer-row *matFooterRowDef="['noResultsFound']" class="not-results-found" [ngClass]="{'hide':!(dataSource!=null && dataSource.length==0)}"></tr>
                                     </table>
                                 </div>
@@ -169,7 +173,39 @@
                         </mat-card>
                     </section>
                 </div>
-            </section>    
+            </section>
         </mat-tab>
-      </mat-tab-group> 
-</div>   
+        <mat-tab label="MAPA" [disabled]="edicion">
+            <agm-map style="height: 600px;width: 100%;" [latitude]="lat" [longitude]="long" [zoom]="zoom" [disableDefaultUI]="false" [disableDoubleClickZoom]="true" [zoomControl]="false">
+
+                <agm-marker [longitude]="latUnidad" [latitude]="longUnidad" [iconUrl]="iconUnidad">
+                    <agm-info-window>
+                        <strong>{{ unidadMedica.clues }} - {{ unidadMedica.descripcion }}</strong>
+                        <br>
+                        <strong>LOCALIDAD:  {{ localidadUnidad }}</strong>
+                        <br>
+                        <strong>Latitud: </strong> {{ unidadMedica.latitud }} <strong>Longitud: </strong> {{ unidadMedica.longitud }}
+
+                    </agm-info-window>
+                </agm-marker>
+                <agm-polyline *ngFor="let unidad of localidadesRegionalizadas">
+                    <agm-polyline-point [latitude]="longUnidad" [longitude]="latUnidad">
+                    </agm-polyline-point>
+                    <agm-polyline-point [longitude]="unidad.lat" [latitude]="unidad.long">
+                    </agm-polyline-point>
+                </agm-polyline>
+                <agm-marker *ngFor="let item of localidades" [latitude]="item.catalogo_localidad.longitud" [longitude]="item.catalogo_localidad.latitud" [iconUrl]="iconMap">
+                    <agm-info-window>
+                        <strong>({{ item.clues }}) - {{ item.clues }}</strong>
+                        <br>
+                        <strong>LOCALIDAD: {{ item.catalogo_localidad.descripcion }}</strong>
+                        <br>
+                        <strong>Latitud: </strong> {{ item.catalogo_localidad.latitud }} <strong>Longitud: </strong> {{ item.catalogo_localidad.longitud }}
+                        <br>
+                        <strong>Distancia: </strong> {{ item.distancia }}
+                    </agm-info-window>
+                </agm-marker>
+            </agm-map>
+        </mat-tab>
+    </mat-tab-group>
+</div>

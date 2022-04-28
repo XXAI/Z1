@@ -11,9 +11,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getEspPaginatorIntl } from '../../esp-paginator-intl';
 import { FormularioComponent } from './formulario/formulario.component';
+import { RegionalizacionComponent } from './regionalizacion/regionalizacion.component';
 
 @NgModule({
-  declarations: [ListaComponent, FormularioComponent],
+  declarations: [ListaComponent, FormularioComponent, RegionalizacionComponent],
   imports: [
     CommonModule,
     SharedModule,

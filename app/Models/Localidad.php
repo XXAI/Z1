@@ -19,6 +19,14 @@ class Localidad extends Model
     }
 
     public function regionalizacion(){
-        return $this->belongsTo('App\Models\RegionalizacionClues', "id", "catalogo_localidad_id");
+        return $this->hasMany('App\Models\RegionalizacionClues', "catalogo_localidad_id");
+    }
+
+    public function clues(){
+        return $this->hasMany('App\Models\Clues',  "catalogo_localidad_id");
+    }
+
+    public function poblacionInegi(){
+        return $this->hasMany('App\Models\PoblacionInegi','catalogo_localidad_id');
     }
 }

@@ -12,7 +12,8 @@ export class LocalidadService {
 
   url                     = `${environment.base_url}/localidad`;
   url_catalogos           = `${environment.base_url}/catalogos`;
-
+  url_catalogo_municipio  = `${environment.base_url}/catalogo_municipio`;
+  
   constructor(private http: HttpClient) { }
 
   getCatalogos():Observable<any> {
@@ -60,5 +61,13 @@ export class LocalidadService {
         return response;
       }
     ));
+  }
+
+  catalogoMunicipio():Observable<any> {
+    return this.http.get<any>(this.url_catalogo_municipio,{}).pipe(
+      map( response => {
+        return response;
+      })
+    );
   }
 }

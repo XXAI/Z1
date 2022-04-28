@@ -17,6 +17,7 @@ use App\Models\Clues;
 use App\Models\TipoTrabajador;
 use App\Models\TipoCamino;
 use App\Models\TipoLocalidad;
+use App\Models\Microrregion;
 
 class CatalogosController extends Controller
 {
@@ -35,6 +36,7 @@ class CatalogosController extends Controller
             $municipio          = Municipio::orderBy("descripcion");
             $camino             = TipoCamino::orderBy("descripcion");
             $tipoLocalidad      = TipoLocalidad::orderBy("descripcion");
+            $microrregion      = Microrregion::orderBy("descripcion");
             
             if(!$access->is_admin){
                 $distrito = $distrito->whereIn('id', $access->distrito);
@@ -51,6 +53,7 @@ class CatalogosController extends Controller
             $municipio          = $municipio->get();
             $camino             = $camino->get();
             $tipoLocalidad      = $tipoLocalidad->get();  
+            $microrregion       = $microrregion->get();  
 
             $catalogos = [
                 "distrito"          => $distrito,
@@ -62,6 +65,7 @@ class CatalogosController extends Controller
                 'municipio'         => $municipio,
                 'camino'            => $camino,
                 'tipoLocalidad'     => $tipoLocalidad,
+                'microrregion'      => $microrregion,
             ];
 
             return response()->json($catalogos,HttpResponse::HTTP_OK);
@@ -76,6 +80,17 @@ class CatalogosController extends Controller
             $params = $request->all();
             //return response()->json($params,HttpResponse::HTTP_OK);
             $municipio = Municipio::where("catalogo_distrito_id", $id)->orderBy("id")->get();
+            
+            return response()->json($municipio,HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
+    
+    public function getMunicipioAutocomplete(Request $request)
+    {
+        try{
+            $municipio = Municipio::orderBy("descripcion")->get();
             
             return response()->json($municipio,HttpResponse::HTTP_OK);
         }catch(\Exception $e){
@@ -103,7 +118,7 @@ class CatalogosController extends Controller
         try{
             $params = $request->all();
             $access = $this->getUserAccessData();
-            $obj = Clues::where('descripcion','LIKE','%'.$params['query'].'%')->orderBy("descripcion");
+            $obj = Clues::with("catalogo_localidad.municipio")->where('descripcion','LIKE','%'.$params['query'].'%')->orderBy("descripcion");
             if(!$access->is_admin){
                 $obj = $obj->whereIn('clues', $access->lista_clues);    
             }

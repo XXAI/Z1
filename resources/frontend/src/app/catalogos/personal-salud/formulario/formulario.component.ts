@@ -27,6 +27,7 @@ export class FormularioComponent implements OnInit {
   cluesIsLoading: boolean = false;
   filteredClues: Observable<any[]>;
   isLoading:boolean = false;
+  localidad_municipio_sede:string = "";
   
   constructor(
     private sharedService: SharedService, 
@@ -49,9 +50,9 @@ export class FormularioComponent implements OnInit {
     'curp': ['',[Validators.required]],
     'edad': ['',[Validators.required]],
     'sexo_id': ['',[Validators.required]],
-    'ur': ['',[Validators.required]],
+    'catalogo_tipo_personal_id': ['',[Validators.required]],
     'catalogo_lengua_id': ['',[Validators.required]],
-    'clues': ['',[Validators.required]],
+    'clues': ['',[Validators.required]]
     
   });
 
@@ -77,7 +78,8 @@ export class FormularioComponent implements OnInit {
           ur: obj.ur.ur,
           edad: obj.edad,
           catalogo_lengua_id: obj.catalogo_lengua_id,
-          clues: obj.rel_rh.clues
+          clues: obj.rel_rh.clues,
+          catalogo_tipo_personal_id: obj.tipo_personal_id
         });
         
       },
@@ -126,7 +128,14 @@ export class FormularioComponent implements OnInit {
   }
 
   displayCluesFn(item: any) {
-    if (item) { return item.descripcion; }
+    if (item) { 
+      let texto = item.clues+" "+item.descripcion;
+      if(item.catalogo_localidad)
+      {
+        texto += " [ "+item.catalogo_localidad.descripcion.toUpperCase()+" - "+item.catalogo_localidad.municipio.descripcion.toUpperCase()+" ]";
+      }  
+      return texto; 
+    }
   }
 
   accionGuardar(id:number)

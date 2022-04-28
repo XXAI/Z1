@@ -35,8 +35,8 @@ export class EditarComponent implements OnInit {
   localidadIsLoading: boolean = false;
 
   catalogos: any = {};
-  filteredCatalogs:any = {};
-
+  filteredCatalogs:any = [];
+  
   puedeGuardar: boolean = true;
   puedeValidar: boolean = true;
   puedeTransferir: boolean = true;
@@ -64,12 +64,8 @@ export class EditarComponent implements OnInit {
   isLoading:boolean = false;
   
   cluesForm = this.fb.group({
-    //'tipos_regionalizacion_id':[''],
-    'microrregion_id': ['',Validators.required],
-    'microrregiones': [''],
-    'tipo_camino_id': [''],
-    'localidad': [''],
-    'localidad_id': ['',Validators.required],
+    'catalogo_microrregion_id': ['',Validators.required],
+    'catalogo_localidad': ['',Validators.required],
     'municipio_id': ['',Validators.required],
     'clues': ['',Validators.required],
     'descripcion': ['',Validators.required],
@@ -77,14 +73,20 @@ export class EditarComponent implements OnInit {
     'cp': ['',Validators.required],
     'telefono': ['',Validators.required],
     'nucleos_camas': ['',Validators.required],
-    'inicio_operacion': ['',Validators.required],
-    'fecha_operacion': ['',Validators.required],
+    'inicio_operacion': [''],
+    'fecha_operacion': [""],
     'latitud': ['',Validators.required],
     'longitud': ['',Validators.required],
-    //'regionalizaciones':this.fb.array([]),
   });
 
-  ngOnInit() {
+  async ngOnInit() {
+    //this.catalogos['localidades'] = [{id:1, descripcion:"hola"},{id:2, descripcion:"hola 2"}];
+
+    let fecha = new Date('YYYY-MM-D');
+    this.fechaActual = fecha;
+
+    await this.IniciarCatalogos(null);
+
     this.route.paramMap.subscribe(params => {
       this.clues = params.get('id');
 
@@ -93,54 +95,46 @@ export class EditarComponent implements OnInit {
       }
     });
 
-    let fecha = new Date('YYYY-MM-D');
-    this.fechaActual = fecha;
-    //this.fechaActual = moment(fecha).format('YYYY-MM-D');
-    // this.maxDate = fecha;
+  }
 
-    // let fecha_inicio = new Date(2020, 0, 1);
-    // this.minDate = fecha_inicio;
-    this.IniciarCatalogos(null);
-
+  displayLocalidadFn(item: any) {
+    if (item) { return item.descripcion; }
   }
 
   public IniciarCatalogos(obj:any)
   {
     this.isLoading = true;
-    let carga_catalogos = [
-      {nombre:'microrregiones',orden:'descripcion'},
-      {nombre:'localidades',orden:'descripcion'},
-      {nombre:'tipos_caminos',orden:'descripcion'},
-      {nombre:'municipios',orden:'descripcion'},
-    ];
-
-    this.cluesService.obtenerCatalogos(carga_catalogos).subscribe(
+    this.cluesService.obtenerCatalogos().subscribe(
       response => {
         this.catalogos = response;
-
-        this.filteredCatalogs['microrregiones']           = this.cluesForm.get('microrregion_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'microrregiones','descripcion')));
-        this.filteredCatalogs['localidades']              = this.cluesForm.get('localidad_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'localidades','descripcion')));
-        this.filteredCatalogs['tipos_caminos']            = this.cluesForm.get('tipo_camino_id').valueChanges.pipe(startWith(''),map(value => this._filter(value,'tipos_caminos','descripcion')));        
-        
-        if(obj)
-        {
-         
-           this.cluesForm.get('microrregion_id').setValue(obj.catalogo_microrregion);
-           this.cluesForm.get('localidad_id').setValue(obj.catalogo_localidad);
-          //this.valor_unidad = parseInt(obj.tipo_unidad_id);
-        }
         this.isLoading = false; 
       } 
     );
 
-  }
-
-  displayLocalidadFn()
-  {
-
+    this.cluesForm.get('catalogo_localidad').valueChanges
+      .pipe(
+        debounceTime(300),
+        tap( () => {
+          //this.element.loading = true;
+            this.localidadIsLoading = true; 
+        } ),
+        switchMap(value => {
+            if(!(typeof value === 'object')){
+              this.localidadIsLoading = false;
+              let municipio = this.cluesForm.get('municipio_id').value;
+                return this.cluesService.obtenerLocalidades({query:value, municipio:municipio }).pipe(finalize(() => this.localidadIsLoading = false ));
+               
+            }else{
+              this.localidadIsLoading = false; 
+              return [];
+            }
+          }
+        ),
+      ).subscribe(items => this.catalogos['localidades'] = items.data);
   }
 
   private _filter(value: any, catalog: string, valueField: string): string[] {
+    
     if(this.catalogos[catalog]){
       let filterValue = '';
       if(value){
@@ -150,6 +144,7 @@ export class EditarComponent implements OnInit {
           filterValue = value.toLowerCase();
         }
       }
+      
       return this.catalogos[catalog].filter(option => option[valueField].toLowerCase().includes(filterValue));
     }
   }
@@ -222,6 +217,11 @@ export class EditarComponent implements OnInit {
         if(typeof response === 'object'){
           //this.datos_clues = response.data;
           this.IniciarCatalogos(response.data);
+          if(response.data.catalogo_localidad)
+          {
+            response.data.municipio_id = response.data.catalogo_localidad.catalogo_municipio_id;
+            
+          }
           this.cluesForm.patchValue(response.data);
           this.estatus_clues = true;
           

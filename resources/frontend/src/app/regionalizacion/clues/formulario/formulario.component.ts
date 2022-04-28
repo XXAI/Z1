@@ -13,7 +13,7 @@ import { SharedService } from 'src/app/shared/shared.service';
 import { RegionalizacionService } from '../../regionalizacion.service';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatTable } from '@angular/material/table';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+//import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ConfirmActionDialogComponent } from '../../../utils/confirm-action-dialog/confirm-action-dialog.component';
 
 export interface FormularioComponentData {
@@ -36,6 +36,7 @@ export class FormularioComponent implements OnInit {
   indexTab:number = 0;
   edicion:boolean = false;
   
+  
   mediaSize:string;
   pageEvent: PageEvent;
   resultsLength: number = 0;
@@ -45,6 +46,32 @@ export class FormularioComponent implements OnInit {
 
   displayedColumns: string[] = ['localidad','camino', 'distancia','actions'];
   dataSource: any = [];
+
+  lat: number = 15.404130;
+  long: number = -92.655800;
+  
+  latUnidad: number = 15.404130;
+  longUnidad: number = -92.655800;
+  zoom: number = 14;
+  localidades:any = [];
+  unidadMedica:any = {};
+  localidadUnidad:string ="";
+
+  localidadesRegionalizadas:any = [];
+
+  //lineas:any = [{lat}]
+
+  iconMap = {
+    url: '../../assets/icons/pin_localidad.png',
+    iconHeigh: 10,
+    scaledSize: {height: 20, width: 15}
+  }
+
+  iconUnidad = {
+    url: '../../assets/icons/UnidadSsa.png',
+    iconHeigh: 10,
+    scaledSize: {height: 40, width: 30}
+  }
 
   constructor(
     private sharedService: SharedService, 
@@ -143,17 +170,19 @@ export class FormularioComponent implements OnInit {
 
   editar(obj:any)
   {
+    console.log(obj.catalogo_localidad.municipio.id);
+    console.log(obj.catalogo_tipo_camino.id);
     this.regionalizacionForm.patchValue(
       {
-        municipio_id: obj.municipio.id,
-        localidad_id: obj,
-        catalogo_tipo_camino_id: obj.regionalizacion.catalogo_tipo_camino.id,
-        distancia: obj.regionalizacion.distancia,
-        tiempo:obj.regionalizacion.tiempo,
-        clues: obj.regionalizacion.catalogo_clues
+        municipio_id: obj.catalogo_localidad.municipio.id,
+        localidad_id: obj.catalogo_localidad,
+        catalogo_tipo_camino_id: obj.catalogo_tipo_camino.id,
+        distancia: obj.distancia,
+        tiempo:obj.tiempo,
+        clues: obj.clues
       }
     );
-    this.id_editar = obj.regionalizacion.id;
+    this.id_editar = obj.id;
     this.indexTab = 0;
     this.edicion = true;
     //console.log(this.indexTab);
@@ -179,6 +208,18 @@ export class FormularioComponent implements OnInit {
     this.regionalizacionService.getFilterLocalidadesList(this.data.clues, params).subscribe(
       response => {
         this.dataSource = response.data.data;
+        this.latUnidad = Number(response.clues.longitud);
+        this.longUnidad = Number(response.clues.latitud);
+        //console.log(this.lat);
+        //console.log(this.long);
+        this.unidadMedica = response.clues;
+        console.log(this.unidadMedica.catalogo_localidad);
+        this.localidadUnidad = this.unidadMedica.catalogo_localidad.clave_localidad+" - "+this.unidadMedica.catalogo_localidad.descripcion;
+        this.localidades = response.data.data;
+        this.localidadesRegionalizadas = [];
+        this.localidades.forEach(element => {
+          this.localidadesRegionalizadas.push({lat: Number(element.catalogo_localidad.latitud), long:Number(element.catalogo_localidad.longitud) });
+        });
         this.regionalizacionForm.patchValue({clues:this.data.clues});
         this.isLoading = false;
         this.resultsLength = response.data.total;
@@ -261,10 +302,13 @@ export class FormularioComponent implements OnInit {
     {
       this.regionalizacionService.edit(this.id_editar, this.regionalizacionForm.value).subscribe(
         response => {
-          this.dialogRef.close(true);
+          //this.dialogRef.close(true);
           this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000);
           this.id_editar = 0;
           this.edicion = false;
+          this.regionalizacionForm.reset();
+          this.cargarDatos();
+          this.indexTab = 1;
         },
         responsError =>{
           console.log(responsError);
@@ -274,8 +318,11 @@ export class FormularioComponent implements OnInit {
     }else{
       this.regionalizacionService.save(this.regionalizacionForm.value).subscribe(
         response => {
-          this.dialogRef.close(true);
+          //this.dialogRef.close(true);
+          this.regionalizacionForm.reset();
+          this.cargarDatos();
           this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000);
+          this.indexTab = 1;
         },
         responsError =>{
           console.log(responsError);

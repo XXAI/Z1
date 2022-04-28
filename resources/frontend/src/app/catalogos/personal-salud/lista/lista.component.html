@@ -1,8 +1,9 @@
-
-<section class="profile" >
+<section class="profile">
     <div fxLayout="row" fxLayoutAlign="space-evenly center">
         <section fxFlex="95" fxLayout="column" fxLayoutAlign="center">
-            <div class="data-loading-shade" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
+            <div class="data-loading-shade" *ngIf="isLoading">
+                <mat-spinner></mat-spinner>
+            </div>
             <mat-card fxFlex.xs="100%" fxFlex="90%">
                 <div fxLayout="row" fxLayout.xs="column">
                     <div fxFlex fxLayout="row wrap">
@@ -12,45 +13,46 @@
                             <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                 <mat-icon>close</mat-icon>
                             </button>
-                            
+
                         </mat-form-field>
                     </div>
                     <div fxFlex="none" fxFlex.xs="100">
                         <div fxFlex></div>
                         <section class="search-button">
                             <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
-                                <mat-icon>search</mat-icon> Buscar
+                                <mat-icon>search</mat-icon>
                             </button>
-                            <button mat-raised-button  color="primary" (click)="agregar()"><mat-icon>add_circle</mat-icon> Agregar Trabajador</button>
+                            <button mat-raised-button (click)="agregar()"><mat-icon>add</mat-icon></button>
                         </section>
                     </div>
                 </div>
             </mat-card>
-           
+
             <mat-card fxFlex.xs="100%" fxFlex="90%">
                 <mat-divider [inset]="true"></mat-divider>
-                
+
                 <div class="data-container ">
                     <div class="data-table-container">
                         <table #dataTable mat-table [dataSource]="dataSource" class="data-table" matSort>
                             <!-- ID Column -->
-                            <ng-container matColumnDef="trabajador" >
+                            <ng-container matColumnDef="trabajador">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> TRABAJADOR </th>
                                 <td mat-cell *matCellDef="let row">
-                                   <b>{{ row.nombre }} {{ row.apellido_paterno }} {{ row.apellido_materno}}</b>
-                                   <div style="font-size: 8pt;">{{ row.rfc }}</div>
+                                    <b>{{ row.nombre }} {{ row.apellido_paterno }} {{ row.apellido_materno}}</b>
+                                    <div style="font-size: 8pt;">{{ row.rfc }} - {{ (row.categoria)?row.categoria:'SIN CATEGORIA'}}
+                                    </div>
                                 </td>
                             </ng-container>
-                    
+
                             <!-- Username Column  -->
                             <ng-container matColumnDef="tipo">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO TRABAJADOR </th>
-                                <td mat-cell *matCellDef="let row"> 
+                                <td mat-cell *matCellDef="let row">
                                     {{ row.descripcion }}
-                                    <div style="font-size: 8pt;"> {{ row.clues }}</div>    
+                                    <div style="font-size: 8pt;"> {{ row.clues }}</div>
                                 </td>
                             </ng-container>
-                    
+
                             <!--
                             <ng-container matColumnDef="Localidad" >
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header fxHide.xs="true"> Localidad </th>
@@ -61,7 +63,7 @@
                                 <td mat-cell *matCellDef="let row" fxHide.xs="true"> [{{ row.clave_colonia}}] {{ row.descripcion}}</td>
                             </ng-container>
                         -->
-                            
+
 
                             <ng-container matColumnDef="actions">
                                 <th mat-header-cell *matHeaderCellDef>Acciones</th>
@@ -70,18 +72,18 @@
                                         <mat-icon>menu</mat-icon>
                                     </button>
                                     <mat-menu #menu="matMenu">
-                                            <button mat-menu-item (click)="editar(row)"><mat-icon color="primary">edit</mat-icon>Editar</button>            
-                                            <button mat-menu-item (click)="eliminar(row)"><mat-icon color="warn">delete</mat-icon>Eliminar</button>            
+                                        <button mat-menu-item (click)="editar(row)"><mat-icon color="primary">edit</mat-icon>Editar</button>
+                                        <button mat-menu-item (click)="eliminar(row)"><mat-icon color="warn">delete</mat-icon>Eliminar</button>
                                     </mat-menu>
                                 </td>
                             </ng-container>
 
                             <ng-container matColumnDef="noResultsFound">
                                 <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-                                    No se encontraron registros 
+                                    No se encontraron registros
                                 </td>
                             </ng-container>
-                            
+
                             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                             <tr mat-row [ngClass]="{'selected-item': i==selectedItemIndex}" *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
 

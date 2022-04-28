@@ -96,15 +96,6 @@ table {
     margin: 0 10px;
 }
 
-.mat-header-row {
-    background-color: #3f51b5 !important;
-    color: white !important;
-}
-
-.mat-header-row th {
-    color: white !important;
-}
-
 tr:nth-child(even) {
     background-color: #f2f2f2 !important;
 }
@@ -112,3 +103,22 @@ tr:nth-child(even) {
 tbody tr:nth-child(even) {
     background: #CCC
 }
+
+.mat-header-row {
+    background-color: darkcyan;
+}
+
+.mat-header-row th {
+    color: white !important;
+}
+
+.search-button button {
+    margin-right: 10pt;
+    padding: 5pt;
+    font-size: 22pt;
+}
+
+
+/*.search-button button .mat-icon {
+    font-size: 22pt;
+}*/

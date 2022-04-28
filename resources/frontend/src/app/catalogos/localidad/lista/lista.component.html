@@ -13,21 +13,70 @@
                             <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                 <mat-icon>close</mat-icon>
                             </button>
-
+                            <mat-hint>
+                                <mat-slide-toggle #showAdvancedFilter (change)="toggleAdvancedFilter(showAdvancedFilter.checked)">Filtro Avanzado</mat-slide-toggle>
+                            </mat-hint>
                         </mat-form-field>
                     </div>
                     <div fxFlex="none" fxFlex.xs="100">
                         <div fxFlex></div>
                         <section class="search-button">
-                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
-                                <mat-icon>search</mat-icon> Buscar
+                            <button mat-raised-button color="accent" class="busqueda" (click)="applyFilter()" *ngIf="panel">
+                                <mat-icon>search</mat-icon>
                             </button>
-                            <button mat-raised-button color="primary" (click)="agregar()"><mat-icon>add_circle</mat-icon> Agregar Localidad</button>
+                            <button mat-raised-button (click)="agregar()">
+                                <mat-icon>
+                                    add
+                                </mat-icon>
+                            </button>
                         </section>
                     </div>
                 </div>
             </mat-card>
+            <mat-accordion class="advanced-filter-container">
+                <mat-expansion-panel #advancedFilter class="advanced-filter" [formGroup]="filterForm">
+                    <br>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-evenly center">
 
+                        <mat-form-field fxFlex="30">
+                            <mat-label>MUNICIPIO</mat-label>
+                            <mat-select formControlName="municipio">
+                                <mat-option>Sin Filtro</mat-option>
+                                <mat-option *ngFor="let item of filterCatalogs['municipio']" [value]="item.id">
+                                    {{item.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="30">
+                            <mat-label>TIPO</mat-label>
+                            <mat-select formControlName="tipo">
+                                <mat-option>TODOS</mat-option>
+                                <mat-option [value]="1">SEDES</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="30">
+                            <mat-label>REGIONALIZADO</mat-label>
+                            <mat-select formControlName="regionalizado">
+                                <mat-option>TODOS</mat-option>
+                                <mat-option [value]="1">SI</mat-option>
+                                <mat-option [value]="2">NO</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div fxFlex></div>
+                        <div fxFlex="none">
+                            <button mat-flat-button (click)="filterForm.reset()">
+                                Limpiar
+                            </button>
+                        </div>
+                        <div fxFlex="none">
+                            <button mat-raised-button color="accent" (click)="applyFilter()">
+                                <mat-icon>search</mat-icon> Aplicar
+                            </button>
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+            </mat-accordion>
             <mat-card fxFlex.xs="100%" fxFlex="90%">
                 <mat-divider [inset]="true"></mat-divider>
 
@@ -38,17 +87,40 @@
                             <ng-container matColumnDef="localidad">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> LOCALIDAD </th>
                                 <td mat-cell *matCellDef="let row">
-                                    <b>{{ row.descripcion }}</b>
-                                    <div style="font-size: 8pt;">{{ row.clave_localidad }}</div>
+                                    <b>[ {{ row.municipio.clave_municipio }} - {{ row.clave_localidad }} ] {{ row.descripcion }}</b>
+                                    <div style="font-size: 8pt;">[ {{ row.municipio.descripcion }} ] {{ row.municipio.clave_municipio }}</div>
                                 </td>
                             </ng-container>
 
                             <!-- Username Column  -->
-                            <ng-container matColumnDef="municipio">
+                            <!--<ng-container matColumnDef="municipio">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> MUNICIPIO </th>
                                 <td mat-cell *matCellDef="let row">
                                     {{ row.municipio.descripcion }}
                                     <div style="font-size: 8pt;"> {{ row.municipio.clave_municipio }}</div>
+                                </td>
+                            </ng-container>-->
+                            <ng-container matColumnDef="sede">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> SEDE </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <div *ngIf="row.clues.length > 0">
+                                        <button mat-raised-button *ngIf="row.clues.length > 1" style="background-color: rgba(0,0,250,0.3);" (click)="verUnidades(row, 1)">...</button>
+                                        <button mat-raised-button *ngIf="row.clues.length == 1" style="background-color: rgba(250,0,0,0.3);">...</button>
+                                        <div style="font-weight: bold; display: contents;"> [ {{ row.clues[0].clues }} ] {{ row.clues[0].descripcion }}</div>
+                                    </div>
+                                    <div *ngIf="row.clues.length == 0">No asignado</div>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="regionalizacion">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> REGIONALIZACIÓN </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <div *ngIf="row.regionalizacion.length > 0">
+                                        <button mat-raised-button *ngIf="row.regionalizacion.length > 1" style="background-color: rgba(0,0,250,0.3);" (click)="verUnidades(row, 2)">...</button>
+                                        <button mat-raised-button *ngIf="row.regionalizacion.length == 1" style="background-color: rgba(250,0,0,0.3);">...</button>
+                                        <div style="font-weight: bold; display: contents;"> [ {{ row.regionalizacion[0].clues }} ] {{ row.regionalizacion[0].catalogo_clues.descripcion }}</div>
+                                    </div>
+                                    <div *ngIf="row.regionalizacion.length == 0">No asignado</div>
                                 </td>
                             </ng-container>
 

@@ -76,8 +76,6 @@ class CluesController extends Controller
     public function update(Request $request, $id)
     {
 
-        $object = $request->all();
-
         $mensajes = [
             
             'required'      => "required",
@@ -86,14 +84,19 @@ class CluesController extends Controller
         ];
 
         $reglas = [
-            'microrregion_id'             => 'required',
-            'localidad_id'                => 'required',
-            
+            'catalogo_microrregion_id'             => 'required',
+            'catalogo_localidad'                => 'required',
+            'descripcion'                => 'required',
+            'direccion'                => 'required',
+            'cp'                => 'required',
+            'telefono'                => 'required',
+            'nucleos_camas'                => 'required',
+            'latitud'                => 'required',
+            'longitud'                => 'required',
         ];
 
         
-        $object = Clues::where("clues", "=", $id)->first();
-        //return response()->json($object,HttpResponse::HTTP_OK);
+        $object = Clues::find($id);
         if(!$object){
             return response()->json(['error' => "No se encuentra el recurso que esta buscando."], HttpResponse::HTTP_NOT_FOUND);
         }
@@ -102,7 +105,7 @@ class CluesController extends Controller
         $v = Validator::make($inputs, $reglas, $mensajes);
 
         if ($v->fails()) {
-            return response()->json(['error' => "No se encuentra el recurso que esta buscando."], HttpResponse::HTTP_NOT_FOUND);
+            return response()->json(['error' => "Error en campos requeridos"], HttpResponse::HTTP_NOT_FOUND);
         }
 
         DB::beginTransaction();
@@ -118,8 +121,8 @@ class CluesController extends Controller
             $object->fecha_operacion                =    $inputs['fecha_operacion'];
             $object->latitud                        =    $inputs['latitud'];
             $object->longitud                       =    $inputs['longitud'];
-            $object->catalogo_microrregion_id       =    $inputs['microrregion_id'];
-            $object->catalogo_localidad_id          =    $inputs['localidad_id'];
+            $object->catalogo_microrregion_id       =    $inputs['catalogo_microrregion_id'];
+            $object->catalogo_localidad_id          =    $inputs['catalogo_localidad']['id'];
 
 
             //return response()->json($object,HttpResponse::HTTP_OK);

@@ -150,8 +150,9 @@ export class ListaComponent implements OnInit {
     this.personalService.getTrabajador(params).subscribe(
       response =>{
         this.dataSource = response.data.data;
-        console.log(this.dataSource);
+        this.resultsLength = response.data.total;
         this.isLoading = false;
+        
       },
       errorResponse =>{
         var errorMessage = "Ocurrió un error.";

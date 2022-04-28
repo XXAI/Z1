@@ -31,6 +31,11 @@ export class FormularioComponent implements OnInit {
   localidadIsLoading: boolean = false;
   filteredLocalidad: Observable<any[]>;
   isLoading:boolean = false;
+  poblacion:any;
+
+  displayedColumns: string[] = ['AÑO', 'CANTIDAD'];
+  dataSource:any;
+
   constructor(
     private sharedService: SharedService, 
     private localidadService: LocalidadService,
@@ -45,7 +50,7 @@ export class FormularioComponent implements OnInit {
   ) { }
   
   public localidadForm = this.fb.group({
-    'tipo_localidad': ['',[Validators.required]],
+    //'tipo_localidad': ['',[Validators.required]],
     'municipio_id': ['',[Validators.required]],
     'clave_localidad': ['',[Validators.required]],
     'descripcion': ['',[Validators.required]],
@@ -64,7 +69,8 @@ export class FormularioComponent implements OnInit {
       response => {
         
         let obj = response.data;
-        console.log(obj);
+        //console.log(obj);
+        this.dataSource = obj.poblacion_inegi;
         this.cargaMunicipio();
         this.localidadForm.patchValue({
           descripcion: obj.descripcion, 

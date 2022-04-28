@@ -19,7 +19,7 @@ class RegionalizacionCluesController extends Controller
         try{
             $access = $this->getUserAccessData();
             $parametros = $request->all();
-            $objeto = Clues::with("regionalizaciones", "catalogo_microrregion");
+            $objeto = Clues::with("regionalizaciones.catalogo_localidad", "catalogo_microrregion");
 
             if(!$access->is_admin){
                 $objeto = $objeto->whereIn('clues', $access->lista_clues);
@@ -67,14 +67,17 @@ class RegionalizacionCluesController extends Controller
         try{
             $parametros = $request->all();
             
-            $objeto = Localidad::with("regionalizacion.catalogo_tipo_camino","regionalizacion.catalogo_clues", "municipio")
+            /*$objeto = Localidad::with("regionalizacion.catalogo_tipo_camino","regionalizacion.catalogo_clues", "municipio")
                         ->whereRaw(" catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues where clues='".$id."')");
                         //->join("regionalizacion_clues", "catalogo_localidad.id", "regionalizacion_clues.catalogo_localidad_id")
                         //                    ->where("regionalizacion_clues.clues", $id);
+            */
+
+            $objeto = RegionalizacionClues::with("catalogo_localidad.municipio", "catalogo_tipo_camino")->where("clues", $id);
 
             if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){
-                    return $query->where('descripcion','LIKE','%'.$parametros['query'].'%');
+                    return $query->whereRaw("regionalizacion_clues.catalogo_localidad_id in (select id from catalogo_localidad where descripcion LIKE '%".$parametros['query']."%')");
                 });
             }
             if(isset($parametros['page'])){
@@ -82,7 +85,9 @@ class RegionalizacionCluesController extends Controller
                 $objeto = $objeto->paginate($resultadosPorPagina);
             }
 
-            return response()->json(["data"=>$objeto],HttpResponse::HTTP_OK);
+            $clues = Clues::with("catalogo_localidad")->find($id);
+
+            return response()->json(["data"=>$objeto, "clues"=>$clues],HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
@@ -180,7 +185,7 @@ class RegionalizacionCluesController extends Controller
             $object->catalogo_tipo_camino_id =  $inputs['catalogo_tipo_camino_id'];
             $object->distancia =                $inputs['distancia'];
             $object->tiempo =                   $inputs['tiempo'];
-            $object->clues =                    $inputs['clues']['clues'];
+            $object->clues =                    $inputs['clues'];
             $object->save();
             DB::commit();
             

@@ -1,12 +1,12 @@
 <h1 mat-dialog-title style="background-color: #3f51b5; color: white; padding: 5pt 10pt; border-bottom: 3px solid #CFCFCF; margin: 0pt;">AGREGAR COLONIA</h1>
 <!--<hr style="border: 1px solid #3f51b5;">-->
 <div mat-dialog-content>
-    <form [formGroup]="coloniaForm" >
+    <form [formGroup]="coloniaForm">
         <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
             <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
                 <div fxFlex="100" fxFlex.xs="100">
                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                        <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
                             <mat-label>Distrito</mat-label>
                             <mat-select formControlName="distrito_id" #distrito required (selectionChange)="cargaMunicipio(distrito.value, null, 1)">
                                 <mat-option *ngFor="let item of catalogo['distrito']" [value]="item.id">
@@ -17,7 +17,7 @@
                                 <span *ngIf="coloniaForm.get('distrito_id').errors.required">Campo obligatorio</span>
                             </mat-error>
                         </mat-form-field>
-                        <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
                             <mat-label>Municipio</mat-label>
                             <mat-select formControlName="municipio_id" required>
                                 <mat-option *ngFor="let item of catalogo['municipio']" [value]="item.id">
@@ -26,16 +26,18 @@
                             </mat-select>
                             <mat-error *ngIf="coloniaForm.get('municipio_id').invalid && (coloniaForm.get('municipio_id').dirty || coloniaForm.get('municipio_id').touched)">
                                 <span *ngIf="coloniaForm.get('municipio_id').errors.required">Campo obligatorio</span>
-                            </mat-error> 
+                            </mat-error>
                         </mat-form-field>
-                        
+
                     </div>
                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                        <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
                             <mat-label>Localidad</mat-label>
                             <input matInput placeholder="Localidad" [matAutocomplete]="localidadAutocomplete" formControlName='localidad_id'>
                             <mat-autocomplete #localidadAutocomplete="matAutocomplete" [displayWith]="displayLocalidadFn" [panelWidth]="'auto'">
-                                <mat-option *ngIf="localidadIsLoading" class="is-loading"><mat-spinner diameter="25"></mat-spinner></mat-option>
+                                <mat-option *ngIf="localidadIsLoading" class="is-loading">
+                                    <mat-spinner diameter="25"></mat-spinner>
+                                </mat-option>
                                 <ng-container *ngIf="!localidadIsLoading">
                                     <mat-option *ngFor="let item of filteredLocalidad" [value]="item">
                                         [{{item.id}}] {{ item.descripcion }}
@@ -44,39 +46,39 @@
                             </mat-autocomplete>
                             <mat-error *ngIf="coloniaForm.get('localidad_id').invalid && (coloniaForm.get('localidad_id').dirty || coloniaForm.get('localidad_id').touched)">
                                 <span *ngIf="coloniaForm.get('localidad_id').errors.required">Campo obligatorio</span>
-                            </mat-error> 
+                            </mat-error>
                         </mat-form-field>
-                        
-                        <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+
+                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
                             <mat-label>Clave de Colonia</mat-label>
-                            <input matInput  autocomplete="off" formControlName="clave_colonia" placeholder="Clave Colonia">
+                            <input matInput autocomplete="off" formControlName="clave_colonia" placeholder="Clave Colonia">
                             <mat-error *ngIf="coloniaForm.get('clave_colonia').invalid && (coloniaForm.get('clave_colonia').dirty || coloniaForm.get('clave_colonia').touched)">
                                 <span *ngIf="coloniaForm.get('clave_colonia').errors.required">Campo obligatorio</span>
                             </mat-error>
                         </mat-form-field>
-                        
-                        
+
+
                     </div>
                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                        <mat-form-field fxFlex="100" fxFlex.xs="100"  appearance="fill">
+                        <mat-form-field fxFlex="100" fxFlex.xs="100" appearance="fill">
                             <mat-label>Nombre Colonia</mat-label>
-                            <input matInput  autocomplete="off" formControlName="colonia" placeholder="Colonia" appearance="fill">
+                            <input matInput autocomplete="off" formControlName="colonia" placeholder="Colonia" appearance="fill">
                             <mat-error *ngIf="coloniaForm.get('colonia').invalid && (coloniaForm.get('colonia').dirty || coloniaForm.get('colonia').touched)">
                                 <span *ngIf="coloniaForm.get('colonia').errors.required">Campo obligatorio</span>
                             </mat-error>
                         </mat-form-field>
                     </div>
                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                        <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
                             <mat-label>Latitud</mat-label>
-                            <input matInput  autocomplete="off" formControlName="latitud" placeholder="Colonia" appearance="fill">
+                            <input matInput autocomplete="off" formControlName="latitud" placeholder="Colonia" appearance="fill">
                             <mat-error *ngIf="coloniaForm.get('latitud').invalid && (coloniaForm.get('latitud').dirty || coloniaForm.get('latitud').touched)">
                                 <span *ngIf="coloniaForm.get('latitud').errors.required">Campo obligatorio</span>
                             </mat-error>
                         </mat-form-field>
-                        <mat-form-field fxFlex="50" fxFlex.xs="100"  appearance="fill">
+                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
                             <mat-label>Longitud</mat-label>
-                            <input matInput  autocomplete="off" formControlName="longitud" placeholder="Colonia" appearance="fill">
+                            <input matInput autocomplete="off" formControlName="longitud" placeholder="Colonia" appearance="fill">
                             <mat-error *ngIf="coloniaForm.get('longitud').invalid && (coloniaForm.get('longitud').dirty || coloniaForm.get('longitud').touched)">
                                 <span *ngIf="coloniaForm.get('longitud').errors.required">Campo obligatorio</span>
                             </mat-error>
@@ -86,12 +88,13 @@
                         
                         
                     </div>-->
-                        
+
                 </div>
             </div>
         </section>
     </form>
 </div>
 <mat-dialog-actions>
+    <button mat-raised-button (click)="this.dialogRef.close(true);" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
     <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!coloniaForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
-</mat-dialog-actions>    
+</mat-dialog-actions>

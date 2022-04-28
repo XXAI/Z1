@@ -17,23 +17,25 @@ class TrabajadorSaludController extends Controller
         try{
             $access = $this->getUserAccessData();
             $parametros = $request->all();
-            $objeto = Trabajador::join("regionalizacion_rh", "regionalizacion_rh.trabajador_id", "=", "trabajador.id")
-                                ->join("catalogo_clues", "catalogo_clues.clues", "regionalizacion_rh.clues")
+            $objeto = Trabajador::leftjoin("regionalizacion_rh", "regionalizacion_rh.trabajador_id", "=", "trabajador.id")
+                                ->leftjoin("catalogo_clues", "catalogo_clues.clues", "regionalizacion_rh.clues")
+                                ->leftjoin("catalogo_tipo_trabajador", "catalogo_tipo_trabajador.id", "Trabajador.tipo_personal_id")
                                     ->where("regionalizacion_rh.tipo_trabajador_id", 1)
                                     ->whereNull("trabajador.deleted_at")
                                     ->whereNull("regionalizacion_rh.deleted_at")
-                                    ->select("trabajador.id", "rfc", "curp", "nombre", "apellido_paterno", "apellido_materno", "regionalizacion_rh.clues", "catalogo_clues.descripcion");
+                                    ->select("trabajador.id", "rfc", "curp", "nombre", "apellido_paterno", "apellido_materno", 
+                                    "regionalizacion_rh.clues", "catalogo_clues.descripcion", "catalogo_tipo_trabajador.descripcion as categoria");
 
             if(!$access->is_admin){
                 $objeto = $objeto->whereIn('regionalizacion_rh.clues', $access->lista_clues);
             }
 
-            /*if(isset($parametros['query'])){
+            if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){
-                    return $query->where('clave_colonia','LIKE','%'.$parametros['query'].'%')
-                                ->orWhere('descripcion','LIKE','%'.$parametros['query'].'%');
+                    return $query->whereRaw("concat(trabajador.nombre, ' ', trabajador.apellido_paterno,' ',trabajador.apellido_materno) LIKE '%".$parametros['query']."%'")
+                                ->orWhere('rfc','LIKE','%'.$parametros['query'].'%');
                 });
-            }*/
+            }
             
             if(isset($parametros['page'])){
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
@@ -79,7 +81,7 @@ class TrabajadorSaludController extends Controller
             'edad'                  => 'required',
             'sexo_id'               => 'required',
             'catalogo_lengua_id'    => 'required',
-            'ur'                    => 'required',
+            'catalogo_tipo_personal_id'                    => 'required',
         ];
         
         
@@ -101,7 +103,7 @@ class TrabajadorSaludController extends Controller
             $object->edad             =     $inputs['edad'];
             $object->sexo_id          =     $inputs['sexo_id'];
             $object->catalogo_lengua_id          =     $inputs['catalogo_lengua_id'];
-            $object->ur                      =     $inputs['ur'];
+            $object->tipo_personal_id                      =     $inputs['catalogo_tipo_personal_id'];
             
             $object->save();
             $relacion = new RelRegionalizacionRh();
@@ -140,7 +142,7 @@ class TrabajadorSaludController extends Controller
             'edad'                  => 'required',
             'sexo_id'               => 'required',
             'catalogo_lengua_id'    => 'required',
-            'ur'    => 'required',
+            'catalogo_tipo_personal_id'    => 'required',
         ];
         
         DB::beginTransaction();
@@ -166,7 +168,7 @@ class TrabajadorSaludController extends Controller
             $object->edad             =     $inputs['edad'];
             $object->sexo_id          =     $inputs['sexo_id'];
             $object->catalogo_lengua_id          =     $inputs['catalogo_lengua_id'];
-            $object->ur                      =     $inputs['ur'];
+            $object->tipo_personal_id                      =     $inputs['catalogo_tipo_personal_id'];
             
             $object->save();
             
