@@ -228,6 +228,55 @@
                                     </div>
                                 </div>
                             </mat-tab>
+                            <mat-tab label="Jurisdicción" [disabled]="(usuarioForm.get('is_superuser').value == true)">
+                                <ng-template mat-tab-label>
+                                    <span>Jurisdicción</span>
+                                </ng-template>
+                        
+                                <div fxLayout="row" fxLayout.xs="column" class="edit-container">
+                                    <div fxLayout="row" class="edit-container">
+                                        <div fxFlex="49" fxFlex.xs="100">
+                                            <div fxLayout="row">
+                                                <mat-form-field fxFlex>
+                                                    <input matInput placeholder="Filtrar Distritos" aria-label="filtrar" [formControl]="filterInputDistrito">
+                                                    <mat-icon *ngIf="!filterInputDistrito.value" matSuffix>filter_list</mat-icon>
+                                                    <button mat-icon-button matSuffix *ngIf="filterInputDistrito.value"  (click)="clearDistritoFilter()">
+                                                        <mat-icon>clear</mat-icon>
+                                                    </button>
+                                                </mat-form-field>
+                                            </div>
+                                            <div fxLayout="row">
+                                                <mat-action-list fxFlex fxFlex.xs="100" dense class="permissions-list">
+                                                    <button mat-list-item *ngFor="let distrito of filterInputDistrito$ | async" (click)="selectDistrito(distrito)" [disabled]="assignedDistrito[distrito.id] && assignedDistrito[distrito.id].inRoles.length > 0">
+                                                        <p matLine>
+                                                            <span fxHide.xs="true">[{{distrito.id}}]</span> <span> {{distrito.description}} </span>
+                                                        </p>
+                                                        <button mat-icon-button  *ngIf="assignedDistrito[distrito.id] && assignedDistrito[distrito.id].inRoles.length > 0">
+                                                                <mat-icon>{{(assignedDistrito[distrito.id].active)?'supervised_user_circle':'block'}}</mat-icon>
+                                                        </button>
+                                                        <button mat-icon-button  *ngIf="!assignedDistrito[distrito.id] || assignedDistrito[distrito.id].inRoles.length <= 0" >
+                                                            <mat-icon>{{(assignedDistrito[distrito.id] && assignedDistrito[distrito.id].active)?'check_box':'check_box_outline_blank'}}</mat-icon>
+                                                        </button>
+                                                        <mat-divider></mat-divider>
+                                                    </button>
+                                                </mat-action-list>
+                                            </div>
+                                        </div>
+                                        <!--<div fxFlex fxHide.xs="true"></div>
+                                        <div fxFlex="49" fxHide.xs="true">
+                                            <mat-form-field fxFlex>
+                                                <mat-chip-list #chipList aria-label="Permisos Seleccionados">
+                                                    <mat-chip [color]="'accent'" *ngFor="let distrito of filterInputDistrito; let i = index" [removable]="true" (removed)="removeDistrito(i)">
+                                                        {{distrito.description}}
+                                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                                    </mat-chip>
+                                                </mat-chip-list>
+                                                <mat-hint align="end">{{selectedDistrito.length}}</mat-hint>
+                                            </mat-form-field>
+                                        </div>-->
+                                    </div>
+                                </div>
+                            </mat-tab>            
                         </mat-tab-group>
                     </div>
                 </mat-card-content>

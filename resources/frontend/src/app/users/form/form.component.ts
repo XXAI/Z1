@@ -45,6 +45,7 @@ export class FormComponent implements OnInit {
     'roles': [[]],
     'permissions': [[]],
     'grupo_unidades': [[]],
+    'distritos': [[]],
   });
 
   avatarList: any[] = [];
@@ -59,6 +60,7 @@ export class FormComponent implements OnInit {
   selectedRoles: any[] = [];
   selectedRolePermissions: any[] = [];
   assignedPermissions: any[] = [];
+  assignedDistrito: any[] = [];
   deniedPermissions: any[] = [];
   selectedRoleChipId: number = 0;
 
@@ -79,9 +81,13 @@ export class FormComponent implements OnInit {
   listOfPermissions$: Observable<any[]>;
   filterInputPermissions: FormControl = new FormControl('');
   filterInputPermissions$: Observable<string> = this.filterInputPermissions.valueChanges.pipe(startWith(''));
+  filterInputDistrito: FormControl = new FormControl('');
+  //filterInputDistrito$: Observable<string> = this.filterInputDistrito.valueChanges.pipe(startWith(''));
   filteredPermissions$: Observable<any[]>;
   selectedPermissions: any[] = [];
+  selectedDistrito: any[] = [];
 
+  filterInputDistrito$:any = [{id:1, descripcion:"DISTRITO 1"}];
 
   ngOnInit() {
     this.authUser = this.authService.getUserData();
@@ -288,6 +294,23 @@ export class FormComponent implements OnInit {
       this.selectedPermissions.splice(index,1);
     }
   }
+  
+  removeDistrito(index){
+    let distrito = this.selectedDistrito[index];
+    if(this.assignedDistrito[distrito.id].inRoles.length <= 0){
+      if(this.assignedDistrito[distrito.id].active){
+        delete this.assignedDistrito[distrito.id];
+      }else{
+        this.assignedDistrito[distrito.id].active = !this.assignedDistrito[distrito.id].active;
+      }
+    }else{
+      this.assignedDistrito[distrito.id].active = !this.assignedDistrito[distrito.id].active;
+    }
+
+    if(!this.assignedDistrito[distrito.id] || !this.assignedDistrito[distrito.id].active){
+      this.assignedDistrito.splice(index,1);
+    }
+  }
 
   showCRList(grupo){
     this.selectedItemGrupo = grupo.id;
@@ -316,6 +339,21 @@ export class FormComponent implements OnInit {
         active: true,
         description: permission.description,
         inRoles:[]
+      };
+    }
+    //console.log(this.assignedPermissions);
+  }
+
+  selectDistrito(distrito){
+    if(this.assignedDistrito[distrito.id]){
+      let Index = this.selectedDistrito.findIndex(item => item.id == distrito.id);
+      this.removeDistrito(Index);
+    }else{
+      this.selectedDistrito.push(distrito);
+      this.selectedDistrito[distrito.id] = {
+        active: true,
+        description: distrito.description,
+        //inRoles:[]
       };
     }
     //console.log(this.assignedPermissions);
@@ -407,5 +445,9 @@ export class FormComponent implements OnInit {
   }
   clearPermissionsFilter(){
     this.filterInputPermissions.setValue('');
+  }
+
+  clearDistritoFilter(){
+    this.filterInputDistrito.setValue('');
   }
 }
