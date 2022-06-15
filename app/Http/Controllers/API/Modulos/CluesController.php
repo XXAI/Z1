@@ -22,10 +22,10 @@ class CluesController extends Controller
             //return $access;
             $parametros = $request->all();
             //return response()->json(['data'=>$access->lista_clues, "consulta"=>"hola"],HttpResponse::HTTP_OK);
-            $clues = Clues::whereNull("deleted_at");
+            $clues = Clues::with('catalogo_localidad', 'catalogo_microrregion','distrito');
             
             if(!$access->is_admin){
-                $clues = $clues->whereIn('clues', $access->lista_clues)->with('catalogo_localidad', 'catalogo_microrregion');
+                $clues = $clues->whereIn('distrito_id', $access->distrito);
             }
             
             if(isset($parametros['query'])){

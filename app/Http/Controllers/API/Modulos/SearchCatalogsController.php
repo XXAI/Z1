@@ -191,10 +191,11 @@ class SearchCatalogsController extends Controller
             $loggedUser = auth()->userOrFail();
         }
         
-        $loggedUser->load('gruposUnidades', 'gruposUnidades');
+        $loggedUser->load('gruposUnidades', 'gruposUnidades', 'UserDistrito');
         
         $lista_cr = [];
         $lista_clues = [];
+        $lista_distrito = [];
         
         foreach ($loggedUser->gruposUnidades as $grupo) {
             $lista_unidades = $grupo->listaCR->pluck('clues')->toArray();
@@ -203,9 +204,17 @@ class SearchCatalogsController extends Controller
             //$lista_cr += $lista_cr + array_keys($lista_unidades);
         }
 
+        foreach ($loggedUser->UserDistrito as $distrito) {
+            $lista_distrito = $distrito->distrito_id->pluck('distrito_id')->toArray();
+            
+            //$lista_clues += $lista_clues + array_values($lista_unidades);
+            //$lista_cr += $lista_cr + array_keys($lista_unidades);
+        }
+
         $accessData = (object)[];
         $accessData->lista_clues = $lista_clues;
         $accessData->lista_cr = $lista_cr;
+        $accessData->distritos = $lista_distrito;
 
         if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
             $accessData->is_admin = true;

@@ -11,4 +11,8 @@ class RelUserDistrito extends Model
     use SoftDeletes;
     protected $fillable = [''];
     protected $table = 'rel_user_distrito';
+
+    public function distrito(){
+        return $this->belongsTo('App\Models\Distrito');
+    }
 }

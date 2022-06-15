@@ -44,7 +44,10 @@
                             <!-- ID Column -->
                             <ng-container matColumnDef="Clues">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> CLUES </th>
-                                <td mat-cell *matCellDef="let row">{{ row.clues }}</td>
+                                <td mat-cell *matCellDef="let row">
+                                    <b>{{ row.clues }}</b>
+                                <div style="font-size: 9pt;">DISTRITO {{ row.distrito.clave_distrito }} {{ row.distrito.descripcion }}</div>
+                            </td>
                             </ng-container>
 
                             <!-- Localidad Column  -->

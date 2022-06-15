@@ -13,6 +13,7 @@ export class UsersService {
   url_role = `${environment.base_url}/role`;
   url_permission = `${environment.base_url}/permission`;
   url_grupos = `${environment.base_url}/grupos_unidades`;
+  url_distritos = `${environment.base_url}/distritos`;
   url_avatars = `${environment.base_url}/avatar-images`;
 
   constructor(private http: HttpClient) { }
@@ -44,6 +45,15 @@ export class UsersService {
   getAllGruposUnidades():Observable<any> {
     let payload:any = {'lista-cr': true};
     return this.http.get<any>(this.url_grupos,{ params: payload}).pipe(
+      map( response => {
+        return response;
+      })
+    );
+  }
+
+  getAllDistritos():Observable<any> {
+    let payload:any = {'lista-distrito': true};
+    return this.http.get<any>(this.url_distritos,{ params: payload}).pipe(
       map( response => {
         return response;
       })

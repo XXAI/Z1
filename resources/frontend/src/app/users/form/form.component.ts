@@ -81,13 +81,16 @@ export class FormComponent implements OnInit {
   listOfPermissions$: Observable<any[]>;
   filterInputPermissions: FormControl = new FormControl('');
   filterInputPermissions$: Observable<string> = this.filterInputPermissions.valueChanges.pipe(startWith(''));
-  filterInputDistrito: FormControl = new FormControl('');
-  //filterInputDistrito$: Observable<string> = this.filterInputDistrito.valueChanges.pipe(startWith(''));
+  
   filteredPermissions$: Observable<any[]>;
   selectedPermissions: any[] = [];
+  
+  catalogDistrito: any[] = [];
+  listOfDistrito$: Observable<any[]>;
+  filterInputDistrito: FormControl = new FormControl('');
+  filterInputDistrito$: Observable<string> = this.filterInputDistrito.valueChanges.pipe(startWith(''));
+  filteredDistrito$: Observable<any[]>;
   selectedDistrito: any[] = [];
-
-  filterInputDistrito$:any = [{id:1, descripcion:"DISTRITO 1"}];
 
   ngOnInit() {
     this.authUser = this.authService.getUserData();
@@ -97,8 +100,9 @@ export class FormComponent implements OnInit {
     let callRolesCatalog = this.usersService.getAllRoles();
     let callPermissionsCatalog = this.usersService.getAllPermissions();
     let callGruposUnidades = this.usersService.getAllGruposUnidades();
+    let callDistrito = this.usersService.getAllDistritos();
 
-    let httpCalls = [callRolesCatalog, callPermissionsCatalog, callGruposUnidades];
+    let httpCalls = [callRolesCatalog, callPermissionsCatalog, callGruposUnidades, callDistrito];
 
     this.route.paramMap.subscribe(params => {
       if(params.get('id')){
@@ -114,7 +118,7 @@ export class FormComponent implements OnInit {
 
       this.isLoading = true;
 
-      //Calls: 0 => Roles, 1 => Permissions, 2 => User
+      //Calls: 0 => Roles, 1 => Permissions, 2 => User, 3 Distritos
       forkJoin(httpCalls).subscribe(
         results => {
           let total_resultados = results.length - 1;
@@ -154,6 +158,18 @@ export class FormComponent implements OnInit {
           );
           //Ends: Grupos Unidades
 
+           //Starts: Distrito
+           this.catalogDistrito = results[3].data;
+           this.listOfDistrito$ = of(this.catalogDistrito);
+           this.filteredDistrito$ = combineLatest(this.listOfDistrito$,this.filterInputDistrito$).pipe(
+             map(
+               ([distrito,filterString]) => distrito.filter(
+                distrito => (distrito.descripcion.toLowerCase().indexOf(filterString.toLowerCase()) !== -1)
+               )
+             )
+           );
+           //Ends: Distrito
+
           //Starts: User
           if(results[total_resultados]){
             this.usuario = results[total_resultados];
@@ -185,6 +201,24 @@ export class FormComponent implements OnInit {
                 }
                 this.selectedPermissions.push(permission);
               }
+            }
+
+            //Load Distrito
+            for(let i in this.usuario.distrito){
+              
+              let distrito = this.usuario.distrito[i];
+              /*if(this.assignedDistrito[distrito.id]){
+                this.assignedDistrito[distrito.id].active = (distrito.pivot.status == 1);
+              }else{*/
+              
+                this.assignedDistrito[distrito.distrito_id] = {
+                  active: true,
+                  description: distrito.distrito.descripcion,
+                  id:distrito.distrito_id
+                }
+                this.selectedDistrito.push(distrito.distrito);
+                console.log(this.assignedDistrito);
+              //}
             }
           }
           //Ends: User
@@ -295,21 +329,10 @@ export class FormComponent implements OnInit {
     }
   }
   
-  removeDistrito(index){
-    let distrito = this.selectedDistrito[index];
-    if(this.assignedDistrito[distrito.id].inRoles.length <= 0){
-      if(this.assignedDistrito[distrito.id].active){
-        delete this.assignedDistrito[distrito.id];
-      }else{
-        this.assignedDistrito[distrito.id].active = !this.assignedDistrito[distrito.id].active;
-      }
-    }else{
-      this.assignedDistrito[distrito.id].active = !this.assignedDistrito[distrito.id].active;
-    }
-
-    if(!this.assignedDistrito[distrito.id] || !this.assignedDistrito[distrito.id].active){
-      this.assignedDistrito.splice(index,1);
-    }
+  removeDistrito(distrito){
+    let indexDistrito = this.selectedDistrito.findIndex(item => item.id == distrito.id);
+    this.selectedDistrito.splice(indexDistrito,1);
+    this.assignedDistrito[distrito.id].active = !this.assignedDistrito[distrito.id].active;
   }
 
   showCRList(grupo){
@@ -345,18 +368,16 @@ export class FormComponent implements OnInit {
   }
 
   selectDistrito(distrito){
-    if(this.assignedDistrito[distrito.id]){
-      let Index = this.selectedDistrito.findIndex(item => item.id == distrito.id);
-      this.removeDistrito(Index);
+    if(this.assignedDistrito[distrito.id] && this.assignedDistrito[distrito.id].active == true){
+      this.removeDistrito(distrito);
     }else{
       this.selectedDistrito.push(distrito);
-      this.selectedDistrito[distrito.id] = {
+      this.assignedDistrito[distrito.id] = {
         active: true,
-        description: distrito.description,
-        //inRoles:[]
-      };
+        description: distrito.descripcion,
+        id:distrito.id
+      }; 
     }
-    //console.log(this.assignedPermissions);
   }
 
   accionGuardar(){
@@ -409,9 +430,20 @@ export class FormComponent implements OnInit {
       grupo_unidades = [this.selectedGrupo.id];
     }
 
+    let distritos = [];
+    for(let id in this.assignedDistrito){
+      if(this.assignedDistrito[id].active == true)
+      {
+        let Distrito = this.assignedDistrito[id];
+        let indice = distritos.length;
+        distritos[indice]=Distrito.id;
+      }
+    }
+
     this.usuarioForm.get('permissions').patchValue(permissions);
     this.usuarioForm.get('roles').patchValue(roles);
     this.usuarioForm.get('grupo_unidades').patchValue(grupo_unidades);
+    this.usuarioForm.get('distritos').patchValue(distritos);
 
     this.usuarioForm.get('avatar').patchValue(this.selectedAvatar);
 

@@ -247,14 +247,15 @@
                                             </div>
                                             <div fxLayout="row">
                                                 <mat-action-list fxFlex fxFlex.xs="100" dense class="permissions-list">
-                                                    <button mat-list-item *ngFor="let distrito of filterInputDistrito$ | async" (click)="selectDistrito(distrito)" [disabled]="assignedDistrito[distrito.id] && assignedDistrito[distrito.id].inRoles.length > 0">
+                                                    <button mat-list-item *ngFor="let distrito of filteredDistrito$ | async" (click)="selectDistrito(distrito)"><!--[disabled]="assignedDistrito[distrito.id] && assignedDistrito[distrito.id].active == true"-->
+                                                        
                                                         <p matLine>
-                                                            <span fxHide.xs="true">[{{distrito.id}}]</span> <span> {{distrito.description}} </span>
+                                                            <span fxHide.xs="true">[{{distrito.clave_distrito}}]</span> <span> {{distrito.descripcion}} </span>
                                                         </p>
-                                                        <button mat-icon-button  *ngIf="assignedDistrito[distrito.id] && assignedDistrito[distrito.id].inRoles.length > 0">
-                                                                <mat-icon>{{(assignedDistrito[distrito.id].active)?'supervised_user_circle':'block'}}</mat-icon>
+                                                        <button mat-icon-button  *ngIf="assignedDistrito[distrito.id] && assignedDistrito[distrito.id].active == true">
+                                                            <mat-icon>{{(assignedDistrito[distrito.id] && assignedDistrito[distrito.id].active)?'check_box':'check_box_outline_blank'}}</mat-icon>
                                                         </button>
-                                                        <button mat-icon-button  *ngIf="!assignedDistrito[distrito.id] || assignedDistrito[distrito.id].inRoles.length <= 0" >
+                                                        <button mat-icon-button  *ngIf="!assignedDistrito[distrito.id] || assignedDistrito[distrito.id].active == false" >
                                                             <mat-icon>{{(assignedDistrito[distrito.id] && assignedDistrito[distrito.id].active)?'check_box':'check_box_outline_blank'}}</mat-icon>
                                                         </button>
                                                         <mat-divider></mat-divider>
@@ -262,18 +263,18 @@
                                                 </mat-action-list>
                                             </div>
                                         </div>
-                                        <!--<div fxFlex fxHide.xs="true"></div>
+                                        <div fxFlex fxHide.xs="true"></div>
                                         <div fxFlex="49" fxHide.xs="true">
                                             <mat-form-field fxFlex>
-                                                <mat-chip-list #chipList aria-label="Permisos Seleccionados">
-                                                    <mat-chip [color]="'accent'" *ngFor="let distrito of filterInputDistrito; let i = index" [removable]="true" (removed)="removeDistrito(i)">
-                                                        {{distrito.description}}
+                                                <mat-chip-list  aria-label="Permisos Seleccionados">
+                                                    <mat-chip [color]="'accent'" *ngFor="let distrito of selectedDistrito; let i = index" [removable]="true" (removed)="removeDistrito(distrito)">
+                                                        {{distrito.descripcion}}
                                                         <mat-icon matChipRemove>cancel</mat-icon>
                                                     </mat-chip>
                                                 </mat-chip-list>
                                                 <mat-hint align="end">{{selectedDistrito.length}}</mat-hint>
                                             </mat-form-field>
-                                        </div>-->
+                                        </div>
                                     </div>
                                 </div>
                             </mat-tab>            

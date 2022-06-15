@@ -96,15 +96,18 @@ class UserController extends Controller
                     $roles = $parametros['roles'];
                     $permisos = $parametros['permissions'];
                     $grupo_unidades = $parametros['grupo_unidades'];
+                    $distritos = $parametros['distritos'];
                 }else{
                     $roles = [];
                     $permisos = [];
                     $grupo_unidades = [];
+                    $distritos = [];
                 }
                 
                 $usuario->roles()->sync($roles);
                 $usuario->permissions()->sync($permisos);
-                $usuario->gruposUnidades()->sync($grupo_unidades);
+                //$usuario->gruposUnidades()->sync($grupo_unidades);
+                $usuario->UserDistrito()->sync($distritos);
 
                 DB::commit();
 
@@ -127,7 +130,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return response()->json(['data'=>User::with('roles','permissions','gruposUnidades')->find($id)],HttpResponse::HTTP_OK);
+        return response()->json(['data'=>User::with('roles','permissions','gruposUnidades','distrito')->find($id)],HttpResponse::HTTP_OK);
     }
 
     /**
@@ -175,16 +178,18 @@ class UserController extends Controller
                     $roles = $parametros['roles'];
                     $permisos = $parametros['permissions'];
                     $grupo_unidades = $parametros['grupo_unidades'];
+                    $distritos = $parametros['distritos'];
                 }else{
                     $roles = [];
                     $permisos = [];
                     $grupo_unidades = [];
+                    $distritos = [];
                 }
 
                 $usuario->roles()->sync($roles);
                 $usuario->permissions()->sync($permisos);
-                $usuario->gruposUnidades()->sync($grupo_unidades);
-
+                //$usuario->gruposUnidades()->sync($grupo_unidades);
+                $usuario->UserDistrito()->sync($distritos);
                 DB::commit();
 
                 return response()->json(['guardado'=>true,'usuario'=>$usuario],HttpResponse::HTTP_OK);

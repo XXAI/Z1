@@ -42,6 +42,7 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::post('catalogos',                        'API\Modulos\SearchCatalogsController@getCatalogs');
 
     Route::apiResource('grupos_unidades',           'API\Modulos\GrupoUnidadesController');
+    Route::apiResource('distritos',                 'API\Modulos\DistritoController');
     
     /* Apis del sistema */
     Route::apiResource('clues',                     'API\Modulos\CluesController');

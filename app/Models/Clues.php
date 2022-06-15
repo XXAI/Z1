@@ -31,4 +31,8 @@ class Clues extends Model
         return $this->hasMany('App\Models\RelRegionalizacionRh', 'clues')->where("tipo_trabajador_id", "1");
     }
 
+    public function distrito(){
+        return $this->belongsTo('App\Models\Distrito');
+    }
+
 }

@@ -68,7 +68,11 @@ class User extends Authenticatable implements JWTSubject{
     }
     
     public function distrito(){
-        return $this->hasMany('App\Models\RelUserDistrito');
+        return $this->hasMany('App\Models\RelUserDistrito')->with("distrito");
+    }
+
+    public function UserDistrito(){
+        return $this->belongsToMany('App\Models\RelUserDistrito', 'rel_user_distrito', 'user_id', 'distrito_id');
     }
 
     public function relUsuarioCluesCr(){
