@@ -118,9 +118,9 @@ class CatalogosController extends Controller
         try{
             $params = $request->all();
             $access = $this->getUserAccessData();
-            $obj = Clues::with("catalogo_localidad.municipio")->where('descripcion','LIKE','%'.$params['query'].'%')->orderBy("descripcion");
+            $obj = Clues::with("catalogo_localidad.municipio", "distrito")->where('descripcion','LIKE','%'.$params['query'].'%')->orderBy("descripcion");
             if(!$access->is_admin){
-                $obj = $obj->whereIn('clues', $access->lista_clues);    
+                $obj = $obj->whereIn('distrito_id', $access->distrito);
             }
             $obj = $obj->get();
             return response()->json($obj,HttpResponse::HTTP_OK);

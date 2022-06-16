@@ -45,11 +45,20 @@
                             </ng-container>
 
                             <!-- Username Column  -->
-                            <ng-container matColumnDef="tipo">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO TRABAJADOR </th>
+                            <ng-container matColumnDef="clues">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> CLUES </th>
                                 <td mat-cell *matCellDef="let row">
                                     {{ row.descripcion }}
                                     <div style="font-size: 8pt;"> {{ row.clues }}</div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Username Column  -->
+                            <ng-container matColumnDef="distrito">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> DISTRITO </th>
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.clave_distrito }} {{ row.distrito }}
+                                    
                                 </td>
                             </ng-container>
 

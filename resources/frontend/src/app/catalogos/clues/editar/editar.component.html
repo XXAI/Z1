@@ -64,7 +64,7 @@
                         </div>
                         <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
 
-                            <mat-form-field fxFlex fxFlex.xs="100" *ngIf="!catalogos['microrregiones']">
+                            <mat-form-field fxFlex fxFlex.xs="30" *ngIf="!catalogos['microrregiones']">
                                 <mat-label>Microrregiones:</mat-label>
                                 <mat-select formControlName="catalogo_microrregion_id" required>
                                     <mat-option *ngFor="let item of catalogos['microrregion']" [value]="item.id">
@@ -73,9 +73,15 @@
                                 </mat-select>
                             </mat-form-field>
 
-                            <mat-form-field fxFlex="33" fxFlex.xs="100">
+                            <div fxFlex fxFlex.xs="25">
+                                <mat-label>Distrito:</mat-label>
+                                <br><b *ngIf="distrito != null">DISTRITO {{ distrito.clave_distrito }} {{ distrito.descripcion }}</b>
+                                <br><b *ngIf="distrito == null">NO IDENTIFICADO</b>
+                            </div>
+
+                            <mat-form-field fxFlex="25" fxFlex.xs="100">
                                 <mat-label>MUNICIPIO </mat-label>
-                                <mat-select formControlName="municipio_id" required>
+                                <mat-select formControlName="municipio_id" required  (selectionChange) = "LimpiarLocalidad()">
                                     <mat-option *ngFor="let item of catalogos['municipio']" [value]="item.id">
                                         {{item.descripcion}}
                                     </mat-option>
@@ -95,7 +101,7 @@
                                     </mat-option>
                                     <ng-container *ngIf="!localidadIsLoading">
                                         <mat-option *ngFor="let item of catalogos['localidades']" [value]="item">
-                                            [{{item.id}}] {{ item.descripcion }}
+                                            [{{item.clave_localidad}}] {{ item.descripcion }}
                                         </mat-option>
                                     </ng-container>
                                 </mat-autocomplete>
@@ -109,54 +115,50 @@
                         </div>
                         <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
 
-                            <mat-form-field fxFlex="25" fxFlex.xs="100">
+                            <mat-form-field fxFlex="10" fxFlex.xs="100">
                                 <input matInput formControlName="telefono" placeholder="Teléfono">
                                 <mat-error *ngIf="cluesForm.get('telefono').invalid && (cluesForm.get('telefono').dirty || cluesForm.get('telefono').touched)">
                                     <span *ngIf="cluesForm.get('telefono').errors.required">El Campo es obligatorio</span>
                                 </mat-error>
                             </mat-form-field>
 
-                            <mat-form-field fxFlex="25" fxFlex.xs="100">
+                            <mat-form-field fxFlex="10" fxFlex.xs="100">
                                 <input matInput formControlName="nucleos_camas" placeholder="N° Camas" type="number">
                                 <mat-error *ngIf="cluesForm.get('nucleos_camas').invalid && (cluesForm.get('nucleos_camas').dirty || cluesForm.get('nucleos_camas').touched)">
                                     <span *ngIf="cluesForm.get('nucleos_camas').errors.required">El Campo es obligatorio</span>
                                 </mat-error>
                             </mat-form-field>
 
-                            <mat-form-field fxFlex="25">
+                            <mat-form-field fxFlex="20">
                                 <mat-label>Fecha de Inicio de Operación: </mat-label>
                                 <input matInput [matDatepicker]="picker1" formControlName="inicio_operacion" placeholder="Fecha de Inicio de Operación" readonly="readonly">
                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
                             </mat-form-field>
 
-                            <mat-form-field fxFlex="25">
+                            <mat-form-field fxFlex="20">
                                 <mat-label>Fecha de Acreditación (Hasta): </mat-label>
                                 <input matInput [matDatepicker]="picker2" formControlName="fecha_operacion" placeholder="Fecha de Acreditación" readonly="readonly">
                                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                 <mat-datepicker #picker2></mat-datepicker>
                             </mat-form-field>
-
-                        </div>
-
-
-                        <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
-
-                            <mat-form-field fxFlex="50" fxFlex.xs="100">
+                            <mat-form-field fxFlex="20" fxFlex.xs="100">
                                 <input matInput formControlName="latitud" placeholder="Latitud" type="text">
                                 <mat-error *ngIf="cluesForm.get('latitud').invalid && (cluesForm.get('latitud').dirty || cluesForm.get('latitud').touched)">
                                     <span *ngIf="cluesForm.get('latitud').errors.required">El Campo es obligatorio</span>
                                 </mat-error>
                             </mat-form-field>
 
-                            <mat-form-field fxFlex="50" fxFlex.xs="100">
+                            <mat-form-field fxFlex="20" fxFlex.xs="100">
                                 <input matInput formControlName="longitud" placeholder="Longitud" type="text">
                                 <mat-error *ngIf="cluesForm.get('longitud').invalid && (cluesForm.get('longitud').dirty || cluesForm.get('longitud').touched)">
                                     <span *ngIf="cluesForm.get('longitud').errors.required">El Campo es obligatorio</span>
                                 </mat-error>
                             </mat-form-field>
-
                         </div>
+
+
+                        
                         <br>
                         <!--<ng-container>
                             <button mat-raised-button (click)="showRegionesDialog();" color="primary"><mat-icon>add_circle_outline</mat-icon> Agregar Region</button>

@@ -17,12 +17,10 @@ class LocalidadController extends Controller
             $access = $this->getUserAccessData();
             $parametros = $request->all();
             $objeto = Localidad::with("municipio.distrito", "poblacionInegi", "regionalizacion.catalogo_clues", "clues");
-
-            //return response()->json(['data'=>$access],HttpResponse::HTTP_OK);
                 
-            /*if(!$access->is_admin){
+            if(!$access->is_admin){
                 $objeto = $objeto->whereRaw("catalogo_localidad.catalogo_municipio_id in (select id from catalogo_municipio where catalogo_distrito_id in (".$access->distrito."))");
-            }*/
+            }
 
             if(isset($parametros['municipio'])){
                 $objeto = $objeto->where('catalogo_municipio_id',$parametros['municipio']);
@@ -71,14 +69,14 @@ class LocalidadController extends Controller
                 if($parametros['regionalizado'] == 1)
                 {
                     $main_query = $main_query->where(function($query)use($parametros){
-                        return $query->whereRaw("catalogo_localidad.id in (select catalogo_localidad_id from catalogo_clues)")
-                                        ->orWhereRaw('catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues)');
+                        return $query->//whereRaw("catalogo_localidad.id in (select catalogo_localidad_id from catalogo_clues)")
+                                        WhereRaw('catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues)');
                     });
                 }else if($parametros['regionalizado'] == 2)
                 {
                     $main_query = $main_query->where(function($query)use($parametros){
-                        return $query->whereRaw("catalogo_localidad.id not in (select catalogo_localidad_id from catalogo_clues)")
-                                        ->WhereRaw('catalogo_localidad.id not in (select catalogo_localidad_id from regionalizacion_clues)');
+                        return $query->whereRaw("catalogo_localidad.id not in (select catalogo_localidad_id from catalogo_clues)");
+                                        //->WhereRaw('catalogo_localidad.id not in (select catalogo_localidad_id from regionalizacion_clues)');
                     });
                 }
                 

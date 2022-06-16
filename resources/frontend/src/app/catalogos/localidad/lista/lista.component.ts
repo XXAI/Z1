@@ -35,7 +35,7 @@ export class ListaComponent implements OnInit {
   filteredCatalogs:any = {};
   filterCatalogs:any = {};
 
-  displayedColumns: string[] = ['localidad','sede', 'regionalizacion','actions'];
+  displayedColumns: string[] = ['distrito','localidad','sede', 'regionalizacion','actions'];
 
   dataSource: any = [];
 
@@ -72,9 +72,6 @@ export class ListaComponent implements OnInit {
         per_page: event.pageSize
       };
     }
-
-
-    
     params.query = this.searchQuery;
 
     let filterFormValues = this.filterForm.value;

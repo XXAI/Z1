@@ -17,17 +17,21 @@ class TrabajadorSaludController extends Controller
         try{
             $access = $this->getUserAccessData();
             $parametros = $request->all();
-            $objeto = Trabajador::leftjoin("regionalizacion_rh", "regionalizacion_rh.trabajador_id", "=", "trabajador.id")
-                                ->leftjoin("catalogo_clues", "catalogo_clues.clues", "regionalizacion_rh.clues")
+            $objeto = Trabajador::join("regionalizacion_rh", "regionalizacion_rh.trabajador_id", "=", "trabajador.id")
+                                ->join("catalogo_clues", "catalogo_clues.clues", "regionalizacion_rh.clues")
+                                ->join("catalogo_distrito", "catalogo_clues.distrito_id", "catalogo_distrito.id")
                                 ->leftjoin("catalogo_tipo_trabajador", "catalogo_tipo_trabajador.id", "Trabajador.tipo_personal_id")
                                     ->where("regionalizacion_rh.tipo_trabajador_id", 1)
                                     ->whereNull("trabajador.deleted_at")
                                     ->whereNull("regionalizacion_rh.deleted_at")
                                     ->select("trabajador.id", "rfc", "curp", "nombre", "apellido_paterno", "apellido_materno", 
-                                    "regionalizacion_rh.clues", "catalogo_clues.descripcion", "catalogo_tipo_trabajador.descripcion as categoria");
+                                    "regionalizacion_rh.clues", "catalogo_clues.descripcion", "catalogo_tipo_trabajador.descripcion as categoria", "catalogo_distrito.clave_distrito", "catalogo_distrito.descripcion as distrito");
 
             if(!$access->is_admin){
-                $objeto = $objeto->whereIn('regionalizacion_rh.clues', $access->lista_clues);
+                //$objeto = $objeto->whereIn('regionalizacion_rh.clues', $access->lista_clues);
+                $objeto = $objeto->where(function($query)use($parametros, $access){
+                    return $query->whereRaw("catalogo_clues.distrito_id in (".$access->distrito.")");
+                });
             }
 
             if(isset($parametros['query'])){
@@ -208,19 +212,20 @@ class TrabajadorSaludController extends Controller
             $loggedUser = auth()->userOrFail();
         }
         
-        $loggedUser->load('gruposUnidades.listaClues');
+        //$loggedUser->load('gruposUnidades.listaClues');
         $accessData = (object)[];
         $lista_clues = [];
         $distrito = [];
-        foreach ($loggedUser->gruposUnidades as $grupo) {
-            $lista_unidades = $grupo->listaClues->pluck('clues')->toArray();
-            $lista_clues += $lista_clues + array_values($lista_unidades);
-        }
-        
+        $string_distrito = "";
         $distrito = $loggedUser->distrito->pluck("distrito_id");
         
         $accessData->lista_clues = $lista_clues;
-        $accessData->distrito = $distrito;
+        
+        foreach ($distrito as $key => $value) {
+           if($key > 0){ $string_distrito .=",";}
+           $string_distrito .= $value;
+        }
+        $accessData->distrito = $string_distrito;
         
         if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
             $accessData->is_admin = true;

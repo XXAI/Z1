@@ -36,6 +36,7 @@ export class EditarComponent implements OnInit {
 
   catalogos: any = {};
   filteredCatalogs:any = [];
+  distrito:any;
   
   puedeGuardar: boolean = true;
   puedeValidar: boolean = true;
@@ -69,12 +70,12 @@ export class EditarComponent implements OnInit {
     'municipio_id': ['',Validators.required],
     'clues': ['',Validators.required],
     'descripcion': ['',Validators.required],
-    'direccion': ['',Validators.required],
+    'direccion': [''],
     'cp': ['',Validators.required],
     'telefono': ['',Validators.required],
     'nucleos_camas': ['',Validators.required],
     'inicio_operacion': [''],
-    'fecha_operacion': [""],
+    'fecha_operacion': [''],
     'latitud': ['',Validators.required],
     'longitud': ['',Validators.required],
   });
@@ -104,7 +105,7 @@ export class EditarComponent implements OnInit {
   public IniciarCatalogos(obj:any)
   {
     this.isLoading = true;
-    this.cluesService.obtenerCatalogos().subscribe(
+    this.cluesService.obtenerCatalogos(obj).subscribe(
       response => {
         this.catalogos = response;
         this.isLoading = false; 
@@ -211,9 +212,11 @@ export class EditarComponent implements OnInit {
 
     this.cluesService.obtenerDatosClues(id,params).subscribe(
       response =>{
-        console.log(response.data);
-        //this.cluesForm.reset();
-
+        if(response.data.distrito)
+        {
+          this.distrito = response.data.distrito;
+        }
+        
         if(typeof response === 'object'){
           //this.datos_clues = response.data;
           this.IniciarCatalogos(response.data);
@@ -238,6 +241,11 @@ export class EditarComponent implements OnInit {
         this.isLoading = false;
       }
     );
+  }
+
+  LimpiarLocalidad()
+  {
+    this.cluesForm.patchValue({catalogo_localidad:''});
   }
 
   displayResponsableFn(item: any) {

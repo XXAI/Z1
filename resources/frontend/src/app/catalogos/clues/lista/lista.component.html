@@ -49,6 +49,11 @@
                                 <div style="font-size: 9pt;">DISTRITO {{ row.distrito.clave_distrito }} {{ row.distrito.descripcion }}</div>
                             </td>
                             </ng-container>
+                            <!-- Unidad Medica Column  -->
+                            <ng-container matColumnDef="Unidad">
+                                <th mat-header-cell *matHeaderCellDef> NOMBRE UNIDAD </th>
+                                <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
+                            </ng-container>
 
                             <!-- Localidad Column  -->
                             <ng-container matColumnDef="Localidad">
@@ -56,12 +61,7 @@
                                 <td mat-cell *matCellDef="let row"> {{(row.catalogo_localidad != null) ? row.catalogo_localidad.descripcion : 'NO ASIGNADO' | uppercase}} </td>
                             </ng-container>
 
-                            <!-- Unidad Medica Column  -->
-                            <ng-container matColumnDef="Unidad">
-                                <th mat-header-cell *matHeaderCellDef> NOMBRE UNIDAD </th>
-                                <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
-                            </ng-container>
-
+                           
                             <ng-container matColumnDef="actions">
                                 <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
                                 <td mat-cell *matCellDef="let row; let i = index">

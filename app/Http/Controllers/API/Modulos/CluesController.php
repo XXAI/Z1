@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use \Validator,\Hash, \Response, \DB;
 
 use App\Models\Clues;
+use App\Models\Municipio;
 
 
 class CluesController extends Controller
@@ -52,13 +53,13 @@ class CluesController extends Controller
     {
         try{
             $access = $this->getUserAccessData();
-            $clues = Clues::where("clues", "=", $id)->with('catalogo_localidad', 'catalogo_microrregion');
+            $clues = Clues::where("clues", "=", $id)->with('catalogo_localidad', 'catalogo_microrregion', 'distrito');
             
             if(!$access->is_admin){
-                $clues = $clues->whereIn('clues', $access->lista_clues)->with('catalogo_localidad', 'catalogo_microrregion');
+                $clues = $clues->whereIn('distrito_id', $access->distrito);
             }
 
-            $clues = $clues->with('catalogo_localidad', 'catalogo_microrregion')->first();
+            $clues = $clues->first();
 
             return response()->json(['data'=>$clues],HttpResponse::HTTP_OK);
         }catch(\Exception $e){
@@ -87,7 +88,7 @@ class CluesController extends Controller
             'catalogo_microrregion_id'             => 'required',
             'catalogo_localidad'                => 'required',
             'descripcion'                => 'required',
-            'direccion'                => 'required',
+            //'direccion'                => 'required',
             'cp'                => 'required',
             'telefono'                => 'required',
             'nucleos_camas'                => 'required',
@@ -111,7 +112,7 @@ class CluesController extends Controller
         DB::beginTransaction();
         try {
             
-            $object->clues                          =    $inputs['clues'];
+            //$object->clues                          =    $inputs['clues'];
             $object->descripcion                    =    $inputs['descripcion'];
             $object->direccion                      =    $inputs['direccion'];
             $object->cp                             =    $inputs['cp'];
@@ -124,6 +125,12 @@ class CluesController extends Controller
             $object->catalogo_microrregion_id       =    $inputs['catalogo_microrregion_id'];
             $object->catalogo_localidad_id          =    $inputs['catalogo_localidad']['id'];
 
+            $municipio = Municipio::whereRaw("id = (select catalogo_municipio_id from catalogo_localidad where id="+$inputs['catalogo_localidad']['id']+")")->fisrt();
+            if($localidad)
+            {
+                $object->distrito_id          =    $municipio->catalogo_distrito_id;
+            }
+            
 
             //return response()->json($object,HttpResponse::HTTP_OK);
 

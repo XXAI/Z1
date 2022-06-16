@@ -108,6 +108,7 @@
                         <ng-container *ngIf="!cluesIsLoading">
                             <mat-option *ngFor="let item of filteredClues" [value]="item">
                                 [{{item.clues}}] {{ item.descripcion }}
+                                <div style="font-size: 9pt;">[{{ item.distrito.clave_distrito }}] {{ item.distrito.descripcion }}</div>
                             </mat-option>
                         </ng-container>
                     </mat-autocomplete>
