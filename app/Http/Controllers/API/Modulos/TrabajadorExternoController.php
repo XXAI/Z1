@@ -22,12 +22,13 @@ class TrabajadorExternoController extends Controller
                                 ->join("catalogo_municipio", "catalogo_municipio.id", "catalogo_localidad.catalogo_municipio_id")
                                 ->join("catalogo_tipo_trabajador", "trabajador_externo.tipo_personal_id", "catalogo_tipo_trabajador.id")
                                     ->where("regionalizacion_rh.tipo_trabajador_id", 2)->whereNull("trabajador_externo.deleted_at")
-                                    ->select("trabajador_externo.id", "rfc", "curp", "nombre", "apellido_paterno", "apellido_materno", 
+                                    ->select("trabajador_externo.id", "trabajador_externo.rfc", "trabajador_externo.curp", "trabajador_externo.nombre", "trabajador_externo.apellido_paterno", "trabajador_externo.apellido_materno", 
                                     "catalogo_localidad.descripcion as localidad", "catalogo_municipio.descripcion as municipio", 
                                     "catalogo_tipo_trabajador.abreviatura as abreviatura", "catalogo_tipo_trabajador.descripcion as tipo_trabajador");
 
             if(!$access->is_admin){
-                $objeto = $objeto->whereIn('regionalizacion_rh.catalogo_localidad_id', $access->arreglo_distrito);
+                //$objeto = $objeto->whereRaw("regionalizacion_rh.catalogo_localidad_id in (select catalogo_localidad_id from regionalizacion_clues where clues in (select clues from catalogo_clues where distrito_id in (".$access->distrito.")))")
+                //            ->orWhereRaw(" catalogo_localidad.id in (select catalogo_localidad_id from catalogo_clues where distrito_id in (". $access->distrito."))");
             }
            
             if(isset($parametros['page'])){
@@ -210,7 +211,6 @@ class TrabajadorExternoController extends Controller
            $string_distrito .= $value;
         }
         $accessData->distrito = $string_distrito;
-        $accessData->arreglo_distrito = $distrito;
         
         if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
             $accessData->is_admin = true;

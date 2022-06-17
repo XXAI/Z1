@@ -38,7 +38,7 @@
                             <ng-container matColumnDef="trabajador">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> TRABAJADOR </th>
                                 <td mat-cell *matCellDef="let row">
-                                    <b>{{ row.nombre }} {{ row.apellido_paterno }} {{ row.apellido_materno}}</b>
+                                    <b>{{ row.apellido_paterno }} {{ row.apellido_materno}} {{ row.nombre }} </b>
                                     <div style="font-size: 8pt;">{{ row.rfc }}</div>
                                 </td>
                             </ng-container>

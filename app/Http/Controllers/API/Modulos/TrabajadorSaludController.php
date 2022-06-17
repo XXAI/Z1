@@ -22,9 +22,10 @@ class TrabajadorSaludController extends Controller
                                 ->join("catalogo_distrito", "catalogo_clues.distrito_id", "catalogo_distrito.id")
                                 ->leftjoin("catalogo_tipo_trabajador", "catalogo_tipo_trabajador.id", "Trabajador.tipo_personal_id")
                                     ->where("regionalizacion_rh.tipo_trabajador_id", 1)
+                                    ->whereNull("catalogo_clues.deleted_at")
                                     ->whereNull("trabajador.deleted_at")
                                     ->whereNull("regionalizacion_rh.deleted_at")
-                                    ->select("trabajador.id", "rfc", "curp", "nombre", "apellido_paterno", "apellido_materno", 
+                                    ->select("trabajador.id", "trabajador.rfc", "curp", "nombre", "apellido_paterno", "apellido_materno", 
                                     "regionalizacion_rh.clues", "catalogo_clues.descripcion", "catalogo_tipo_trabajador.descripcion as categoria", "catalogo_distrito.clave_distrito", "catalogo_distrito.descripcion as distrito");
 
             if(!$access->is_admin){
@@ -37,9 +38,11 @@ class TrabajadorSaludController extends Controller
             if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){
                     return $query->whereRaw("concat(trabajador.nombre, ' ', trabajador.apellido_paterno,' ',trabajador.apellido_materno) LIKE '%".$parametros['query']."%'")
-                                ->orWhere('rfc','LIKE','%'.$parametros['query'].'%');
+                                ->orWhere('trabajador.rfc','LIKE','%'.$parametros['query'].'%');
                 });
             }
+
+            $objeto = $objeto->orderBy("trabajador.apellido_paterno", "asc")->orderBy("trabajador.apellido_materno", "asc")->orderBy("trabajador.nombre", "asc");   
             
             if(isset($parametros['page'])){
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;

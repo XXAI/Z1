@@ -20,7 +20,7 @@ class TrabajadorExterno extends Model
     }
     
     public function rel_regionalizacion_rh(){
-        return $this->hasOne('App\Models\RelRegionalizacionRh')->where("tipo_trabajador_id", "2");
+        return $this->hasOne('App\Models\RelRegionalizacionRh','trabajador_id', "id")->where("tipo_trabajador_id", "2");
     }
 
     public function personal_externo(){

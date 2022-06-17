@@ -39,8 +39,8 @@ class CatalogosController extends Controller
             $microrregion      = Microrregion::orderBy("descripcion");
             
             if(!$access->is_admin){
-                $distrito = $distrito->whereIn('id', $access->distrito);
-                $municipio = $municipio->whereIn('catalogo_distrito_id', $access->distrito);
+                //$distrito = $distrito->whereIn('id', $access->distrito);
+                //$municipio = $municipio->whereIn('catalogo_distrito_id', $access->distrito);
                 //$personalSalud = $personalSalud->whereIn('id', $access->distrito);
             }
 
@@ -104,10 +104,14 @@ class CatalogosController extends Controller
             $params = $request->all();
             $access = $this->getUserAccessData();
 
-            $obj = Localidad::where("catalogo_municipio_id", $params['municipio_id'])->where('descripcion','LIKE','%'.$params['query'].'%')->orderBy("descripcion")->get();
+            $obj = Localidad::where("catalogo_municipio_id", $params['municipio_id'])->where('descripcion','LIKE','%'.$params['query'].'%');
             if(!$access->is_admin){
-                $obj = $obj->whereIn("catalogo_localidad.id", "(select catalogo_localidad_id from regulacion_clues where clues in (".$access->string_distrito.") and regulacion_clues.deleted_at is null)");
+                $obj = $obj->where(function($obj)use($params, $access){
+                    return $obj->whereRaw(" catalogo_localidad.id in (select catalogo_localidad_id from catalogo_clues where distrito_id in (".$access->distrito."))")
+                                ->orWhereRaw("catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues where clues in (select catalogo_localidad_id from catalogo_clues where distrito_id in (".$access->distrito.")))");
+                });
             }
+            $obj = $obj->get();
             return response()->json($obj,HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
@@ -134,26 +138,21 @@ class CatalogosController extends Controller
             $loggedUser = auth()->userOrFail();
         }
         
-        $loggedUser->load('gruposUnidades.listaClues');
+        //$loggedUser->load('gruposUnidades.listaClues');
         $accessData = (object)[];
         $lista_clues = [];
         $distrito = [];
         $string_distrito = "";
-        foreach ($loggedUser->gruposUnidades as $grupo) {
-            $lista_unidades = $grupo->listaClues->pluck('clues')->toArray();
-            $lista_clues += $lista_clues + array_values($lista_unidades);
-        }
-        
-        foreach ($distrito as $key => $value) {
-            if($key > 0){ $string_distrito .=",";}
-            $string_distrito .= $value;
-         }
-         $accessData->string_distrito = $string_distrito;
-
         $distrito = $loggedUser->distrito->pluck("distrito_id");
         
         $accessData->lista_clues = $lista_clues;
-        $accessData->distrito = $distrito;
+        
+        foreach ($distrito as $key => $value) {
+           if($key > 0){ $string_distrito .=",";}
+           $string_distrito .= $value;
+        }
+        $accessData->distrito = $string_distrito;
+        $accessData->arreglo_distrito = $distrito;
         
         if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
             $accessData->is_admin = true;
