@@ -56,9 +56,11 @@ export class FormularioComponent implements OnInit {
   localidades:any = [];
   unidadMedica:any = {};
   localidadUnidad:string ="";
+  tipoMicroregion:string = "";
 
   localidadesRegionalizadas:any = [];
 
+  nombre_unidad:string = "";
   //lineas:any = [{lat}]
 
   iconMap = {
@@ -183,7 +185,7 @@ export class FormularioComponent implements OnInit {
       }
     );
     this.id_editar = obj.id;
-    this.indexTab = 0;
+    this.indexTab = 1;
     this.edicion = true;
     //console.log(this.indexTab);
   }
@@ -213,8 +215,16 @@ export class FormularioComponent implements OnInit {
         //console.log(this.lat);
         //console.log(this.long);
         this.unidadMedica = response.clues;
-        console.log(this.unidadMedica.catalogo_localidad);
-        this.localidadUnidad = this.unidadMedica.catalogo_localidad.clave_localidad+" - "+this.unidadMedica.catalogo_localidad.descripcion;
+        //console.log(this.unidadMedica);
+        this.tipoMicroregion = this.unidadMedica.catalogo_microrregion.descripcion+" "+this.unidadMedica.catalogo_microrregion.descripcion_tipo;
+        
+        //console.log(this.unidadMedica.catalogo_localidad);
+        if(this.unidadMedica.catalogo_localidad != null)
+        {
+          this.localidadUnidad = this.unidadMedica.catalogo_localidad.clave_localidad+" - "+this.unidadMedica.catalogo_localidad.descripcion;
+        }else{
+          this.localidadUnidad = "SIN SEDE";
+        }
         this.localidades = response.data.data;
         this.localidadesRegionalizadas = [];
         this.localidades.forEach(element => {
@@ -308,7 +318,7 @@ export class FormularioComponent implements OnInit {
           this.edicion = false;
           this.regionalizacionForm.reset();
           this.cargarDatos();
-          this.indexTab = 1;
+          this.indexTab = 0;
         },
         responsError =>{
           console.log(responsError);
@@ -322,7 +332,7 @@ export class FormularioComponent implements OnInit {
           this.regionalizacionForm.reset();
           this.cargarDatos();
           this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000);
-          this.indexTab = 1;
+          this.indexTab = 0;
         },
         responsError =>{
           console.log(responsError);

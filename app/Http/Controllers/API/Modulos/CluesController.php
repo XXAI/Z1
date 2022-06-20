@@ -126,10 +126,10 @@ class CluesController extends Controller
             $object->catalogo_localidad_id          =    $inputs['catalogo_localidad']['id'];
 
             $municipio = Municipio::whereRaw("id = (select catalogo_municipio_id from catalogo_localidad where id="+$inputs['catalogo_localidad']['id']+")")->fisrt();
-            if($localidad)
+            /*if($localidad)
             {
                 $object->distrito_id          =    $municipio->catalogo_distrito_id;
-            }
+            }*/
             
 
             //return response()->json($object,HttpResponse::HTTP_OK);

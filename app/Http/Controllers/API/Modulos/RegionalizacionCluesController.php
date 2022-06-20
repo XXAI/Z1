@@ -19,10 +19,20 @@ class RegionalizacionCluesController extends Controller
         try{
             $access = $this->getUserAccessData();
             $parametros = $request->all();
-            $objeto = Clues::with("regionalizaciones.catalogo_localidad", "catalogo_microrregion");
+            $objeto = Clues::select(
+                "clues",
+                "descripcion",
+                DB::RAW("(select descripcion from catalogo_microregion where id=catalogo_clues.catalogo_microrregion_id) as categoria"),
+                DB::RAW("(select descripcion_tipo from catalogo_microregion where id=catalogo_clues.catalogo_microrregion_id) as microregion"),
+                DB::RAW("(select count(*) from regionalizacion_clues where clues=catalogo_clues.clues and deleted_at is null) as cantidad_localidades"),
+                DB::RAW("(select clave_localidad from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id) as clave_localidad"),
+                DB::RAW("(select descripcion from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id) as localidad"),
+                DB::RAW("(select clave_municipio from catalogo_municipio where id =(select catalogo_municipio_id from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id)) as clave_municipio"),
+                DB::RAW("(select descripcion from catalogo_municipio where id =(select catalogo_municipio_id from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id)) as municipio")
+            );
 
             if(!$access->is_admin){
-                $objeto = $objeto->whereIn('clues', $access->lista_clues);
+                $objeto = $objeto->whereIn('distrito_id', $access->distrito);
             }
 
             if(isset($parametros['query'])){
@@ -73,7 +83,7 @@ class RegionalizacionCluesController extends Controller
                         //                    ->where("regionalizacion_clues.clues", $id);
             */
 
-            $objeto = RegionalizacionClues::with("catalogo_localidad.municipio", "catalogo_tipo_camino")->where("clues", $id);
+            $objeto = RegionalizacionClues::with("catalogo_localidad.municipio", "catalogo_tipo_camino", "catalogo_clues")->where("clues", $id);
 
             if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){
@@ -85,7 +95,7 @@ class RegionalizacionCluesController extends Controller
                 $objeto = $objeto->paginate($resultadosPorPagina);
             }
 
-            $clues = Clues::with("catalogo_localidad")->find($id);
+            $clues = Clues::with("catalogo_localidad","catalogo_microrregion")->find($id);
 
             return response()->json(["data"=>$objeto, "clues"=>$clues],HttpResponse::HTTP_OK);
         }catch(\Exception $e){

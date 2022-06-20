@@ -29,7 +29,7 @@ class LocalidadController extends Controller
             $objeto = $this->aplicarFiltros($objeto, $parametros);
             
             if(isset($parametros['page'])){
-                $objeto = $objeto->orderBy('descripcion');
+                //$objeto = $objeto->orderBy('descripcion');
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
                 $objeto = $objeto->paginate($resultadosPorPagina);
             }else
@@ -80,6 +80,17 @@ class LocalidadController extends Controller
                     });
                 }
                 
+            }
+
+            if(isset($parametros['orden']) && $parametros['orden']){
+                if($parametros['orden'] == 1)
+                {
+                    $main_query = $main_query->orderBy("descripcion", "asc");
+                }else if($parametros['orden'] == 2)
+                {
+                    $main_query = $main_query->orderBy("clave_localidad", "asc");
+                }
+
             }
         }
         return $main_query;

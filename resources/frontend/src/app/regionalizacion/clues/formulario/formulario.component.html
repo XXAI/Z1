@@ -2,87 +2,6 @@
 <!--<hr style="border: 1px solid #3f51b5;">-->
 <div mat-dialog-content>
     <mat-tab-group [(selectedIndex)]="indexTab">
-        <mat-tab label="REGISTRO">
-            <form [formGroup]="regionalizacionForm">
-                <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
-                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
-                        <div fxFlex="100" fxFlex.xs="100">
-                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                                <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>MUNICIPIO</mat-label>
-                                    <mat-select formControlName="municipio_id" required>
-                                        <mat-option *ngFor="let item of catalogo['municipio']" [value]="item.id">
-                                            {{item.descripcion}}
-                                        </mat-option>
-                                    </mat-select>
-                                    <mat-error *ngIf="regionalizacionForm.get('municipio_id').invalid && (regionalizacionForm.get('municipio_id').dirty || regionalizacionForm.get('municipio_id').touched)">
-                                        <span *ngIf="regionalizacionForm.get('municipio_id').errors.required">Campo obligatorio</span>
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>LOCALIDAD</mat-label>
-                                    <input matInput placeholder="LOCALIDAD" [matAutocomplete]="localidadAutocomplete" formControlName='localidad_id'>
-                                    <mat-autocomplete #localidadAutocomplete="matAutocomplete" [displayWith]="displayLocalidadFn" [panelWidth]="'auto'">
-                                        <mat-option *ngIf="localidadIsLoading" class="is-loading">
-                                            <mat-spinner diameter="25"></mat-spinner>
-                                        </mat-option>
-                                        <ng-container *ngIf="!localidadIsLoading">
-                                            <mat-option *ngFor="let item of filteredLocalidad" [value]="item">
-                                                [{{item.clave_localidad }}] {{ item.descripcion }}
-                                            </mat-option>
-                                        </ng-container>
-                                    </mat-autocomplete>
-                                    <mat-error *ngIf="regionalizacionForm.get('localidad_id').invalid && (regionalizacionForm.get('localidad_id').dirty || regionalizacionForm.get('localidad_id').touched)">
-                                        <span *ngIf="regionalizacionForm.get('localidad_id').errors.required">Campo obligatorio</span>
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
-                        <div fxFlex="100" fxFlex.xs="100">
-                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>TIPO CAMINO</mat-label>
-                                    <mat-select formControlName="catalogo_tipo_camino_id" required>
-                                        <mat-option *ngFor="let item of catalogo['camino']" [value]="item.id">
-                                            {{item.descripcion}}
-                                        </mat-option>
-                                    </mat-select>
-                                    <mat-error *ngIf="regionalizacionForm.get('catalogo_tipo_camino_id').invalid && (regionalizacionForm.get('catalogo_tipo_camino_id').dirty || regionalizacionForm.get('catalogo_tipo_camino_id').touched)">
-                                        <span *ngIf="regionalizacionForm.get('catalogo_tipo_camino_id').errors.required">Campo obligatorio</span>
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>DISTANCIA</mat-label>
-                                    <input matInput autocomplete="off" formControlName="distancia" placeholder="DISTANCIA">
-                                    <mat-error *ngIf="regionalizacionForm.get('distancia').invalid && (regionalizacionForm.get('distancia').dirty || regionalizacionForm.get('distancia').touched)">
-                                        <span *ngIf="regionalizacionForm.get('distancia').errors.required">Campo obligatorio</span>
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>TIEMPO</mat-label>
-                                    <input matInput autocomplete="off" formControlName="tiempo" placeholder="TIEMPO">
-                                    <mat-error *ngIf="regionalizacionForm.get('tiempo').invalid && (regionalizacionForm.get('tiempo').dirty || regionalizacionForm.get('tiempo').touched)">
-                                        <span *ngIf="regionalizacionForm.get('tiempo').errors.required">Campo obligatorio</span>
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
-                        <div fxFlex="100" fxFlex.xs="100">
-                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                                <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!regionalizacionForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
-                                <button mat-raised-button (click)="cancelar()" *ngIf="edicion" color="warn"><mat-icon>close</mat-icon> Cancelar</button>
-                                <button mat-raised-button (click)="cerrar()" *ngIf="id_editar==0" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </section>
-            </form>
-        </mat-tab>
         <mat-tab label="LOCALIDADES REGIONALIZADAS" [disabled]="edicion">
             <section class="profile">
                 <div fxLayout="row" fxLayoutAlign="space-evenly center">
@@ -92,6 +11,12 @@
                         </div>
                         <mat-card fxFlex.xs="100%" fxFlex="100%">
                             <div fxLayout="row" fxLayout.xs="column">
+                                <div fxFlex fxFlex.xs="30" class="clues">
+                                    CLUES: ({{ unidadMedica.clues }}) {{unidadMedica.descripcion}}
+                                    <div style="padding: 9pt">
+                                        {{ tipoMicroregion }}
+                                    </div>
+                                </div>
                                 <div fxFlex fxLayout="row wrap">
                                     <mat-form-field fxFill appearance="outline">
                                         <mat-label>Buscar</mat-label>
@@ -175,6 +100,88 @@
                 </div>
             </section>
         </mat-tab>
+        <mat-tab label="REGISTRO">
+            <form [formGroup]="regionalizacionForm">
+                <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                        <div fxFlex="100" fxFlex.xs="100">
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                                    <mat-label>MUNICIPIO</mat-label>
+                                    <mat-select formControlName="municipio_id" required>
+                                        <mat-option *ngFor="let item of catalogo['municipio']" [value]="item.id">
+                                            {{item.descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="regionalizacionForm.get('municipio_id').invalid && (regionalizacionForm.get('municipio_id').dirty || regionalizacionForm.get('municipio_id').touched)">
+                                        <span *ngIf="regionalizacionForm.get('municipio_id').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                                    <mat-label>LOCALIDAD</mat-label>
+                                    <input matInput placeholder="LOCALIDAD" [matAutocomplete]="localidadAutocomplete" formControlName='localidad_id'>
+                                    <mat-autocomplete #localidadAutocomplete="matAutocomplete" [displayWith]="displayLocalidadFn" [panelWidth]="'auto'">
+                                        <mat-option *ngIf="localidadIsLoading" class="is-loading">
+                                            <mat-spinner diameter="25"></mat-spinner>
+                                        </mat-option>
+                                        <ng-container *ngIf="!localidadIsLoading">
+                                            <mat-option *ngFor="let item of filteredLocalidad" [value]="item">
+                                                [{{item.clave_localidad }}] {{ item.descripcion }}
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="regionalizacionForm.get('localidad_id').invalid && (regionalizacionForm.get('localidad_id').dirty || regionalizacionForm.get('localidad_id').touched)">
+                                        <span *ngIf="regionalizacionForm.get('localidad_id').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                        <div fxFlex="100" fxFlex.xs="100">
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
+                                    <mat-label>TIPO CAMINO</mat-label>
+                                    <mat-select formControlName="catalogo_tipo_camino_id" required>
+                                        <mat-option *ngFor="let item of catalogo['camino']" [value]="item.id">
+                                            {{item.descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="regionalizacionForm.get('catalogo_tipo_camino_id').invalid && (regionalizacionForm.get('catalogo_tipo_camino_id').dirty || regionalizacionForm.get('catalogo_tipo_camino_id').touched)">
+                                        <span *ngIf="regionalizacionForm.get('catalogo_tipo_camino_id').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
+                                    <mat-label>DISTANCIA</mat-label>
+                                    <input matInput autocomplete="off" formControlName="distancia" placeholder="DISTANCIA">
+                                    <mat-error *ngIf="regionalizacionForm.get('distancia').invalid && (regionalizacionForm.get('distancia').dirty || regionalizacionForm.get('distancia').touched)">
+                                        <span *ngIf="regionalizacionForm.get('distancia').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
+                                    <mat-label>TIEMPO</mat-label>
+                                    <input matInput autocomplete="off" formControlName="tiempo" placeholder="TIEMPO">
+                                    <mat-error *ngIf="regionalizacionForm.get('tiempo').invalid && (regionalizacionForm.get('tiempo').dirty || regionalizacionForm.get('tiempo').touched)">
+                                        <span *ngIf="regionalizacionForm.get('tiempo').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                        <div fxFlex="100" fxFlex.xs="100">
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!regionalizacionForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
+                                <button mat-raised-button (click)="cancelar()" *ngIf="edicion" color="warn"><mat-icon>close</mat-icon> Cancelar</button>
+                                <button mat-raised-button (click)="cerrar()" *ngIf="id_editar==0" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </form>
+        </mat-tab>
+
         <mat-tab label="MAPA" [disabled]="edicion">
             <agm-map style="height: 600px;width: 100%;" [latitude]="lat" [longitude]="long" [zoom]="zoom" [disableDefaultUI]="false" [disableDoubleClickZoom]="true" [zoomControl]="false">
 
@@ -196,7 +203,7 @@
                 </agm-polyline>
                 <agm-marker *ngFor="let item of localidades" [latitude]="item.catalogo_localidad.longitud" [longitude]="item.catalogo_localidad.latitud" [iconUrl]="iconMap">
                     <agm-info-window>
-                        <strong>({{ item.clues }}) - {{ item.clues }}</strong>
+                        <strong>({{ item.clues }}) - {{ item.catalogo_clues.descripcion }}</strong>
                         <br>
                         <strong>LOCALIDAD: {{ item.catalogo_localidad.descripcion }}</strong>
                         <br>

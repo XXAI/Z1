@@ -67,6 +67,7 @@ class ColoniasController extends Controller
             'unique'        => "unique"
         ];
         $inputs = $request->all();
+        
         $inputs['catalogo_localidad_id'] = $inputs['localidad_id']['id'];
         //$inputs = $inputs['params'];
         $reglas = [

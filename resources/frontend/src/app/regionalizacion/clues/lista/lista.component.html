@@ -1,8 +1,9 @@
-
-<section class="profile" >
+<section class="profile">
     <div fxLayout="row" fxLayoutAlign="space-evenly center">
         <section fxFlex="95" fxLayout="column" fxLayoutAlign="center">
-            <div class="data-loading-shade" *ngIf="isLoading"><mat-spinner></mat-spinner></div>
+            <div class="data-loading-shade" *ngIf="isLoading">
+                <mat-spinner></mat-spinner>
+            </div>
             <mat-card fxFlex.xs="100%" fxFlex="90%">
                 <div fxLayout="row" fxLayout.xs="column">
                     <div fxFlex fxLayout="row wrap">
@@ -12,7 +13,7 @@
                             <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                 <mat-icon>close</mat-icon>
                             </button>
-                            
+
                         </mat-form-field>
                     </div>
                     <div fxFlex="none" fxFlex.xs="100">
@@ -26,40 +27,56 @@
                     </div>
                 </div>
             </mat-card>
-           
+
             <mat-card fxFlex.xs="100%" fxFlex="90%">
                 <mat-divider [inset]="true"></mat-divider>
-                
+
                 <div class="data-container ">
                     <div class="data-table-container">
                         <table #dataTable mat-table [dataSource]="dataSource" class="data-table" matSort>
                             <!-- ID Column -->
-                            <ng-container matColumnDef="clues" >
+                            <ng-container matColumnDef="clues">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> CLUES </th>
-                                <td mat-cell *matCellDef="let row"> 
+                                <td mat-cell *matCellDef="let row">
                                     <b>{{ row.descripcion }}</b>
-                                    <div style="font-size: 8pt;"> {{ row.clues }}</div>    
+                                    <div style="font-size: 8pt;"> {{ row.clues }}</div>
                                 </td>
                             </ng-container>
-                    
-                             <!-- Username Column  -->
-                             <ng-container matColumnDef="tipo">
+
+                            <!-- Username Column  -->
+                            <ng-container matColumnDef="tipo">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO MICROREGION </th>
                                 <td mat-cell *matCellDef="let row">
-                                    <span *ngIf="row.catalogo_microrregion != null">
-                                        <b>{{ row.catalogo_microrregion.descripcion_tipo}}</b>
-                                        <div style="font-size: 8pt;">{{ row.catalogo_microrregion.descripcion}}</div>        
-                                    </span>
-                                    <span *ngIf="row.catalogo_microrregion == null">
-                                        Sin asignar        
-                                    </span> 
+                                    <div *ngIf="row.microregion != null">
+                                        <b>{{ row.microregion}}</b>
+                                        <div style="font-size: 8pt;">{{ row.categoria}}</div>
+                                    </div>
+                                    <div *ngIf="row.microregion == null">
+                                        SIN TIPOLOGIA
+                                    </div>
+
+
+
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sede">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> SEDE </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <div *ngIf="row.clave_localidad != null">
+                                        <b>[{{ row.clave_localidad}}] {{ row.localidad}}</b>
+                                        <div style="font-size: 8pt;">[{{ row.clave_municipio}}] {{ row.municipio }}</div>
+                                    </div>
+                                    <div *ngIf="row.clave_localidad == null">
+                                        SIN SEDE
+                                    </div>
                                 </td>
                             </ng-container>
                             <!-- Username Column  -->
                             <ng-container matColumnDef="localidades">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> NO. LOCALIDADES </th>
-                                <td mat-cell *matCellDef="let row"> 
-                                    {{ row.regionalizaciones.length }}   
+                                <td mat-cell *matCellDef="let row">
+                                    {{ row.cantidad_localidades }}
                                 </td>
                             </ng-container>
 
@@ -70,17 +87,17 @@
                                         <mat-icon>menu</mat-icon>
                                     </button>
                                     <mat-menu #menu="matMenu">
-                                            <button mat-menu-item (click)="regionalizacion(row)"><mat-icon color="primary">edit</mat-icon>Regionalización</button>              
+                                        <button mat-menu-item (click)="regionalizacion(row)"><mat-icon color="primary">edit</mat-icon>Regionalización</button>
                                     </mat-menu>
                                 </td>
                             </ng-container>
 
                             <ng-container matColumnDef="noResultsFound">
                                 <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-                                    No se encontraron registros 
+                                    No se encontraron registros
                                 </td>
                             </ng-container>
-                            
+
                             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                             <tr mat-row [ngClass]="{'selected-item': i==selectedItemIndex}" *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
 

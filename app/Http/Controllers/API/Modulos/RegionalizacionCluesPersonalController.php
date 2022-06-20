@@ -21,7 +21,7 @@ class RegionalizacionCluesPersonalController extends Controller
     public function index(Request $request)
     {
         try{
-            //$access = $this->getUserAccessData();
+            $access = $this->getUserAccessData();
             $parametros = $request->all();
             $objeto = Trabajador::with("rel_rh.clues", "personal_salud", "ur")->whereRaw("trabajador.id in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=1 and deleted_at is null)");
 
@@ -32,6 +32,13 @@ class RegionalizacionCluesPersonalController extends Controller
                                 ->orWhere('rfc','LIKE','%'.$parametros['query'].'%');
                 });
             }
+            
+            if(!$access->is_admin){
+                $objeto = $objeto->where(function($query)use($parametros, $access){
+                    return $query->whereRaw("trabajador.id in (select trabajador_id from regionalizacion_rh where deleted_at is null and clues in (select clues from catalogo_clues where distrito_id in (".$access->distrito.")))");
+                });
+            }
+
             if(isset($parametros['page'])){
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
                 $objeto = $objeto->paginate($resultadosPorPagina);
@@ -44,6 +51,12 @@ class RegionalizacionCluesPersonalController extends Controller
                     return $query->whereRaw(' concat(nombre," ", apellido_paterno, " ", apellido_materno) like "%'.$parametros['query'].'%"' )
                                 ->orWhere('curp','LIKE','%'.$parametros['query'].'%')
                                 ->orWhere('rfc','LIKE','%'.$parametros['query'].'%');
+                });
+            }
+
+            if(!$access->is_admin){
+                $objeto_externo = $objeto_externo->where(function($query)use($parametros, $access){
+                    return $query->whereRaw("trabajador_externo.id in (select trabajador_id from regionalizacion_rh where deleted_at is null and catalogo_localidad_id in (select catalogo_localidad_id from regionalizacion_clues where clues in (select clues from catalogo_clues where distrito_id in (".$access->distrito."))))");
                 });
             }
             if(isset($parametros['page'])){
@@ -319,6 +332,34 @@ class RegionalizacionCluesPersonalController extends Controller
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
     }
+    
+    private function getUserAccessData($loggedUser = null){
+        if(!$loggedUser){
+            $loggedUser = auth()->userOrFail();
+        }
+        
+        //$loggedUser->load('gruposUnidades.listaClues');
+        $accessData = (object)[];
+        $lista_clues = [];
+        $distrito = [];
+        $string_distrito = "";
+        $distrito = $loggedUser->distrito->pluck("distrito_id");
+        
+        $accessData->lista_clues = $lista_clues;
+        
+        foreach ($distrito as $key => $value) {
+           if($key > 0){ $string_distrito .=",";}
+           $string_distrito .= $value;
+        }
+        $accessData->distrito = $string_distrito;
+        
+        if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
+            $accessData->is_admin = true;
+        }else{
+            $accessData->is_admin = false;
+        }
 
+        return $accessData;
+    }
     
 }

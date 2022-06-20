@@ -29,7 +29,7 @@ export class ListaComponent implements OnInit {
   pageSize: number = 20;
   selectedItemIndex: number = -1;
 
-  displayedColumns: string[] = ['trabajador','tipo', 'localidad','actions'];
+  displayedColumns: string[] = ['trabajador','tipo', 'localidad','unidad','actions'];
   dataSource: any = [];
 
   constructor(private sharedService: SharedService, public dialog: MatDialog, private personalExternoService:PersonalExternoService, private fb: FormBuilder, public mediaObserver: MediaObserver) { }

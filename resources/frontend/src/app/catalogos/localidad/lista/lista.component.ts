@@ -49,6 +49,7 @@ export class ListaComponent implements OnInit {
     'municipio': [undefined],
     'tipo': [undefined],
     'regionalizado': [undefined],
+    'orden': [undefined],
   });
 
   ngOnInit(): void {
@@ -72,9 +73,14 @@ export class ListaComponent implements OnInit {
         per_page: event.pageSize
       };
     }
+    console.log(this.searchQuery);
+    console.log("------------------1");
     params.query = this.searchQuery;
 
     let filterFormValues = this.filterForm.value;
+    console.log(this.filterForm.value);
+    console.log("------------------2");
+    
     let countFilter = 0;
 
     for(let i in filterFormValues){
@@ -83,12 +89,13 @@ export class ListaComponent implements OnInit {
         if(i == 'municipio'){
           params[i] = filterFormValues[i];
         }else if(i == 'tipo'){
-          console.log("entro");
-         
           params[i] = filterFormValues[i];
-          console.log(filterFormValues[i]);
-          console.log(params[i]);
+          
         }else if(i == 'regionalizado'){
+          params[i] = filterFormValues[i];
+        }else if(i == 'orden'){
+          console.log("orden");
+          console.log(filterFormValues[i]);
           params[i] = filterFormValues[i];
         }else{ //profesion y rama (grupos)
           params[i] = filterFormValues[i].id;
@@ -96,6 +103,8 @@ export class ListaComponent implements OnInit {
         countFilter++;
       }
     }
+    console.log(params);
+    console.log("------------------3");
 
     if(countFilter > 0){
       params.active_filter = true;
@@ -114,6 +123,8 @@ export class ListaComponent implements OnInit {
     }
 
     let appStoredData = this.sharedService.getArrayDataFromCurrentApp(['searchQuery','paginator','filter']);
+    console.log(appStoredData);
+    console.log("------------------4");
     
     if(appStoredData['searchQuery']){
       this.searchQuery = appStoredData['searchQuery'];
@@ -134,11 +145,16 @@ export class ListaComponent implements OnInit {
       this.sharedService.setDataToCurrentApp('paginator', dummyPaginator);
     }
 
-    if(appStoredData['filter']){
+    /*if(appStoredData['filter']){
       this.filterForm.patchValue(appStoredData['filter']);
-    }
+    }*/
+
+    console.log(appStoredData['filter']);
+    console.log("------------------5");
+    
 
     this.sharedService.setDataToCurrentApp('searchQuery',this.searchQuery);
+    //this.sharedService.setDataToCurrentApp('filter',params);
     this.sharedService.setDataToCurrentApp('filter',filterFormValues);
 
     this.localidadService.getLocaliadList(params).subscribe(

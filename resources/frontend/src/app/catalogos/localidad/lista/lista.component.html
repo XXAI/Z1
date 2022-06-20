@@ -38,7 +38,7 @@
                     <br>
                     <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-evenly center">
 
-                        <mat-form-field fxFlex="30">
+                        <mat-form-field fxFlex="20">
                             <mat-label>MUNICIPIO</mat-label>
                             <mat-select formControlName="municipio">
                                 <mat-option>Sin Filtro</mat-option>
@@ -47,19 +47,27 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <mat-form-field fxFlex="30">
+                        <mat-form-field fxFlex="20">
                             <mat-label>TIPO</mat-label>
                             <mat-select formControlName="tipo">
                                 <mat-option>TODOS</mat-option>
                                 <mat-option [value]="1">SEDES</mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <mat-form-field fxFlex="30">
+                        <mat-form-field fxFlex="20">
                             <mat-label>REGIONALIZADO</mat-label>
                             <mat-select formControlName="regionalizado">
                                 <mat-option>TODOS</mat-option>
                                 <mat-option [value]="1">SI</mat-option>
                                 <mat-option [value]="2">NO</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="20">
+                            <mat-label>ORDEN</mat-label>
+                            <mat-select formControlName="orden">
+                                <mat-option>NINGUNO</mat-option>
+                                <mat-option [value]="1">ALFABETICO</mat-option>
+                                <mat-option [value]="2">CLAVE LOCALIDAD</mat-option>
                             </mat-select>
                         </mat-form-field>
                         <div fxFlex></div>

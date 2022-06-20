@@ -22,13 +22,25 @@ class TrabajadorExternoController extends Controller
                                 ->join("catalogo_municipio", "catalogo_municipio.id", "catalogo_localidad.catalogo_municipio_id")
                                 ->join("catalogo_tipo_trabajador", "trabajador_externo.tipo_personal_id", "catalogo_tipo_trabajador.id")
                                     ->where("regionalizacion_rh.tipo_trabajador_id", 2)->whereNull("trabajador_externo.deleted_at")
-                                    ->select("trabajador_externo.id", "trabajador_externo.rfc", "trabajador_externo.curp", "trabajador_externo.nombre", "trabajador_externo.apellido_paterno", "trabajador_externo.apellido_materno", 
-                                    "catalogo_localidad.descripcion as localidad", "catalogo_municipio.descripcion as municipio", 
-                                    "catalogo_tipo_trabajador.abreviatura as abreviatura", "catalogo_tipo_trabajador.descripcion as tipo_trabajador");
+                                    ->select("trabajador_externo.id", 
+                                    "trabajador_externo.rfc", 
+                                    "trabajador_externo.curp", 
+                                    "trabajador_externo.nombre", 
+                                    "trabajador_externo.apellido_paterno", 
+                                    "trabajador_externo.apellido_materno", 
+                                    "catalogo_localidad.clave_localidad",
+                                    "catalogo_localidad.descripcion as localidad", 
+                                    "catalogo_municipio.clave_municipio", 
+                                    "catalogo_municipio.descripcion as municipio", 
+                                    "catalogo_tipo_trabajador.abreviatura as abreviatura", 
+                                    "catalogo_tipo_trabajador.descripcion as tipo_trabajador",
+                                    DB::RAW("(select clues from regionalizacion_clues where catalogo_localidad_id = regionalizacion_rh.catalogo_localidad_id) as clues"),
+                                    DB::RAW("(select descripcion from catalogo_clues where clues =(select clues from regionalizacion_clues where catalogo_localidad_id = regionalizacion_rh.catalogo_localidad_id)) as nombre_unidad")
+                                );
 
             if(!$access->is_admin){
-                //$objeto = $objeto->whereRaw("regionalizacion_rh.catalogo_localidad_id in (select catalogo_localidad_id from regionalizacion_clues where clues in (select clues from catalogo_clues where distrito_id in (".$access->distrito.")))")
-                //            ->orWhereRaw(" catalogo_localidad.id in (select catalogo_localidad_id from catalogo_clues where distrito_id in (". $access->distrito."))");
+                $objeto = $objeto->whereRaw("regionalizacion_rh.catalogo_localidad_id in (select catalogo_localidad_id from regionalizacion_clues where clues in (select clues from catalogo_clues where distrito_id in (".$access->distrito.")))")
+                            ->orWhereRaw(" catalogo_localidad.id in (select catalogo_localidad_id from catalogo_clues where distrito_id in (". $access->distrito."))");
             }
            
             if(isset($parametros['page'])){

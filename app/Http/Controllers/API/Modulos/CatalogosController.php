@@ -39,9 +39,9 @@ class CatalogosController extends Controller
             $microrregion      = Microrregion::orderBy("descripcion");
             
             if(!$access->is_admin){
-                //$distrito = $distrito->whereIn('id', $access->distrito);
-                //$municipio = $municipio->whereIn('catalogo_distrito_id', $access->distrito);
-                //$personalSalud = $personalSalud->whereIn('id', $access->distrito);
+                $distrito = $distrito->whereRaw('id in ('. $access->distrito.')');
+                $municipio = $municipio->whereRaw('catalogo_distrito_id in ('. $access->distrito.')');
+                //$personalSalud = $personalSalud->whereRaw('id in ', $access->distrito);
             }
 
             $distrito           = $distrito->get();
@@ -111,6 +111,7 @@ class CatalogosController extends Controller
                                 ->orWhereRaw("catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues where clues in (select catalogo_localidad_id from catalogo_clues where distrito_id in (".$access->distrito.")))");
                 });
             }
+            $obj = $obj->limit(5);
             $obj = $obj->get();
             return response()->json($obj,HttpResponse::HTTP_OK);
         }catch(\Exception $e){
@@ -124,7 +125,7 @@ class CatalogosController extends Controller
             $access = $this->getUserAccessData();
             $obj = Clues::with("catalogo_localidad.municipio", "distrito")->where('descripcion','LIKE','%'.$params['query'].'%')->orderBy("descripcion");
             if(!$access->is_admin){
-                $obj = $obj->whereIn('distrito_id', $access->distrito);
+                $obj = $obj->whereRaw("distrito_id in (".$access->distrito.")");
             }
             $obj = $obj->get();
             return response()->json($obj,HttpResponse::HTTP_OK);

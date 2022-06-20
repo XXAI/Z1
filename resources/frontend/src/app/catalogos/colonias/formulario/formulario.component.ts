@@ -153,31 +153,37 @@ export class FormularioComponent implements OnInit {
 
   accionGuardar(id:number)
   {
-    if(this.data.id != null)
-    {
-      this.coloniasService.editColonias(this.data.id, this.coloniaForm.value).subscribe(
-        response => {
-          this.dialogRef.close(true);
-          this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000);
-        },
-        responsError =>{
-          console.log(responsError);
-          this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
-        }
-      );
-    }else{
-      this.coloniasService.saveColonias(this.coloniaForm.value).subscribe(
-        response => {
-          this.dialogRef.close(true);
-          this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000);
-        },
-        responsError =>{
-          console.log(responsError);
-          this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
-        }
-      );
-    }
     
+    if(typeof this.coloniaForm.value.localidad_id != 'object')
+    {
+      this.sharedService.showSnackBar('Debe de seleccionar una localidad de la lista', null, 4000);
+    }else{
+      if(this.data.id != null)
+      {
+        console.log(this.coloniaForm.value);
+        this.coloniasService.editColonias(this.data.id, this.coloniaForm.value).subscribe(
+          response => {
+            this.dialogRef.close(true);
+            this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000);
+          },
+          responsError =>{
+            console.log(responsError);
+            this.sharedService.showSnackBar('Error al guardar el formulario', null, 4000);
+          }
+        );
+      }else{
+        this.coloniasService.saveColonias(this.coloniaForm.value).subscribe(
+          response => {
+            this.dialogRef.close(true);
+            this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000);
+          },
+          responsError =>{
+            console.log(responsError);
+            this.sharedService.showSnackBar('Error al guardar el formulario', null, 4000);
+          }
+        );
+      }
+    }
   }
 
 }
