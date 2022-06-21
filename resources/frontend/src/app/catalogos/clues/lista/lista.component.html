@@ -58,7 +58,16 @@
                             <!-- Localidad Column  -->
                             <ng-container matColumnDef="Localidad">
                                 <th mat-header-cell *matHeaderCellDef> LOCALIDAD (SEDE)</th>
-                                <td mat-cell *matCellDef="let row"> {{(row.catalogo_localidad != null) ? row.catalogo_localidad.descripcion : 'NO ASIGNADO' | uppercase}} </td>
+                                <td mat-cell *matCellDef="let row"> 
+                                    <div *ngIf="row.catalogo_localidad != null">
+                                        <b> [{{ row.catalogo_localidad.clave_localidad }}] {{ row.catalogo_localidad.descripcion }}</b>
+                                        <div style="font-size: 9pt">[{{ row.catalogo_localidad.municipio.clave_municipio }}] {{row.catalogo_localidad.municipio.descripcion }}</div>
+                                    </div>
+                                    <div *ngIf="row.catalogo_localidad == null">
+                                        NO ASIGNADO
+                                    </div>
+ 
+                                </td>
                             </ng-container>
 
                            

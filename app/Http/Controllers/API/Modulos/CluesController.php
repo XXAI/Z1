@@ -23,7 +23,7 @@ class CluesController extends Controller
             //return $access;
             $parametros = $request->all();
             //return response()->json(['data'=>$access->lista_clues, "consulta"=>"hola"],HttpResponse::HTTP_OK);
-            $clues = Clues::with('catalogo_localidad', 'catalogo_microrregion','distrito');
+            $clues = Clues::with('catalogo_localidad.municipio', 'catalogo_microrregion','distrito');
             
             if(!$access->is_admin){
                 $clues = $clues->whereIn('distrito_id', $access->distrito);
@@ -125,7 +125,7 @@ class CluesController extends Controller
             $object->catalogo_microrregion_id       =    $inputs['catalogo_microrregion_id'];
             $object->catalogo_localidad_id          =    $inputs['catalogo_localidad']['id'];
 
-            $municipio = Municipio::whereRaw("id = (select catalogo_municipio_id from catalogo_localidad where id="+$inputs['catalogo_localidad']['id']+")")->fisrt();
+            //$municipio = Municipio::whereRaw("id = (select catalogo_municipio_id from catalogo_localidad where id="+$inputs['catalogo_localidad']['id']+")")->fisrt();
             /*if($localidad)
             {
                 $object->distrito_id          =    $municipio->catalogo_distrito_id;
