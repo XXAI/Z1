@@ -113,6 +113,7 @@
 
                             </mat-form-field>
                         </div>
+                        
                         <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="10px">
 
                             <mat-form-field fxFlex="10" fxFlex.xs="100">
@@ -129,19 +130,30 @@
                                 </mat-error>
                             </mat-form-field>
 
-                            <mat-form-field fxFlex="20">
+                            
+                              <div fxFlex="20">
                                 <mat-label>Fecha de Inicio de Operación: </mat-label>
-                                <input matInput [matDatepicker]="picker1" formControlName="inicio_operacion" placeholder="Fecha de Inicio de Operación" readonly="readonly">
-                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <br>{{ inicio_operacion }}
+                              </div>
+                              <div fxFlex="20">
+                                <mat-label>Fecha de Acreditación: </mat-label>
+                                <br>{{ fecha_acreditacion }}
+                              </div>
+                            <!--<mat-form-field fxFlex="20">
+                                
+
+                                <mat-label>Fecha de Inicio de Operación: </mat-label>
+                                <input matInput [matDatepicker]="picker1" formControlName="inicio_operacion" placeholder="Fecha de Inicio de Operación" [required]="false" >
+                                <mat-datepicker-toggle matSuffix [for]="picker1" ></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
                             </mat-form-field>
-
+                           
                             <mat-form-field fxFlex="20">
                                 <mat-label>Fecha de Acreditación (Hasta): </mat-label>
-                                <input matInput [matDatepicker]="picker2" formControlName="fecha_operacion" placeholder="Fecha de Acreditación" readonly="readonly">
-                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <input matInput [matDatepicker]="picker2" formControlName="fecha_operacion" placeholder="Fecha de Acreditación"  [required]="false" >
+                                <mat-datepicker-toggle matSuffix [for]="picker2" ></mat-datepicker-toggle>
                                 <mat-datepicker #picker2></mat-datepicker>
-                            </mat-form-field>
+                            </mat-form-field>-->
                             <mat-form-field fxFlex="20" fxFlex.xs="100">
                                 <input matInput formControlName="latitud" placeholder="Latitud" type="text">
                                 <mat-error *ngIf="cluesForm.get('latitud').invalid && (cluesForm.get('latitud').dirty || cluesForm.get('latitud').touched)">

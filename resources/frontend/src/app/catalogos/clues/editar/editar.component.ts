@@ -52,6 +52,9 @@ export class EditarComponent implements OnInit {
   maxDate:Date;
   minDate:Date;
 
+  inicio_operacion:string = "0000-00-00";
+  fecha_acreditacion:string = "0000-00-00";
+
   constructor(
     private sharedService: SharedService, 
     private cluesService: CluesService,
@@ -74,8 +77,8 @@ export class EditarComponent implements OnInit {
     'cp': ['',Validators.required],
     'telefono': ['',Validators.required],
     'nucleos_camas': ['',Validators.required],
-    'inicio_operacion': [''],
-    'fecha_operacion': [''],
+    //'inicio_operacion': [''],
+    //'fecha_operacion': [''],
     'latitud': ['',Validators.required],
     'longitud': ['',Validators.required],
   });
@@ -158,6 +161,12 @@ export class EditarComponent implements OnInit {
     return value ? value[valueLabel] : value;
   }
 
+  validarFecha(valor)
+  {
+    this.cluesForm.get('inicio_operacion').disable();
+    console.log(valor);
+  }
+
 
   showRegionesDialog(index_editable = null){
     let configDialog = {};
@@ -226,6 +235,14 @@ export class EditarComponent implements OnInit {
             
           }
           this.cluesForm.patchValue(response.data);
+          this.inicio_operacion = response.data.inicio_operacion;
+          this.fecha_acreditacion = response.data.fecha_operacion;
+          /*console.log(this.cluesForm.get('fecha_operacion').value);
+          
+
+          //if()
+          this.cluesForm.patchValue({'fecha_operacion': new Date(1960, 1, 1), 'inicio_operacion': new Date(1960, 1, 1)});          */
+          //console.log(response.data);
           this.estatus_clues = true;
           
         }

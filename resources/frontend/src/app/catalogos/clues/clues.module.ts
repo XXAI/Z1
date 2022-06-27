@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AgmCoreModule } from '@agm/core';
-
 import { CluesRoutingModule } from './clues-routing.module';
 
 import { SharedModule } from 'src/app/shared/shared.module';
-
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorIntl } from '@angular/material/paginator';

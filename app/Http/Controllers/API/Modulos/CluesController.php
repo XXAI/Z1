@@ -118,8 +118,8 @@ class CluesController extends Controller
             $object->cp                             =    $inputs['cp'];
             $object->telefono                       =    $inputs['telefono'];
             $object->nucleos_camas                  =    $inputs['nucleos_camas'];
-            $object->inicio_operacion               =    $inputs['inicio_operacion'];
-            $object->fecha_operacion                =    $inputs['fecha_operacion'];
+            //$object->inicio_operacion               =    $inputs['inicio_operacion'];
+            //$object->fecha_operacion                =    $inputs['fecha_operacion'];
             $object->latitud                        =    $inputs['latitud'];
             $object->longitud                       =    $inputs['longitud'];
             $object->catalogo_microrregion_id       =    $inputs['catalogo_microrregion_id'];
