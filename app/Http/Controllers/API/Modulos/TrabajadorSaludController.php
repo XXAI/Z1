@@ -20,7 +20,7 @@ class TrabajadorSaludController extends Controller
             $objeto = Trabajador::join("regionalizacion_rh", "regionalizacion_rh.trabajador_id", "=", "trabajador.id")
                                 ->join("catalogo_clues", "catalogo_clues.clues", "regionalizacion_rh.clues")
                                 ->join("catalogo_distrito", "catalogo_clues.distrito_id", "catalogo_distrito.id")
-                                ->leftjoin("catalogo_tipo_trabajador", "catalogo_tipo_trabajador.id", "Trabajador.tipo_personal_id")
+                                ->leftjoin("catalogo_tipo_trabajador", "catalogo_tipo_trabajador.id", "trabajador.tipo_personal_id")
                                     ->where("regionalizacion_rh.tipo_trabajador_id", 1)
                                     ->whereNull("catalogo_clues.deleted_at")
                                     ->whereNull("trabajador.deleted_at")
