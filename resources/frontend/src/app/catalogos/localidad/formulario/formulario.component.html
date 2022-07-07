@@ -1,24 +1,15 @@
-<h1 mat-dialog-title style="background-color: #3f51b5; color: white; padding: 5pt 10pt; border-bottom: 3px solid #CFCFCF; margin: 0pt;">LOCALIDADES</h1>
+<h1 mat-dialog-title style="background-color: #008b8b; color: white; padding: 5pt 10pt; border-bottom: 3px solid #CFCFCF; margin: 0pt;">LOCALIDADES</h1>
 <!--<hr style="border: 1px solid #3f51b5;">-->
-<mat-tab-group>
-    <mat-tab label="FORMULARIO" style="width: 100%; overflow-x: hidden !important;">
-        <div mat-dialog-content style="overflow-x: hidden !important;">
+
+<div mat-dialog-content>
+    <mat-tab-group>
+        <mat-tab label="FORMULARIO" style="width: 100%; overflow-x: hidden !important;">
+
             <form [formGroup]="localidadForm">
                 <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
                         <div fxFlex="100" fxFlex.xs="100">
-                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                                <!--<mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>TIPO LOCALIDAD</mat-label>
-                                    <mat-select formControlName="tipo_localidad" required>
-                                        <mat-option *ngFor="let item of catalogo['tipoLocalidad']" [value]="item.id">
-                                            {{item.descripcion}}
-                                        </mat-option>
-                                    </mat-select>
-                                    <mat-error *ngIf="localidadForm.get('tipo_localidad').invalid && (localidadForm.get('tipo_localidad').dirty || localidadForm.get('tipo_localidad').touched)">
-                                        <span *ngIf="localidadForm.get('tipo_localidad').errors.required">Campo obligatorio</span>
-                                    </mat-error>
-                                </mat-form-field>-->
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">          
                                 <mat-form-field fxFlex="70" fxFlex.xs="100" appearance="fill">
                                     <mat-label>MUNICIPIO </mat-label>
                                     <mat-select formControlName="municipio_id" required>
@@ -37,83 +28,170 @@
                                         <span *ngIf="localidadForm.get('clave_localidad').errors.required">Campo obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
-                                <!--<mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
-                                            <mat-label>LOCALIDAD</mat-label>
-                                            <input matInput autocomplete="off" formControlName="descripcion" placeholder="Descripcion">
+                            </div>
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                                <div fxFlex="100" fxFlex.xs="100">
+                                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+
+                                        <mat-form-field fxFlex="100" fxFlex.xs="100" appearance="fill">
+                                            <mat-label>NOMBRE LOCALIDAD</mat-label>
+                                            <input matInput autocomplete="off" formControlName="descripcion" placeholder="Nombre Localidad">
                                             <mat-error *ngIf="localidadForm.get('descripcion').invalid && (localidadForm.get('descripcion').dirty || localidadForm.get('descripcion').touched)">
                                                 <span *ngIf="localidadForm.get('descripcion').errors.required">Campo obligatorio</span>
                                             </mat-error>
-                                        </mat-form-field>-->
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                                <div fxFlex="100" fxFlex.xs="100">
+                                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                                            <mat-label>LATITUD</mat-label>
+                                            <input matInput autocomplete="off" formControlName="latitud" placeholder="Latitud">
+                                            <mat-error *ngIf="localidadForm.get('latitud').invalid && (localidadForm.get('latitud').dirty || localidadForm.get('latitud').touched)">
+                                                <span *ngIf="localidadForm.get('latitud').errors.required">Campo obligatorio</span>
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                                            <mat-label>LONGITUD</mat-label>
+                                            <input matInput autocomplete="off" formControlName="longitud" placeholder="Longitud">
+                                            <mat-error *ngIf="localidadForm.get('longitud').invalid && (localidadForm.get('descripcion').dirty || localidadForm.get('longitud').touched)">
+                                                <span *ngIf="localidadForm.get('longitud').errors.required">Campo obligatorio</span>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
-                        <div fxFlex="100" fxFlex.xs="100">
-                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-
-                                <mat-form-field fxFlex="100" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>NOMBRE LOCALIDAD</mat-label>
-                                    <input matInput autocomplete="off" formControlName="descripcion" placeholder="Nombre Localidad">
-                                    <mat-error *ngIf="localidadForm.get('descripcion').invalid && (localidadForm.get('descripcion').dirty || localidadForm.get('descripcion').touched)">
-                                        <span *ngIf="localidadForm.get('descripcion').errors.required">Campo obligatorio</span>
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
-                        <div fxFlex="100" fxFlex.xs="100">
-                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                                <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>LATITUD</mat-label>
-                                    <input matInput autocomplete="off" formControlName="latitud" placeholder="Latitud">
-                                    <mat-error *ngIf="localidadForm.get('latitud').invalid && (localidadForm.get('latitud').dirty || localidadForm.get('latitud').touched)">
-                                        <span *ngIf="localidadForm.get('latitud').errors.required">Campo obligatorio</span>
-                                    </mat-error>
-                                </mat-form-field>
-                                <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>LONGITUD</mat-label>
-                                    <input matInput autocomplete="off" formControlName="longitud" placeholder="Longitud">
-                                    <mat-error *ngIf="localidadForm.get('longitud').invalid && (localidadForm.get('descripcion').dirty || localidadForm.get('longitud').touched)">
-                                        <span *ngIf="localidadForm.get('longitud').errors.required">Campo obligatorio</span>
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
-                        <div fxFlex="100" fxFlex.xs="100">
-                            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                                <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!localidadForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
-
-                                <button mat-raised-button (click)="cerrar()" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
-                            </div>
-                        </div>
-                    </div>
-
                 </section>
             </form>
-        </div>
-    </mat-tab>
-    <mat-tab label="POBLACIÓN INEGI">
-        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-                <ng-container matColumnDef="AÑO">
-                    <th mat-header-cell *matHeaderCellDef> AÑO </th>
-                    <td mat-cell *matCellDef="let element"> {{element.anio}} </td>
-                </ng-container>
-                <ng-container matColumnDef="CANTIDAD">
-                    <th mat-header-cell *matHeaderCellDef> CANTIDAD </th>
-                    <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
-                </ng-container>
+        </mat-tab>
+        <mat-tab label="POBLACIÓN INEGI">
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                    <ng-container matColumnDef="AÑO">
+                        <th mat-header-cell *matHeaderCellDef> AÑO </th>
+                        <td mat-cell *matCellDef="let element"> {{element.anio}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="CANTIDAD">
+                        <th mat-header-cell *matHeaderCellDef> CANTIDAD </th>
+                        <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+                    </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
 
-        </div>
-    </mat-tab>
+            </div>
+        </mat-tab>
+    </mat-tab-group>        
+</div>
+<mat-dialog-actions>
+    <button mat-raised-button (click)="this.dialogRef.close(true);" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
+    <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!localidadForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
+</mat-dialog-actions>
+<!--<div mat-dialog-content>
+    <mat-tab-group>
+        <mat-tab label="FORMULARIO" style="width: 100%; overflow-x: hidden !important;">
+            <div mat-dialog-content style="overflow-x: hidden !important;">
+                <form [formGroup]="localidadForm">
+                    <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                            <div fxFlex="100" fxFlex.xs="100">
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                
+                                    <mat-form-field fxFlex="70" fxFlex.xs="100" appearance="fill">
+                                        <mat-label>MUNICIPIO </mat-label>
+                                        <mat-select formControlName="municipio_id" required>
+                                            <mat-option *ngFor="let item of catalogo['municipio']" [value]="item.id">
+                                                {{item.descripcion}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="localidadForm.get('municipio_id').invalid && (localidadForm.get('municipio_id').dirty || localidadForm.get('municipio_id').touched)">
+                                            <span *ngIf="localidadForm.get('municipio_id').errors.required">Campo obligatorio</span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="30" fxFlex.xs="100" appearance="fill">
+                                        <mat-label>CLAVE LOCALIDAD</mat-label>
+                                        <input matInput autocomplete="off" formControlName="clave_localidad" placeholder="Clave Localidad">
+                                        <mat-error *ngIf="localidadForm.get('clave_localidad').invalid && (localidadForm.get('clave_localidad').dirty || localidadForm.get('clave_localidad').touched)">
+                                            <span *ngIf="localidadForm.get('clave_localidad').errors.required">Campo obligatorio</span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                
+                                </div>
+                            </div>
+                        </div>
 
-</mat-tab-group>
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                            <div fxFlex="100" fxFlex.xs="100">
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+
+                                    <mat-form-field fxFlex="100" fxFlex.xs="100" appearance="fill">
+                                        <mat-label>NOMBRE LOCALIDAD</mat-label>
+                                        <input matInput autocomplete="off" formControlName="descripcion" placeholder="Nombre Localidad">
+                                        <mat-error *ngIf="localidadForm.get('descripcion').invalid && (localidadForm.get('descripcion').dirty || localidadForm.get('descripcion').touched)">
+                                            <span *ngIf="localidadForm.get('descripcion').errors.required">Campo obligatorio</span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                            <div fxFlex="100" fxFlex.xs="100">
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                    <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                                        <mat-label>LATITUD</mat-label>
+                                        <input matInput autocomplete="off" formControlName="latitud" placeholder="Latitud">
+                                        <mat-error *ngIf="localidadForm.get('latitud').invalid && (localidadForm.get('latitud').dirty || localidadForm.get('latitud').touched)">
+                                            <span *ngIf="localidadForm.get('latitud').errors.required">Campo obligatorio</span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                                        <mat-label>LONGITUD</mat-label>
+                                        <input matInput autocomplete="off" formControlName="longitud" placeholder="Longitud">
+                                        <mat-error *ngIf="localidadForm.get('longitud').invalid && (localidadForm.get('descripcion').dirty || localidadForm.get('longitud').touched)">
+                                            <span *ngIf="localidadForm.get('longitud').errors.required">Campo obligatorio</span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                            <div fxFlex="100" fxFlex.xs="100">
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                    <button mat-raised-button (click)="accionGuardar(1)" color="success" [disabled]="!localidadForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
+
+                                    <button mat-raised-button (click)="cerrar()" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+                </form>
+            </div>
+        </mat-tab>
+        <mat-tab label="POBLACIÓN INEGI">
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                    <ng-container matColumnDef="AÑO">
+                        <th mat-header-cell *matHeaderCellDef> AÑO </th>
+                        <td mat-cell *matCellDef="let element"> {{element.anio}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="CANTIDAD">
+                        <th mat-header-cell *matHeaderCellDef> CANTIDAD </th>
+                        <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+            </div>
+        </mat-tab>
+
+    </mat-tab-group>
+</div>-->    

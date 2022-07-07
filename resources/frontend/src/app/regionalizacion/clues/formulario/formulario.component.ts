@@ -18,6 +18,8 @@ import { ConfirmActionDialogComponent } from '../../../utils/confirm-action-dial
 
 export interface FormularioComponentData {
   clues?: number;
+  latitud?: number;
+  longitud?; number;
 }
 
 @Component({
@@ -44,7 +46,7 @@ export class FormularioComponent implements OnInit {
   pageSize: number = 20;
   selectedItemIndex: number = -1;
 
-  displayedColumns: string[] = ['localidad','camino', 'distancia','actions'];
+  displayedColumns: string[] = ['localidad','camino', 'distancia', 'tipo','actions'];
   dataSource: any = [];
 
   lat: number = 15.404130;
@@ -52,7 +54,7 @@ export class FormularioComponent implements OnInit {
   
   latUnidad: number = 15.404130;
   longUnidad: number = -92.655800;
-  zoom: number = 14;
+  zoom: number = 12;
   localidades:any = [];
   unidadMedica:any = {};
   localidadUnidad:string ="";
@@ -62,6 +64,7 @@ export class FormularioComponent implements OnInit {
 
   nombre_unidad:string = "";
   //lineas:any = [{lat}]
+  tipoLocalidad:any = [{id:'AREA DE INFLUENCIA', descripcion: 'AREA DE INFLUENCIA'}, {id:'ACCIÓN INTENSIVA', descripcion: 'ACCIÓN INTENSIVA'}];
 
   iconMap = {
     url: '../../assets/icons/pin_localidad.png',
@@ -96,6 +99,7 @@ export class FormularioComponent implements OnInit {
     'municipio_id': ['',[Validators.required]],
     'localidad_id': ['',[Validators.required]],
     'catalogo_tipo_camino_id': ['',[Validators.required]],
+    'tipo_localidad_regionalizacion': ['',[Validators.required]],
     'distancia': ['',[Validators.required]],
     'tiempo': ['',[Validators.required]],
     'clues': ['',[Validators.required]],
@@ -103,8 +107,11 @@ export class FormularioComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.lat = Number(this.data.latitud);
+    this.long = Number(this.data.longitud);
     this.cargarCatalogos();
     //this.loadData();
+    //console.log(this.data);
   }
 
   loadData(event?:PageEvent)
@@ -181,7 +188,8 @@ export class FormularioComponent implements OnInit {
         catalogo_tipo_camino_id: obj.catalogo_tipo_camino.id,
         distancia: obj.distancia,
         tiempo:obj.tiempo,
-        clues: obj.clues
+        clues: obj.clues,
+        tipo_localidad_regionalizacion:obj.tipo_localidad_regionalizacion
       }
     );
     this.id_editar = obj.id;
@@ -205,20 +213,14 @@ export class FormularioComponent implements OnInit {
 
     params.query = this.searchQuery;
 
-    //console.log("entro"+ params );
-    //console.log(this.searchQuery );
     this.regionalizacionService.getFilterLocalidadesList(this.data.clues, params).subscribe(
       response => {
         this.dataSource = response.data.data;
         this.latUnidad = Number(response.clues.longitud);
         this.longUnidad = Number(response.clues.latitud);
-        //console.log(this.lat);
-        //console.log(this.long);
         this.unidadMedica = response.clues;
-        //console.log(this.unidadMedica);
         this.tipoMicroregion = this.unidadMedica.catalogo_microrregion.descripcion+" "+this.unidadMedica.catalogo_microrregion.descripcion_tipo;
         
-        //console.log(this.unidadMedica.catalogo_localidad);
         if(this.unidadMedica.catalogo_localidad != null)
         {
           this.localidadUnidad = this.unidadMedica.catalogo_localidad.clave_localidad+" - "+this.unidadMedica.catalogo_localidad.descripcion;
@@ -248,6 +250,7 @@ export class FormularioComponent implements OnInit {
     this.regionalizacionService.getCatalogos().subscribe(
       response => {
         this.catalogo = response;
+        this.catalogo['tipoLocalidad'] = this.tipoLocalidad;
         if(this.data.clues != null)
         {
           this.cargarDatos();
@@ -268,7 +271,7 @@ export class FormularioComponent implements OnInit {
           if(!(typeof value === 'object')){
             this.localidadIsLoading = false;
             let municipio = this.regionalizacionForm.get('municipio_id').value;
-            return this.regionalizacionService.buscarLocalidad({query:value, municipio_id: municipio}).pipe(finalize(() => this.localidadIsLoading = false ));
+            return this.regionalizacionService.buscarLocalidad({query:value, municipio_id: municipio, subtipo:2}).pipe(finalize(() => this.localidadIsLoading = false ));
            
              
           }else{
@@ -295,6 +298,7 @@ export class FormularioComponent implements OnInit {
     this.edicion = false;
     this.id_editar = 0;
     this.regionalizacionForm.reset();
+    this.indexTab = 0;
   }
 
   cerrar()

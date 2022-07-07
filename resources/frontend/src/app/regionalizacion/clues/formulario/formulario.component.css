@@ -97,7 +97,7 @@ table {
 }
 
 .mat-header-row {
-    background-color: #3f51b5 !important;
+    background-color: #008b8b !important;
     color: white !important;
 }
 
@@ -117,4 +117,10 @@ tbody tr:nth-child(even) {
     background-color: gainsboro;
     padding: 10pt;
     margin: 0pt 10pt;
+}
+
+mat-ripple
+{
+    background-color: aliceblue !important;
+    color: red;
 }

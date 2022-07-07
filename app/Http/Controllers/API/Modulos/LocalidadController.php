@@ -22,9 +22,7 @@ class LocalidadController extends Controller
                 $objeto = $objeto->whereRaw("catalogo_localidad.catalogo_municipio_id in (select id from catalogo_municipio where catalogo_distrito_id in (".$access->distrito."))");
             }
 
-            if(isset($parametros['municipio'])){
-                $objeto = $objeto->where('catalogo_municipio_id',$parametros['municipio']);
-            }
+            
             
             $objeto = $this->aplicarFiltros($objeto, $parametros);
             
@@ -70,12 +68,12 @@ class LocalidadController extends Controller
                 {
                     $main_query = $main_query->where(function($query)use($parametros){
                         return $query->//whereRaw("catalogo_localidad.id in (select catalogo_localidad_id from catalogo_clues)")
-                                        WhereRaw('catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues)');
+                                        WhereRaw('catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues where deleted_at is null)');
                     });
                 }else if($parametros['regionalizado'] == 2)
                 {
                     $main_query = $main_query->where(function($query)use($parametros){
-                        return $query->whereRaw("catalogo_localidad.id not in (select catalogo_localidad_id from catalogo_clues)");
+                        return $query->whereRaw("catalogo_localidad.id not in (select catalogo_localidad_id from regionalizacion_clues where deleted_at is null)");
                                         //->WhereRaw('catalogo_localidad.id not in (select catalogo_localidad_id from regionalizacion_clues)');
                     });
                 }
@@ -125,7 +123,6 @@ class LocalidadController extends Controller
         $reglas = [
             'municipio_id'               => 'required',
             'clave_localidad'            => 'required',
-            'tipo_localidad'             => 'required',
             'descripcion'                => 'required',
             'latitud'                    => 'required',
             'longitud'                   => 'required',
@@ -144,7 +141,6 @@ class LocalidadController extends Controller
             $object = new Localidad();
             $object->catalogo_municipio_id =    $inputs['municipio_id'];
             $object->clave_localidad =          $inputs['clave_localidad'];
-            $object->tipo_localidad =           $inputs['tipo_localidad'];
             $object->descripcion =              \Str::upper($inputs['descripcion']);
             $object->latitud =                  $inputs['latitud'];
             $object->longitud =                 $inputs['longitud'];
@@ -178,7 +174,6 @@ class LocalidadController extends Controller
         $reglas = [
             'municipio_id'               => 'required',
             'clave_localidad'                     => 'required',
-            'tipo_localidad'                         => 'required',
             'descripcion'                         => 'required',
             'latitud'                         => 'required',
             'longitud'                         => 'required',
@@ -201,7 +196,6 @@ class LocalidadController extends Controller
             
             $object->catalogo_municipio_id =    $inputs['municipio_id'];
             $object->clave_localidad =          $inputs['clave_localidad'];
-            $object->tipo_localidad =           $inputs['tipo_localidad'];
             $object->descripcion =              \Str::upper($inputs['descripcion']);
             $object->latitud =                  $inputs['latitud'];
             $object->longitud =                 $inputs['longitud'];

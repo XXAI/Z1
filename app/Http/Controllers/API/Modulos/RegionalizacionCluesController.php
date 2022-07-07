@@ -28,7 +28,9 @@ class RegionalizacionCluesController extends Controller
                 DB::RAW("(select clave_localidad from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id) as clave_localidad"),
                 DB::RAW("(select descripcion from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id) as localidad"),
                 DB::RAW("(select clave_municipio from catalogo_municipio where id =(select catalogo_municipio_id from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id)) as clave_municipio"),
-                DB::RAW("(select descripcion from catalogo_municipio where id =(select catalogo_municipio_id from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id)) as municipio")
+                DB::RAW("(select descripcion from catalogo_municipio where id =(select catalogo_municipio_id from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id)) as municipio"),
+                "latitud",
+                "longitud"
             );
 
             if(!$access->is_admin){
@@ -83,7 +85,7 @@ class RegionalizacionCluesController extends Controller
                         //                    ->where("regionalizacion_clues.clues", $id);
             */
 
-            $objeto = RegionalizacionClues::with("catalogo_localidad.municipio", "catalogo_tipo_camino", "catalogo_clues")->where("clues", $id);
+            $objeto = RegionalizacionClues::with("catalogo_localidad.municipio", "catalogo_tipo_camino", "catalogo_clues")->where("clues", $id)->orderBy("tipo_localidad_regionalizacion",'ASC');
 
             if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){
@@ -137,11 +139,12 @@ class RegionalizacionCluesController extends Controller
         }
         try {
             $object = new RegionalizacionClues();
-            $object->catalogo_localidad_id =    $inputs['localidad_id']['id'];
-            $object->catalogo_tipo_camino_id =  $inputs['catalogo_tipo_camino_id'];
-            $object->distancia =                $inputs['distancia'];
-            $object->tiempo =                   $inputs['tiempo'];
-            $object->clues =                    $inputs['clues'];
+            $object->catalogo_localidad_id          = $inputs['localidad_id']['id'];
+            $object->catalogo_tipo_camino_id        = $inputs['catalogo_tipo_camino_id'];
+            $object->distancia                      = $inputs['distancia'];
+            $object->tiempo                         = $inputs['tiempo'];
+            $object->clues                          = $inputs['clues'];
+            $object->tipo_localidad_regionalizacion = $inputs['tipo_localidad_regionalizacion'];
             $object->save();
             DB::commit();
             
@@ -196,6 +199,7 @@ class RegionalizacionCluesController extends Controller
             $object->distancia =                $inputs['distancia'];
             $object->tiempo =                   $inputs['tiempo'];
             $object->clues =                    $inputs['clues'];
+            $object->tipo_localidad_regionalizacion = $inputs['tipo_localidad_regionalizacion'];
             $object->save();
             DB::commit();
             

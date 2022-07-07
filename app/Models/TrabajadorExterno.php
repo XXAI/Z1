@@ -23,11 +23,11 @@ class TrabajadorExterno extends Model
         return $this->hasOne('App\Models\RelRegionalizacionRh','trabajador_id', "id")->where("tipo_trabajador_id", "2");
     }
 
-    public function personal_externo(){
+    public function tipoTrabajador(){
         return $this->hasOne('App\Models\TipoTrabajador', "id","tipo_personal_id")->where("tipo", "2");
     }
 
     public function rel_rh(){
-        return $this->hasOne('App\Models\RelRegionalizacionRh', "trabajador_id", "id");
+        return $this->hasOne('App\Models\RelRegionalizacionRh', "trabajador_id", "id")->where("tipo_trabajador_id", "2");
     }
 }

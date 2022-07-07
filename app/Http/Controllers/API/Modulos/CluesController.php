@@ -112,6 +112,23 @@ class CluesController extends Controller
         DB::beginTransaction();
         try {
             
+            if($inputs['catalogo_localidad']['id'] != $object->catalogo_localidad_id)
+            {
+                $relacion = RelRegionalizacionClues::where("clues",$id)->where('tipo_localidad_regionalizacion','SEDE')->first();
+                if($relacion)
+                {
+                    $relacion->delete();
+                }
+                $object = new RegionalizacionClues();
+                $object->catalogo_localidad_id =    $inputs['localidad_id']['id'];
+                $object->catalogo_tipo_camino_id =  1;
+                $object->distancia =                0;
+                $object->tiempo =                   0;
+                $object->clues =                    $id;
+                $object->save();
+                DB::commit();
+            }
+
             //$object->clues                          =    $inputs['clues'];
             $object->descripcion                    =    $inputs['descripcion'];
             $object->direccion                      =    $inputs['direccion'];
@@ -124,15 +141,6 @@ class CluesController extends Controller
             $object->longitud                       =    $inputs['longitud'];
             $object->catalogo_microrregion_id       =    $inputs['catalogo_microrregion_id'];
             $object->catalogo_localidad_id          =    $inputs['catalogo_localidad']['id'];
-
-            //$municipio = Municipio::whereRaw("id = (select catalogo_municipio_id from catalogo_localidad where id="+$inputs['catalogo_localidad']['id']+")")->fisrt();
-            /*if($localidad)
-            {
-                $object->distrito_id          =    $municipio->catalogo_distrito_id;
-            }*/
-            
-
-            //return response()->json($object,HttpResponse::HTTP_OK);
 
             $object->update();
     

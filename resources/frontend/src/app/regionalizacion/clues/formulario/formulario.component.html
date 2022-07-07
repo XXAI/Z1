@@ -1,6 +1,9 @@
-<h1 mat-dialog-title style="background-color: #3f51b5; color: white; padding: 5pt 10pt; border-bottom: 3px solid #CFCFCF; margin: 0pt;">REGIONALIZACIÓN</h1>
+<h1 mat-dialog-title style="background-color: #008b8b; color: white; padding: 5pt 10pt; border-bottom: 3px solid #CFCFCF; margin: 0pt;">REGIONALIZACIÓN 
+({{ tipoMicroregion }} ) [ CLUES: ({{ unidadMedica.clues }}) {{unidadMedica.descripcion}} ]
+</h1>
 <!--<hr style="border: 1px solid #3f51b5;">-->
 <div mat-dialog-content>
+    
     <mat-tab-group [(selectedIndex)]="indexTab">
         <mat-tab label="LOCALIDADES REGIONALIZADAS" [disabled]="edicion">
             <section class="profile">
@@ -9,34 +12,44 @@
                         <div class="data-loading-shade" *ngIf="isLoading">
                             <mat-spinner></mat-spinner>
                         </div>
-                        <mat-card fxFlex.xs="100%" fxFlex="100%">
-                            <div fxLayout="row" fxLayout.xs="column">
-                                <div fxFlex fxFlex.xs="30" class="clues">
-                                    CLUES: ({{ unidadMedica.clues }}) {{unidadMedica.descripcion}}
-                                    <div style="padding: 9pt">
-                                        {{ tipoMicroregion }}
-                                    </div>
-                                </div>
-                                <div fxFlex fxLayout="row wrap">
-                                    <mat-form-field fxFill appearance="outline">
-                                        <mat-label>Buscar</mat-label>
-                                        <input matInput [(ngModel)]="searchQuery" (keyup.escape)="cleanSearch()" (keyup.enter)="applyFilter()" placeholder="Buscar">
-                                        <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
-                                            <mat-icon>close</mat-icon>
-                                        </button>
-
-                                    </mat-form-field>
-                                </div>
-                                <div fxFlex="none" fxFlex.xs="100">
-                                    <div fxFlex></div>
-                                    <section class="search-button">
-                                        <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
-                                            <mat-icon>search</mat-icon> Buscar
-                                        </button>
-                                    </section>
-                                </div>
+                        <!--<div fxFlex fxLayout="row wrap">
+                            <mat-form-field fxFill appearance="outline">
+                                <mat-label>Buscar</mat-label>
+                                <input matInput [(ngModel)]="searchQuery" (keyup.escape)="cleanSearch()" (keyup.enter)="applyFilter()" placeholder="Buscar">
+                                <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+            
+                            </mat-form-field>
+                        </div>
+                        <div fxFlex="none" fxFlex.xs="100">
+                            <div fxFlex></div>
+                            <section class="search-button">
+                                <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
+                                    <mat-icon>search</mat-icon> Buscar
+                                </button>
+                            </section>
+                        </div>-->
+                        <div fxLayout="row" fxLayout.xs="column">
+                            <div fxFlex fxLayout="row wrap">
+                                <mat-form-field fxFill appearance="outline">
+                                    <mat-label>Buscar</mat-label>
+                                    <input matInput [(ngModel)]="searchQuery" (keyup.escape)="cleanSearch()" (keyup.enter)="applyFilter()" placeholder="Buscar">
+                                    <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+        
+                                </mat-form-field>
                             </div>
-                        </mat-card>
+                            <div fxFlex="none" fxFlex.xs="100">
+                                <div fxFlex></div>
+                                <section class="search-button">
+                                    <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt; padding: 5pt;">
+                                        <mat-icon >search</mat-icon> 
+                                    </button>
+                                </section>
+                            </div>
+                        </div>            
 
                         <mat-card fxFlex.xs="100%" fxFlex="90%">
                             <mat-divider [inset]="true"></mat-divider>
@@ -68,11 +81,18 @@
                                             </td>
                                         </ng-container>
 
+                                        <ng-container matColumnDef="tipo">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                {{ row.tipo_localidad_regionalizacion }}
+                                            </td>
+                                        </ng-container>
+
                                         <ng-container matColumnDef="actions">
-                                            <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-                                            <td mat-cell *matCellDef="let row; let i = index">
-                                                <button mat-mini-fab color="primary" mat-stroked-button [matMenuTriggerFor]="menu">
-                                                    <mat-icon>menu</mat-icon>
+                                            <th mat-header-cell *matHeaderCellDef  style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
+                                            <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
+                                                <button mat-button [matMenuTriggerFor]="menu" *ngIf="row.tipo_localidad_regionalizacion !='SEDE'">
+                                                    <mat-icon>more_vert</mat-icon>
                                                 </button>
                                                 <mat-menu #menu="matMenu">
                                                     <button mat-menu-item (click)="editar(row)"><mat-icon color="primary">edit</mat-icon>Editar</button>
@@ -106,7 +126,7 @@
                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
                         <div fxFlex="100" fxFlex.xs="100">
                             <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                                <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
                                     <mat-label>MUNICIPIO</mat-label>
                                     <mat-select formControlName="municipio_id" required>
                                         <mat-option *ngFor="let item of catalogo['municipio']" [value]="item.id">
@@ -117,7 +137,7 @@
                                         <span *ngIf="regionalizacionForm.get('municipio_id').errors.required">Campo obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
-                                <mat-form-field fxFlex="50" fxFlex.xs="100" appearance="fill">
+                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
                                     <mat-label>LOCALIDAD</mat-label>
                                     <input matInput placeholder="LOCALIDAD" [matAutocomplete]="localidadAutocomplete" formControlName='localidad_id'>
                                     <mat-autocomplete #localidadAutocomplete="matAutocomplete" [displayWith]="displayLocalidadFn" [panelWidth]="'auto'">
@@ -132,6 +152,17 @@
                                     </mat-autocomplete>
                                     <mat-error *ngIf="regionalizacionForm.get('localidad_id').invalid && (regionalizacionForm.get('localidad_id').dirty || regionalizacionForm.get('localidad_id').touched)">
                                         <span *ngIf="regionalizacionForm.get('localidad_id').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
+                                    <mat-label>TIPO LOCALIDAD</mat-label>
+                                    <mat-select formControlName="tipo_localidad_regionalizacion" required>
+                                        <mat-option *ngFor="let item of catalogo['tipoLocalidad']" [value]="item.id">
+                                            {{item.descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="regionalizacionForm.get('tipo_localidad_regionalizacion').invalid && (regionalizacionForm.get('tipo_localidad_regionalizacion').dirty || regionalizacionForm.get('tipo_localidad_regionalizacion').touched)">
+                                        <span *ngIf="regionalizacionForm.get('tipo_localidad_regionalizacion').errors.required">Campo obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
                             </div>

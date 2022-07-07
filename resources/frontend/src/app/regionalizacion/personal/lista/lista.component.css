@@ -94,12 +94,6 @@ table {
   margin: 0 10px;
 }
 
-
-.mat-header-row
-{
-  background-color: #3f51b5 !important;
-  color: white !important;
-}
 .mat-header-row th
 {
   color: white !important;

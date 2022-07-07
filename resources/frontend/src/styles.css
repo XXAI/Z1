@@ -78,3 +78,20 @@ a.item-mini-side-menu div.mat-list-item-content{
     border-top-color: #000000;
     animation: spinner .8s linear infinite;
 }
+
+/*Estilo de sistema*/
+.mat-header-row {
+    background-color: darkcyan !important;
+    height: 24pt !important;
+    color: white !important;
+}
+
+.mat-table tbody tr:nth-child(even) {
+    background: #EFEFEF;
+}
+
+.data-table-container
+{
+    max-height: calc(100% - 50px) !important;
+}
+

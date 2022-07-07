@@ -92,7 +92,7 @@ export class ListaComponent implements OnInit {
     }else{
       configDialog = {
         width: '40%',
-        maxHeight: '60vh',
+        maxHeight: '70vh',
         data:{}
       }
     }

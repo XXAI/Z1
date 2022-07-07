@@ -19,11 +19,13 @@
                     <div fxFlex="none" fxFlex.xs="100">
                         <div fxFlex></div>
                         <section class="search-button">
-                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
-                                <mat-icon>search</mat-icon> Buscar
+                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt; padding: 5pt;">
+                                <mat-icon >search</mat-icon> 
                             </button>
-
-                            <button mat-raised-button color="primary" (click)="agregar()"><mat-icon>add_circle</mat-icon> Agregar Regionalización</button>
+                            
+                            <button mat-raised-button color="primary" (click)="agregar()" style="margin-right: 10pt; padding: 5pt;">
+                                <mat-icon >add_circle</mat-icon> 
+                            </button>
                         </section>
                     </div>
                 </div>
@@ -68,11 +70,12 @@
 
 
                                     <ng-container matColumnDef="actions">
-                                        <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-                                        <td mat-cell *matCellDef="let row; let i = index">
-                                            <button mat-mini-fab color="primary" mat-stroked-button [matMenuTriggerFor]="menu">
-                                                <mat-icon>menu</mat-icon>
+                                        <th mat-header-cell *matHeaderCellDef  style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
+                                        <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
+                                            <button mat-button [matMenuTriggerFor]="menu">
+                                                <mat-icon>more_vert</mat-icon>
                                             </button>
+        
                                             <mat-menu #menu="matMenu">
                                                 <button mat-menu-item (click)="editar(row, 1)"><mat-icon color="primary">edit</mat-icon>Editar</button>
                                                 <button mat-menu-item (click)="transferir(row, 1)"><mat-icon color="primary">call_split</mat-icon>Transferir</button>
@@ -115,10 +118,10 @@
                                     <ng-container matColumnDef="tipo">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>TIPO PERSONAL </th>
                                         <td mat-cell *matCellDef="let row">
-                                            <span *ngIf="row.personal_externo">
-                                                {{ row.personal_externo.descripcion }}
+                                            <span *ngIf="row.tipoTrabajador">
+                                                {{ row.tipoTrabajador.descripcion }}
                                             </span>
-                                            <span *ngIf="!row.personal_externo">
+                                            <span *ngIf="!row.tipoTrabajador">
                                                 SIN ASIGNAR
                                             </span>
                                         </td>
@@ -135,11 +138,12 @@
 
 
                                     <ng-container matColumnDef="actions">
-                                        <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-                                        <td mat-cell *matCellDef="let row; let i = index">
-                                            <button mat-mini-fab color="primary" mat-stroked-button [matMenuTriggerFor]="menu">
-                                                <mat-icon>menu</mat-icon>
+                                        <th mat-header-cell *matHeaderCellDef  style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
+                                        <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
+                                            <button mat-button [matMenuTriggerFor]="menu">
+                                                <mat-icon>more_vert</mat-icon>
                                             </button>
+        
                                             <mat-menu #menu="matMenu">
                                                 <button mat-menu-item (click)="editar(row, 2)"><mat-icon color="primary">edit</mat-icon>Editar</button>
                                                 <button mat-menu-item (click)="eliminar(row, 2)"><mat-icon color="warn">close</mat-icon>Eliminar</button>

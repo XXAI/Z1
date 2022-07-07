@@ -1,7 +1,12 @@
 {
     "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
     "cli": {
-        "analytics": false
+        "analytics": false,
+        "cache": {
+            "enabled": true,
+            "path": ".cache",
+            "environment": "all"
+        }
     },
     "version": 1,
     "newProjectRoot": "projects",
@@ -30,7 +35,9 @@
                                 "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
                                 "inject": true
                             },
-                            "src/styles.css"
+                            "src/styles.css",
+                            "src/app-theme.scss"
+                            
                         ],
                         "scripts": [],
                         "webWorkerTsConfig": "tsconfig.worker.json"

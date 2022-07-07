@@ -19,9 +19,10 @@
                     <div fxFlex="none" fxFlex.xs="100">
                         <div fxFlex></div>
                         <section class="search-button">
-                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
-                                <mat-icon>search</mat-icon> Buscar
+                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt; padding: 5pt;">
+                                <mat-icon >search</mat-icon> 
                             </button>
+
                             <!--<button mat-raised-button  color="primary" (click)="agregar()"><mat-icon>add_circle</mat-icon> Agregar Trabajador</button>-->
                         </section>
                     </div>
@@ -54,9 +55,6 @@
                                     <div *ngIf="row.microregion == null">
                                         SIN TIPOLOGIA
                                     </div>
-
-
-
                                 </td>
                             </ng-container>
 
@@ -74,17 +72,17 @@
                             </ng-container>
                             <!-- Username Column  -->
                             <ng-container matColumnDef="localidades">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> NO. LOCALIDADES </th>
-                                <td mat-cell *matCellDef="let row">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;"> NO. LOCALIDADES </th>
+                                <td mat-cell *matCellDef="let row" style="text-align: center;">
                                     {{ row.cantidad_localidades }}
                                 </td>
                             </ng-container>
 
                             <ng-container matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-                                <td mat-cell *matCellDef="let row; let i = index">
-                                    <button mat-mini-fab color="primary" mat-stroked-button [matMenuTriggerFor]="menu">
-                                        <mat-icon>menu</mat-icon>
+                                <th mat-header-cell *matHeaderCellDef  style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
+                                <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
+                                    <button mat-button [matMenuTriggerFor]="menu">
+                                        <mat-icon>more_vert</mat-icon>
                                     </button>
                                     <mat-menu #menu="matMenu">
                                         <button mat-menu-item (click)="regionalizacion(row)"><mat-icon color="primary">edit</mat-icon>Regionalización</button>

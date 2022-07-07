@@ -44,7 +44,7 @@ class RegionalizacionCluesPersonalController extends Controller
                 $objeto = $objeto->paginate($resultadosPorPagina);
             }
 
-            $objeto_externo = TrabajadorExterno::with("rel_rh.localidad.municipio", "personal_externo")->whereRaw("trabajador_externo.id in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=2 and deleted_at is null)");
+            $objeto_externo = TrabajadorExterno::with("rel_rh.localidad.municipio", "tipoTrabajador");
 
             if(isset($parametros['query'])){
                 $objeto_externo = $objeto_externo->where(function($query)use($parametros){
@@ -56,15 +56,19 @@ class RegionalizacionCluesPersonalController extends Controller
 
             if(!$access->is_admin){
                 $objeto_externo = $objeto_externo->where(function($query)use($parametros, $access){
-                    return $query->whereRaw("trabajador_externo.id in (select trabajador_id from regionalizacion_rh where deleted_at is null and catalogo_localidad_id in (select catalogo_localidad_id from regionalizacion_clues where clues in (select clues from catalogo_clues where distrito_id in (".$access->distrito."))))");
+                    return $query->whereRaw("trabajador_externo.id in (select trabajador_id from regionalizacion_rh where deleted_at is null and tipo_trabajador_id=2 and catalogo_localidad_id in 
+                                            (select catalogo_localidad_id from regionalizacion_clues where clues in 
+                                            (select clues from catalogo_clues where distrito_id in (".$access->distrito."))))");
                 });
+            }else{
+                $objeto_externo = $objeto_externo->whereRaw("trabajador_externo.id in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=2 and deleted_at is null)");
             }
             if(isset($parametros['page'])){
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
                 $objeto_externo = $objeto_externo->paginate($resultadosPorPagina);
             }
 
-            return response()->json(['salud'=>$objeto, 'externo'=>$objeto_externo ],HttpResponse::HTTP_OK);
+        return response()->json(['salud'=>$objeto, 'externo'=>$objeto_externo ],HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
