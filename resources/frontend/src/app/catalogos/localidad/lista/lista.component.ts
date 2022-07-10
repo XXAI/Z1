@@ -196,8 +196,8 @@ export class ListaComponent implements OnInit {
       };
     }else{
       configDialog = {
-        width: '30%',
-        maxHeight: '65vh',
+        width: '60vw',
+        maxHeight: '75vh',
         data:{}
       }
     }
@@ -224,8 +224,8 @@ export class ListaComponent implements OnInit {
       };
     }else{
       configDialog = {
-        width: '30%',
-        maxHeight: '70vh',
+        width: '60vw',
+        maxHeight: '75vh',
         data:{id:obj.id}
       }
     }

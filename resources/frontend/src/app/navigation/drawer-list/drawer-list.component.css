@@ -4,11 +4,28 @@
     color: rgba(63, 81, 181, 1);
 }
 
-.toggle-drawer-collapsed{
-  min-width: 33px;
-  padding: 0px;
+.toggle-drawer-collapsed {
+    min-width: 33px;
+    padding: 0px;
 }
 
-.mat-list-base .mat-list-item .mat-list-item-content{
-  padding:0px !important;
+.mat-list-base .mat-list-item .mat-list-item-content {
+    padding: 0px !important;
+}
+
+.example-container {
+    width: 500px;
+    height: 300px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.example-sidenav-content {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.example-sidenav {
+    padding: 20px;
 }

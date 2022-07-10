@@ -2,8 +2,11 @@
     <!--button mat-icon-button aria-label="Ir al inicio" routerLink="/" fxShow.xs fxHide.gt-sm>
       <mat-icon>home</mat-icon>
     </button-->
-    <img src="{{(selectedApp)?selectedApp.icon:'assets/LogoSistemaBlanco.png'}}" alt="" style="height: 60%; width:auto;" fxHide.xs="true">
-    <span style="margin-left:10px" *ngIf="!selectedApp"><a routerLink="/">Secretaria de Salud</a></span> <span *ngIf="selectedApp">&nbsp; <a routerLink="{{selectedApp.route}}">{{selectedApp.name}}</a></span>
+    <!--<img src="{{(selectedApp)?selectedApp.icon:'assets/LogoSistemaBlanco.png'}}" alt="" style="height: 60%; width:auto;" fxHide.xs="true">-->
+    <a routerLink="/">
+        <mat-icon>apps</mat-icon>
+    </a>
+    <span style="margin-left:10px" *ngIf="!selectedApp"><a routerLink="/">Secretaria de Salud</a></span> <span *ngIf="selectedApp">&nbsp; {{selectedApp.name}}</span>
 
     <span class="spacer"></span>
 
@@ -38,11 +41,11 @@
       </mat-menu-->
 
         <mat-menu #menuAccount="matMenu">
-            <div style="width:280px;" style="display:flex; justify-content: start center">
+            <div style="width:280px;" style="display:flex; justify-content: start center; background-color: rgba(0,99,0,0.3);">
                 <img src="{{user.avatar}}" alt="" style="width:80px; margin:10px">
                 <div style="width:160px; margin:10px;  display: flex; flex-direction:column; justify-content: center; font-size:0.8em;">
-                    <strong>{{user.name}}</strong>
-                    <small style="color:#777">{{user.email}}</small>
+                    <strong style="font-size: 12pt;">{{user.name}}</strong>
+                    <small style="color: #000;font-size: 10pt;">{{user.email}}</small>
                     <br>
                     <!--<button mat-button mat-raised-button color="primary" routerLink="/profile">
                 <mat-icon>account_circle</mat-icon> 
@@ -52,7 +55,7 @@
             </div>
             <mat-divider></mat-divider>
 
-            <div>
+            <div style="background-color: rgba(200,200,200,0.3);">
                 <div class="apps" fxLayout="row" fxLayoutAlign="center center">
                     <ng-container *ngFor="let app of apps; let i = index">
                         <figure [routerLink]="['/'+app.route]" *ngIf="i<9">

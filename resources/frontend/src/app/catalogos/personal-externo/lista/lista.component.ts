@@ -53,8 +53,8 @@ export class ListaComponent implements OnInit {
       };
     }else{
       configDialog = {
-        width: '60%',
-        maxHeight: '60vh',
+        width: '60vw',
+        maxHeight: '100vh',
         data:{}
       }
     }
@@ -80,8 +80,8 @@ export class ListaComponent implements OnInit {
       };
     }else{
       configDialog = {
-        width: '60%',
-        maxHeight: '60vh',
+        width: '60vw',
+        maxHeight: '100vh',
         data:{id:obj.id}
       }
     }

@@ -19,7 +19,8 @@ export class DrawerListComponent implements OnInit {
   selectedChild: any;
   apps: App[];
   expandDrawer:boolean = true;
-
+  showFiller = false;
+  
   constructor(private authService:AuthService, private appsService: AppsListService, private router: Router) {
     router.events.pipe(
       filter(event => event instanceof NavigationEnd)  

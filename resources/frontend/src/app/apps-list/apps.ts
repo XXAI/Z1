@@ -14,11 +14,11 @@ export const APPS:App [] = [
         {name:'Configuración',route:'dashboard/configuracion', icon:'settings', permission:"JIZVHPLq3b50VmEiwHDoGOViE63rBJpFa"}
       ]
     },
-    { name:"Usuarios",          route: "usuarios",      icon: "assets/icons/users.svg",              permission:"nTSk4Y4SFKMyQmRD4ku0UCiNWIDe8OEt" },
-    { name:'Permisos',          route: "permisos",      icon: "assets/icons/security-shield.svg",    permission:"RGMUpFAiRuv7UFoJroHP6CtvmpoFlQXl" },
-    { name:'Roles',             route: "roles",         icon: "assets/icons/users-roles.svg",        permission:"nrPqEhq2TX0mI7qT7glaOCJ7Iqx2QtPs" },
+    { name:"Usuarios",          route: "usuarios",      icon: "assets/icons/users.png",              permission:"nTSk4Y4SFKMyQmRD4ku0UCiNWIDe8OEt" },
+    { name:'Permisos',          route: "permisos",      icon: "assets/icons/permisos.png",    permission:"RGMUpFAiRuv7UFoJroHP6CtvmpoFlQXl" },
+    { name:'Roles',             route: "roles",         icon: "assets/icons/roles.png",        permission:"nrPqEhq2TX0mI7qT7glaOCJ7Iqx2QtPs" },
     
-    { name:'Catalogos',         route: "catalogos",     icon: "assets/icons/catalogos.svg",           isHub:true, hideHome:true, 
+    { name:'Catalogos',         route: "catalogos",     icon: "assets/icons/catalogos.png",           isHub:true, hideHome:true, 
       children:[
         {name:'Clues',            route:'catalogos/clues',            icon:'insert_drive_file', permission:""},
         {name:'Localidad',        route:'catalogos/localidad',        icon:'insert_drive_file', permission:""},

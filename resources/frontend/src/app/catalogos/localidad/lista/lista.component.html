@@ -96,7 +96,7 @@
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> DISTRITO/MUNICIPIO </th>
                                 <td mat-cell *matCellDef="let row">
                                     <b>[ {{ row.municipio.clave_municipio }}] {{ row.municipio.descripcion }} </b>
-                                    <div style="font-size: 8pt;">[ {{ row.municipio.distrito.clave_distrito }} ]  {{ row.municipio.distrito.descripcion }}</div>
+                                    <div style="font-size: 8pt;">[ {{ row.municipio.distrito.clave_distrito }} ] {{ row.municipio.distrito.descripcion }}</div>
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="localidad">
@@ -124,7 +124,7 @@
                                         <div style="font-weight: bold; display: contents; color: purple; cursor: pointer;" (click)="verUnidades(row, 1);" *ngIf="row.clues.length > 1"> [ {{ row.clues[0].clues }} ] {{ row.clues[0].descripcion }}</div>
                                         <div style="font-weight: bold; display: contents;" *ngIf="row.clues.length == 1"> [ {{ row.clues[0].clues }} ] {{ row.clues[0].descripcion }}</div>
                                         <!--<div  *ngIf="row.clues.length == 1" style="font-size: 9pt;">UNICO</div>-->
-                                        
+
                                     </div>
                                     <div *ngIf="row.clues.length == 0">No asignado</div>
                                 </td>
@@ -136,7 +136,7 @@
                                     <div *ngIf="row.regionalizacion.length > 0">
                                         <!--<button mat-raised-button *ngIf="row.regionalizacion.length > 1" style="background-color: rgba(0,0,250,0.3);" (click)="verUnidades(row, 2)">...</button>
                                         <button mat-raised-button *ngIf="row.regionalizacion.length == 1" style="background-color: rgba(250,0,0,0.3);">...</button>-->
-                                        <div style="font-weight: bold; display: contents; color: purple; cursor: pointer;" *ngIf="row.regionalizacion.length > 1"  (click)="verUnidades(row, 2)"> [ {{ row.regionalizacion[0].clues }} ] {{ row.regionalizacion[0].catalogo_clues.descripcion }}</div>
+                                        <div style="font-weight: bold; display: contents; color: purple; cursor: pointer;" *ngIf="row.regionalizacion.length > 1" (click)="verUnidades(row, 2)"> [ {{ row.regionalizacion[0].clues }} ] {{ row.regionalizacion[0].catalogo_clues.descripcion }}</div>
                                         <div style="font-weight: bold; display: contents;" *ngIf="row.regionalizacion.length == 1"> [ {{ row.regionalizacion[0].clues }} ] {{ row.regionalizacion[0].catalogo_clues.descripcion }}</div>
                                     </div>
                                     <div *ngIf="row.regionalizacion.length == 0">No asignado</div>
@@ -144,9 +144,11 @@
                             </ng-container>
 
                             <ng-container matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef  style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
-                                <td mat-cell *matCellDef="let row; let i = index"  style="text-align: center;">
-                                    <button  mat-button  [matMenuTriggerFor]="menu">
+                                <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                                    <mat-icon>more_vert</mat-icon>
+                                </th>
+                                <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
+                                    <button mat-button [matMenuTriggerFor]="menu">
                                         <mat-icon>more_vert</mat-icon>
                                     </button>
                                     <mat-menu #menu="matMenu">
@@ -168,7 +170,7 @@
                             <tr mat-footer-row *matFooterRowDef="['noResultsFound']" class="not-results-found" [ngClass]="{'hide':!(dataSource!=null && dataSource.length==0)}"></tr>
                         </table>
                     </div>
-                    <mat-paginator #paginator [pageSize]="pageSize" [pageIndex]="currentPage" [length]="resultsLength" [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons (page)="pageEvent = loadData($event)"></mat-paginator>
+                    <mat-paginator #paginator [pageSize]="pageSize" [pageIndex]="currentPage" [length]="resultsLength" [pageSizeOptions]="[14, 28]" showFirstLastButtons (page)="pageEvent = loadData($event)"></mat-paginator>
                 </div>
             </mat-card>
         </section>

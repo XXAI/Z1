@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const environment = {\n  production: true,\n  base_url: \"http://localhost/proyectos_base/simoss/public/api\"\n};","map":null,"metadata":{},"sourceType":"module"}

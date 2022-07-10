@@ -28,7 +28,7 @@ class LocalidadController extends Controller
             
             if(isset($parametros['page'])){
                 //$objeto = $objeto->orderBy('descripcion');
-                $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
+                $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 14;
                 $objeto = $objeto->paginate($resultadosPorPagina);
             }else
             {

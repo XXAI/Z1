@@ -1,22 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: 'Roboto', sans-serif; }
+html,
+body {
+    height: 100%;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: 'Roboto', sans-serif; }
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: 'Roboto', sans-serif; }
+html,
+body {
+    height: 100%;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: 'Roboto', sans-serif; }
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
 
-a.link-route-item-collapsed div.mat-list-item-content{
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+a.link-route-item-collapsed div.mat-list-item-content {
     padding: 0px !important;
 }
 
-.mini-side-menu{
+.mini-side-menu {
     min-width: 33px;
     max-width: 33px;
     min-height: 33px;
@@ -24,14 +52,14 @@ a.link-route-item-collapsed div.mat-list-item-content{
     padding: 0px;
 }
 
-a.item-mini-side-menu{
+a.item-mini-side-menu {
     min-width: 33px;
     max-width: 33px;
     min-height: 33px;
     max-height: 33px;
 }
 
-a.item-mini-side-menu div.mat-list-item-content{
+a.item-mini-side-menu div.mat-list-item-content {
     padding: 0px !important;
     min-width: 33px;
     max-width: 33px;
@@ -39,7 +67,7 @@ a.item-mini-side-menu div.mat-list-item-content{
     max-height: 33px;
 }
 
-.dense-form-field .mat-form-field-wrapper{
+.dense-form-field .mat-form-field-wrapper {
     padding-bottom: 0px;
 }
 
@@ -47,6 +75,7 @@ a.item-mini-side-menu div.mat-list-item-content{
     color: #fff !important;
     background-color: #28a745 !important;
 }
+
 .mat-success[disabled] {
     background-color: rgba(0, 0, 0, 0.12) !important;
 }
@@ -55,14 +84,17 @@ a.item-mini-side-menu div.mat-list-item-content{
     color: #fff !important;
     background-color: #0c94d3 !important;
 }
+
 .mat-info[disabled] {
     background-color: rgba(0, 0, 0, 0.12) !important;
 }
 
 @keyframes spinner {
-    to {transform: rotate(360deg);}
+    to {
+        transform: rotate(360deg);
+    }
 }
-   
+
 .button-spinner:before {
     content: '';
     box-sizing: border-box;
@@ -79,7 +111,9 @@ a.item-mini-side-menu div.mat-list-item-content{
     animation: spinner .8s linear infinite;
 }
 
+
 /*Estilo de sistema*/
+
 .mat-header-row {
     background-color: darkcyan !important;
     height: 24pt !important;
@@ -90,8 +124,7 @@ a.item-mini-side-menu div.mat-list-item-content{
     background: #EFEFEF;
 }
 
-.data-table-container
-{
-    max-height: calc(100% - 50px) !important;
+.data-table-container {
+    /*max-height: 80% !important;*/
+    /*calc(80% - 300px) !important;*/
 }
-

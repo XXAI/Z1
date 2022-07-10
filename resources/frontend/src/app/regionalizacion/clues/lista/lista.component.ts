@@ -51,7 +51,6 @@ export class ListaComponent implements OnInit {
 
   regionalizacion(obj:any)
   {
-    console.log(obj);
     let configDialog = {};
     if(this.mediaSize == 'xs'){
       configDialog = {
@@ -61,7 +60,7 @@ export class ListaComponent implements OnInit {
       };
     }else{
       configDialog = {
-        width: '80%',
+        width: '80vw',
         maxWidth: '80vw',
         maxHeight: '100vh',
         data:{clues:obj.clues, latitud: obj.latitud, longitud: obj.longitud}
