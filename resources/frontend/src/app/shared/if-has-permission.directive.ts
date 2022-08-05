@@ -6,7 +6,7 @@ import { AuthService } from '../auth/auth.service';
 })
 export class IfHasPermissionDirective implements OnInit{
 
-  @Input() ifHasPermission: string;
+  @Input() ifHasPermission: string | undefined;
   
 
   constructor(

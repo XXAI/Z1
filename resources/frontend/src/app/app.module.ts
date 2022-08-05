@@ -23,7 +23,7 @@ import { AuthService } from './auth/auth.service';
 
 import { SharedService } from './shared/shared.service';
 import { TokenInterceptor, ErrorInterceptor } from './token.service';
-import { MAT_STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import {MatStepperModule} from '@angular/material/stepper';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
 
@@ -32,7 +32,7 @@ import { ProfileModule } from './profile/profile.module';
 import { DevToolsModule } from './dev-tools/dev-tools.module';
 import { CatalogosModule } from './catalogos/catalogos.module';
 import { RegionalizacionModule } from './regionalizacion/regionalizacion.module';
-
+import { MapaModule } from './mapa/mapa.module';
 
 @NgModule({
   declarations: [
@@ -55,6 +55,7 @@ import { RegionalizacionModule } from './regionalizacion/regionalizacion.module'
     SecurityModule,
     DevToolsModule,
     CatalogosModule,
+    MapaModule,
     RegionalizacionModule,
     ProfileModule,
     AppRoutingModule,
@@ -77,7 +78,7 @@ import { RegionalizacionModule } from './regionalizacion/regionalizacion.module'
       multi: true
     },
     {
-      provide: MAT_STEPPER_GLOBAL_OPTIONS,
+      provide: MatStepperModule,
       useValue: { showError: true }
     },
     SharedService
@@ -85,3 +86,4 @@ import { RegionalizacionModule } from './regionalizacion/regionalizacion.module'
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

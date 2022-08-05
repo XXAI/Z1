@@ -54,6 +54,8 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::apiResource('trabajador-salud',      'API\Modulos\TrabajadorSaludController');
     Route::apiResource('trabajador-externo',    'API\Modulos\TrabajadorExternoController');
     Route::get('catalogo-municipio/{id}',       'API\Modulos\CatalogosController@catalogoMunicipio');
+    Route::get('catalogo-microrregion/{id}',       'API\Modulos\CatalogosController@catalogoMicrorregion');
+    
     Route::get('catalogo-localidad',            'API\Modulos\CatalogosController@catalogoLocalidad');
     Route::get('catalogo-clues',                'API\Modulos\CatalogosController@catalogoClues');
     Route::apiResource('profile',               'API\ProfileController')->only([ 'show', 'update']);
@@ -61,11 +63,15 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::get('ver-info-clue/{id}',    'API\Modulos\CluesController@infoClue');
     Route::get('busqueda-clues',    'API\Modulos\SearchCatalogsController@getCluesAutocomplete');
     Route::get('catalogo_municipio',    'API\Modulos\CatalogosController@getMunicipioAutocomplete');
+    Route::get('catalogo-mapa',    'API\Modulos\CatalogosController@getCatalogoMapa');
+    
     Route::apiResource('profile',       'API\ProfileController')->only([ 'show', 'update']);
     
     Route::apiResource('reginalizacion-clues',          'API\Modulos\RegionalizacionCluesController');
     Route::get('regionalizacion-localidades/{id}',      'API\Modulos\RegionalizacionCluesController@localidades');
     Route::get('regionalizacion-localidades-filtro/{id}','API\Modulos\RegionalizacionCluesController@filtroLocalidades');
+    Route::get('get-data-mapa',                         'API\Modulos\RegionalizacionCluesController@getMapa');
+    Route::get('get-data-regionalizacion/{id}',              'API\Modulos\RegionalizacionCluesController@getLocalidades');
     
     Route::apiResource('reginalizacion-clues-personal',  'API\Modulos\RegionalizacionCluesPersonalController');
     Route::apiResource('localidad',                      'API\Modulos\LocalidadController');

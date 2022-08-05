@@ -26,13 +26,13 @@ export class FormularioComponent implements OnInit {
   catalogo:any = [];
   isLoading:boolean = false;
   localidadIsLoading: boolean = false;
-  filteredLocalidad: Observable<any[]>;
+  filteredLocalidad: any[];
 
   cluesIsLoading: boolean = false;
-  filteredClues: Observable<any[]>;
+  filteredClues: any[];
   
   personalIsLoading: boolean = false;
-  filteredPersonal: Observable<any[]>;
+  filteredPersonal: any[];
 
   searchQuery:string = "";
   searchQueryExterno:string = "";

@@ -26,7 +26,7 @@ export class FormularioComponent implements OnInit {
   catalogo:any = [];
   isLoading:boolean = false;
   localidadIsLoading: boolean = false;
-  filteredLocalidad: Observable<any[]>;
+  filteredLocalidad: any[];
 
   constructor(
     private sharedService: SharedService, 

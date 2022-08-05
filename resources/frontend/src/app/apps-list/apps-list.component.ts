@@ -9,7 +9,7 @@ import { App } from './apps';
 })
 export class AppsListComponent implements OnInit {
 
-  apps: App[];
+  apps: App[] | undefined;
   breakpoint = 6;
 
   constructor(private appsService: AppsListService) { }
@@ -23,7 +23,7 @@ export class AppsListComponent implements OnInit {
     this.apps = this.appsService.getApps();
   }
 
-  onResize(event) {
+  onResize(event:any) {
     this.breakpoint = (event.target.innerWidth <= 599) ? 3 : 6;
   }
 

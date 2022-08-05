@@ -32,7 +32,7 @@ export class FormularioComponent implements OnInit {
   catalogo:any = [];
   isLoading:boolean = false;
   localidadIsLoading: boolean = false;
-  filteredLocalidad: Observable<any[]>;
+  filteredLocalidad: any[];
   searchQuery:string = "";
   id_editar:number = 0;
   indexTab:number = 0;
@@ -66,16 +66,17 @@ export class FormularioComponent implements OnInit {
   //lineas:any = [{lat}]
   tipoLocalidad:any = [{id:'AREA DE INFLUENCIA', descripcion: 'AREA DE INFLUENCIA'}, {id:'ACCIÓN INTENSIVA', descripcion: 'ACCIÓN INTENSIVA'}];
 
-  iconMap = {
-    url: '../../assets/icons/pin_localidad.png',
+ iconMap = {
+    url: '../../assets/icons/pin_localidad_reg.png',
     iconHeigh: 10,
     scaledSize: {height: 20, width: 15}
   }
 
+
   iconUnidad = {
     url: '../../assets/icons/UnidadSsa.png',
-    iconHeigh: 10,
-    scaledSize: {height: 40, width: 30}
+    //iconHeigh: 10,
+    scaledSize: {height: 30, width: 20}
   }
 
   constructor(
@@ -216,8 +217,8 @@ export class FormularioComponent implements OnInit {
     this.regionalizacionService.getFilterLocalidadesList(this.data.clues, params).subscribe(
       response => {
         this.dataSource = response.data.data;
-        this.latUnidad = Number(response.clues.longitud);
-        this.longUnidad = Number(response.clues.latitud);
+        this.latUnidad = Number(response.clues.latitud);
+        this.longUnidad = Number(response.clues.longitud);
         this.unidadMedica = response.clues;
         this.tipoMicroregion = this.unidadMedica.catalogo_microrregion.descripcion+" "+this.unidadMedica.catalogo_microrregion.descripcion_tipo;
         

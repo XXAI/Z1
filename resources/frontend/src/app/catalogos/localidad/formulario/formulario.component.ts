@@ -29,7 +29,7 @@ export class FormularioComponent implements OnInit {
 
   catalogo:any = [];
   localidadIsLoading: boolean = false;
-  filteredLocalidad: Observable<any[]>;
+  filteredLocalidad: any[];
   isLoading:boolean = false;
   poblacion:any;
 

@@ -1,9 +1,8 @@
-<h1 mat-dialog-title style="background-color: #008b8b; color: white; padding: 5pt 10pt; border-bottom: 3px solid #CFCFCF; margin: 0pt;">REGIONALIZACIÓN 
-({{ tipoMicroregion }} ) [ CLUES: ({{ unidadMedica.clues }}) {{unidadMedica.descripcion}} ]
+<h1 mat-dialog-title style="background-color: #008b8b; color: white; padding: 5pt 10pt; border-bottom: 3px solid #CFCFCF; margin: 0pt;">REGIONALIZACIÓN ({{ tipoMicroregion }} ) [ CLUES: ({{ unidadMedica.clues }}) {{unidadMedica.descripcion}} ]
 </h1>
 <!--<hr style="border: 1px solid #3f51b5;">-->
 <div mat-dialog-content>
-    
+
     <mat-tab-group [(selectedIndex)]="indexTab">
         <mat-tab label="LOCALIDADES REGIONALIZADAS" [disabled]="edicion">
             <section class="profile">
@@ -38,7 +37,7 @@
                                     <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                         <mat-icon>close</mat-icon>
                                     </button>
-        
+
                                 </mat-form-field>
                             </div>
                             <div fxFlex="none" fxFlex.xs="100">
@@ -49,7 +48,7 @@
                                     </button>
                                 </section>
                             </div>
-                        </div>            
+                        </div>
 
                         <mat-card fxFlex.xs="100%" fxFlex="90%">
                             <mat-divider [inset]="true"></mat-divider>
@@ -89,7 +88,9 @@
                                         </ng-container>
 
                                         <ng-container matColumnDef="actions">
-                                            <th mat-header-cell *matHeaderCellDef  style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
+                                            <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </th>
                                             <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
                                                 <button mat-button [matMenuTriggerFor]="menu" *ngIf="row.tipo_localidad_regionalizacion !='SEDE'">
                                                     <mat-icon>more_vert</mat-icon>
@@ -216,7 +217,7 @@
         <mat-tab label="MAPA" [disabled]="edicion">
             <agm-map style="height: 600px;width: 100%;" [latitude]="lat" [longitude]="long" [zoom]="zoom" [disableDefaultUI]="false" [disableDoubleClickZoom]="true" [zoomControl]="false">
 
-                <agm-marker [longitude]="latUnidad" [latitude]="longUnidad" [iconUrl]="iconUnidad">
+                <agm-marker [longitude]="longUnidad" [latitude]="latUnidad" [iconUrl]="$any(iconUnidad)">
                     <agm-info-window>
                         <strong>{{ unidadMedica.clues }} - {{ unidadMedica.descripcion }}</strong>
                         <br>
@@ -227,12 +228,12 @@
                     </agm-info-window>
                 </agm-marker>
                 <agm-polyline *ngFor="let unidad of localidadesRegionalizadas">
-                    <agm-polyline-point [latitude]="longUnidad" [longitude]="latUnidad">
+                    <agm-polyline-point [latitude]="latUnidad" [longitude]="longUnidad">
                     </agm-polyline-point>
-                    <agm-polyline-point [longitude]="unidad.lat" [latitude]="unidad.long">
+                    <agm-polyline-point [longitude]="unidad.long" [latitude]="unidad.lat">
                     </agm-polyline-point>
                 </agm-polyline>
-                <agm-marker *ngFor="let item of localidades" [latitude]="item.catalogo_localidad.longitud" [longitude]="item.catalogo_localidad.latitud" [iconUrl]="iconMap">
+                <agm-marker *ngFor="let item of localidades" [latitude]="item.catalogo_localidad.latitud" [longitude]="item.catalogo_localidad.longitud" [iconUrl]="$any(iconMap)">
                     <agm-info-window>
                         <strong>({{ item.clues }}) - {{ item.catalogo_clues.descripcion }}</strong>
                         <br>

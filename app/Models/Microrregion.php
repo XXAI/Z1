@@ -13,4 +13,8 @@ class Microrregion extends Model
     protected $primaryKey = 'id';
     public $incrementing = false;
 
+    public function tipo_unidad(){
+        return $this->belongsTo('App\Models\TipoUnidad','catalogo_tipo_unidad_id','id');
+    }
+
 }

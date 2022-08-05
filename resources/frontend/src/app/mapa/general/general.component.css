@@ -1,0 +1,67 @@
+.example-container {
+    height: 100%;
+}
+
+.filtro {
+    min-width: 300px;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+
+/* Column Widths */
+
+.mat-column-actions {
+    max-width: 75px;
+    min-width: 60px;
+}
+
+.selected-item {
+    background-color: lightskyblue;
+}
+
+.not-results-found {
+    text-align: center;
+    font-style: italic;
+}
+
+.loading-results {
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    text-align: center;
+    font-style: italic;
+}
+
+.loading-results mat-spinner {
+    margin: 0 auto;
+}
+
+.hide {
+    display: none;
+}
+
+.mat-header-cell {
+    color: white !important;
+}
+
+.cargando {
+    bottom: 0px;
+    width: 100px;
+    right: 0px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    margin-bottom: 66px;
+}

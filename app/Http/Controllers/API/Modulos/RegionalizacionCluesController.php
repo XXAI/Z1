@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use \Validator,\Hash, \Response, \DB;
 use App\Models\TrabajadorExterno;
 use App\Models\RegionalizacionClues;
+use App\Models\Microrregion;
 use App\Models\Clues;
 use App\Models\Localidad;
 
@@ -224,6 +225,36 @@ class RegionalizacionCluesController extends Controller
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
     }
+    public function getLocalidades($id)
+    {
+        try{
+            $object = Localidad::Join("regionalizacion_clues", "regionalizacion_clues.catalogo_localidad_id", "catalogo_localidad.id")
+            ->whereNull("regionalizacion_clues.deleted_at")
+            ->where("regionalizacion_clues.tipo_localidad_regionalizacion","!=", "'SEDE'")
+            ->whereRAW("regionalizacion_clues.clues='".$id."'")
+            ->get();
+
+            $personal_salud = DB::Table("regionalizacion_rh")->join("trabajador", "trabajador.id", "regionalizacion_rh.trabajador_id")
+                                               ->join("catalogo_tipo_trabajador", "trabajador.tipo_personal_id", "catalogo_tipo_trabajador.id")
+                                               ->whereRaw("regionalizacion_rh.clues = '".$id."'")
+                                               ->where("regionalizacion_rh.tipo_trabajador_id",1)
+                                               ->groupBy("trabajador.tipo_personal_id")
+                                               ->select("catalogo_tipo_trabajador.abreviatura","catalogo_tipo_trabajador.descripcion",DB::RAW("count(*) as cantidad"))
+                                               ->get();
+
+            $externo = DB::Table("regionalizacion_rh")->join("trabajador_externo", "trabajador_externo.id", "regionalizacion_rh.trabajador_id")
+                                                ->join("regionalizacion_clues", "regionalizacion_clues.catalogo_localidad_id", "regionalizacion_rh.catalogo_localidad_id")
+                                               ->join("catalogo_tipo_trabajador", "trabajador_externo.tipo_personal_id", "catalogo_tipo_trabajador.id")
+                                               ->whereRaw("regionalizacion_clues.clues = '".$id."'")
+                                               ->where("regionalizacion_rh.tipo_trabajador_id",2)
+                                               ->groupBy("trabajador_externo.tipo_personal_id")
+                                               ->select("catalogo_tipo_trabajador.abreviatura","catalogo_tipo_trabajador.descripcion",DB::RAW("count(*) as cantidad"))
+                                               ->get();
+            return response()->json(['localidades'=>$object, "salud"=>$personal_salud, "externo"=>$externo], HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
 
     private function getUserAccessData($loggedUser = null){
         if(!$loggedUser){
@@ -251,5 +282,73 @@ class RegionalizacionCluesController extends Controller
         }
 
         return $accessData;
+    }
+
+    public function getMapa(Request $request)
+    {
+        try{
+            $inputs = $request->all();
+            $objeto = Clues::with("catalogo_localidad", "catalogo_microrregion.tipo_unidad")->whereNull("deleted_at");
+            $localidadesReg = Localidad::whereNull("deleted_at");
+            $localidadesNoReg = Localidad::whereNull("deleted_at");
+           
+                
+            if($inputs['jurisdiccion_id']!=0 && $inputs['jurisdiccion_id']!="")
+            {
+                $objeto = $objeto->where("distrito_id",$inputs['jurisdiccion_id']);
+            }
+
+            if($inputs['municipio_id']!=0 && $inputs['municipio_id']!="")
+            {
+                $objeto = $objeto->whereRaw("catalogo_localidad_id in (select id from catalogo_localidad where catalogo_municipio_id =".$inputs['municipio_id'].")");
+            }
+            
+            if($inputs['tipo']!=0 && $inputs['tipo']!="")
+            {
+                if($inputs['microrregion']!=0 && $inputs['microrregion']!="")
+                {
+                    $objeto = $objeto->where("catalogo_microrregion_id",$inputs['microrregion']);
+                }else
+                {
+                    $objeto = $objeto->whereRaw("catalogo_microrregion_id in (select id from catalogo_microregion where catalogo_tipo_unidad_id =".$inputs['tipo'].")");
+                }
+            }
+
+            if($inputs['clues']!="")
+            {
+                $objeto = $objeto->where("clues",$inputs['clues']);
+            }
+            $objeto = $objeto->get();
+            
+            if($inputs['regionalizacion'] != 0)
+            {
+                
+                if($inputs['jurisdiccion_id']!=0 && $inputs['jurisdiccion_id']!="")
+                {
+                    if($inputs['municipio_id']!=0 && $inputs['municipio_id']!="")
+                    {
+                        $localidadesReg = $localidadesReg->where("catalogo_municipio_id",$inputs['municipio_id']);
+                        $localidadesNoReg = $localidadesNoReg->where("catalogo_municipio_id",$inputs['municipio_id']);
+                    }else{
+                        $localidadesReg = $localidadesReg->whereRaw("catalogo_municipio_id in (select id from catalogo_municipio where catalogo_distrito_id =".$inputs['jurisdiccion_id'].")");
+                        $localidadesNoReg = $localidadesNoReg->whereRaw("catalogo_municipio_id in (select id from catalogo_municipio where catalogo_distrito_id =".$inputs['jurisdiccion_id'].")");
+                    }
+                }
+                if($inputs['regionalizacion'] == 1)
+                {
+                    $localidadesReg = $localidadesReg->whereRaw("id in (select catalogo_localidad_id from regionalizacion_clues where deleted_at is null)");
+                    $localidadesReg = $localidadesReg->get();
+                }else if($inputs['regionalizacion'] == 2){
+                    $localidadesNoReg = $localidadesNoReg->whereRaw("id not in (select catalogo_localidad_id from regionalizacion_clues where deleted_at is null)");
+                    $localidadesNoReg = $localidadesNoReg->get();
+                }
+                    
+            }
+
+            return response()->json(['clues'=>$objeto, "localidadesReg"=>$localidadesReg, "localidadesNoReg"=>$localidadesNoReg], HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+        
     }
 }

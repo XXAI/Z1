@@ -29,7 +29,7 @@ export const APPS:App [] = [
     
       ],
     },
-    { name:'Regionalizacion',         route: "regionalizacion",     icon: "assets/icons/regionalizacion.png",           isHub:true, hideHome:true, 
+    { name:'Regionalizacion',         route: "regionalizacion",     icon: "assets/icons/regionalizar.png",           isHub:true, hideHome:true, 
       children:[
         {name:'Unidades Médicas',            route:'regionalizacion/clues',            icon:'insert_drive_file', permission:""},
         /*{name:'Localidad Colonia',           route:'regionalizacion/localidad-coloni',        icon:'insert_drive_file', permission:""},*/
@@ -37,7 +37,7 @@ export const APPS:App [] = [
     
       ],
     },
-
+    { name:"Mapa",          route: "mapa",      icon: "assets/icons/regionalizacion.png",              permission:"JuGmLNcjjgiRyOaqycHDjA7Zj5zEuXnT" },
     
     { name:'Herramientas Dev',  route: "dev-tools",     icon: "assets/icons/toolbox.svg",           isHub:true, hideHome:true, 
       children:[

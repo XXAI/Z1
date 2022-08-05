@@ -1,0 +1,253 @@
+<mat-drawer-container class="example-container" hasBackdrop="true">
+    <mat-drawer #drawer mode="over" class="filtro" style="text-align: center;">
+        <form [formGroup]="regionalizacionForm" style="width: 100%;">
+            <section fxFlex="100" fxLayout="column" fxLayoutAlign="space-evenly stretch">
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                    <mat-form-field fxFlex="100" fxFlex.xs="100">
+                        <mat-label>JURISDICCIÓN</mat-label>
+                        <mat-select formControlName="jurisdiccion_id" #jurisdiccion (selectionChange)="CargarMunicipios(jurisdiccion.value)">
+                            <mat-option [value]="0">
+                                TODOS
+                            </mat-option>
+                            <mat-option *ngFor="let item of jurisdicciones" [value]="item.id">
+                                {{ item.clave_distrito }}.- {{item.descripcion}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                    <mat-form-field fxFlex="100" fxFlex.xs="100">
+                        <mat-label>MUNICIPIO</mat-label>
+                        <mat-select formControlName="municipio_id">
+                            <mat-option [value]="0">
+                                TODOS
+                            </mat-option>
+                            <mat-option *ngFor="let item of municipios" [value]="item.id">
+                                {{ item.clave_municipio }} - {{item.descripcion}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                    <mat-form-field fxFlex="100" fxFlex.xs="100">
+                        <mat-label>TIPO UNIDAD</mat-label>
+                        <mat-select formControlName="tipo" #FtipoUnidad (selectionChange)="CargarMicrorregion(FtipoUnidad.value)">
+                            <mat-option [value]="0">
+                                TODOS
+                            </mat-option>
+                            <mat-option *ngFor="let item of tipoUnidad" [value]="item.id" matTooltip="{{item.descripcion}}">
+                                {{ item.id }}.- {{item.descripcion}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                    <mat-form-field fxFlex="100" fxFlex.xs="100">
+                        <mat-label>TIPO MICRORREGIÓN</mat-label>
+                        <mat-select formControlName="microrregion">
+                            <mat-option [value]="0">
+                                TODOS
+                            </mat-option>
+                            <mat-option *ngFor="let item of tipoMicrorregion" [value]="item.id" matTooltip="{{item.descripcion_tipo}}">
+                                {{ item.id }}.- {{item.descripcion_tipo}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                    <mat-form-field fxFlex="100" fxFlex.xs="100">
+                        <mat-label>CLUES</mat-label>
+                        <input matInput autocomplete="off" formControlName="clues" placeholder="CLUES">
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                    <mat-form-field fxFlex="100" fxFlex.xs="100">
+                        <mat-label>REGIONALIZADO</mat-label>
+                        <mat-select formControlName="regionalizacion">
+                            <mat-option [value]="0">
+                                TODOS
+                            </mat-option>
+                            <mat-option *ngFor="let item of regionalizado" [value]="item.id">
+                                {{item.descripcion}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                    <button mat-raised-button color="primary" fxFlex="100" fxFlex.xs="100" (click)="BuscarUnidades()" [disabled]="DisplayFiltro"><mat-icon>search</mat-icon> BUSCAR</button>
+                </div>
+            </section>
+        </form>
+    </mat-drawer>
+
+    <mat-drawer-content>
+        <section class="profile ">
+            <div fxLayout="row " fxLayoutAlign="space-evenly center ">
+                <section fxFlex="95 " fxLayout="column " fxLayoutAlign="center ">
+                    <button mat-raised-button (click)="drawer.toggle() "><mat-icon>menu</mat-icon></button>
+
+                </section>
+            </div>
+        </section>
+
+
+
+        <agm-map style="height: 95%;width: 100%; " [latitude]="lat " [longitude]="long " [zoom]="zoom " [disableDefaultUI]="false " [disableDoubleClickZoom]="true " [zoomControl]="false ">
+            <agm-marker *ngFor="let item of mapa" [longitude]="item.longitud" [latitude]="item.latitud" [iconUrl]="$any(iconUnidad)" (markerClick)="markerClicked(item)">
+
+            </agm-marker>
+            <agm-marker *ngFor="let item of localidadesReg" [longitude]="item.longitud" [latitude]="item.latitud" [iconUrl]="$any(iconLocalidadReg)">
+            </agm-marker>
+            <agm-marker *ngFor="let item of localidadesNoReg" [longitude]="item.longitud" [latitude]="item.latitud" [iconUrl]="$any(iconLocalidadNoReg)">
+                <agm-info-window>
+                    <strong>{{ item.descripcion }}</strong>
+                </agm-info-window>
+            </agm-marker>
+            <agm-marker *ngFor="let item of localidadesPoint" [longitude]="item.longitud" [latitude]="item.latitud" [iconUrl]="$any(iconLocalidadReg)">
+                <agm-info-window>
+                    <strong>{{ item.descripcion }}</strong>
+                </agm-info-window>
+            </agm-marker>
+            <agm-polyline *ngFor="let item of localidadesRegionalizadas">
+                <agm-polyline-point [latitude]="latitudOrigen" [longitude]="longitudOrigen">
+                </agm-polyline-point>
+                <agm-polyline-point [latitude]="item.latitud" [longitude]="item.longitud">
+                </agm-polyline-point>
+            </agm-polyline>
+        </agm-map>
+
+        <div style="position: relative;" *ngIf="DisplayFiltro">
+            <div style="position: absolute;" class="cargando">
+                <div>Cargando</div>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+        </div>
+
+        <div style="position: relative; " *ngIf="displayInfo">
+            <mat-accordion style="position: absolute; bottom:0px; width: 100%; ">
+                <mat-expansion-panel (opened)="panelOpenState=true " (closed)="panelOpenState=false ">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            UNIDAD: {{ UnidadSeleccionada }}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            DISTRITO: {{ DistritoSeleccionado }}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <section class="profile">
+                        <div fxLayout="row" fxLayoutAlign="space-evenly center">
+                            <section fxFlex="100" fxLayout="column" fxLayoutAlign="center">
+                                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                                    <div fxFlex="25" fxFlex.xs="100">
+                                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
+                                            <div style="width: 100%; height:500px; overflow-y: auto;">
+                                                <mat-list fxFlex.xs="100">
+                                                    <mat-divider></mat-divider>
+                                                    <mat-list-item>
+                                                        <mat-icon mat-list-icon>pin_drop</mat-icon>
+                                                        <div mat-line>SEDE</div>
+                                                        <div mat-line style="white-space: pre-line;"> {{ Sede }} </div>
+                                                    </mat-list-item>
+                                                    <mat-divider></mat-divider>
+                                                    <mat-list-item>
+                                                        <mat-icon mat-list-icon>info</mat-icon>
+                                                        <div mat-line>TIPO MICRORREGIÓN</div>
+                                                        <div mat-line style="white-space: pre-line;"> {{ Microrregion }} </div>
+                                                    </mat-list-item>
+                                                    <mat-divider></mat-divider>
+                                                    <mat-list-item>
+                                                        <mat-icon mat-list-icon>label</mat-icon>
+                                                        <div mat-line>TIPO UNIDAD</div>
+                                                        <div mat-line style="white-space: pre-line;"> {{ TipoUnidad }} </div>
+                                                    </mat-list-item>
+                                                    <mat-divider></mat-divider>
+                                                </mat-list>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div fxFlex="50" fxFlex.xs="100">
+                                        <div style="width: 100%; height:500px; overflow-y: auto;">
+                                            <table #dataTable mat-table [dataSource]="dataSource" class="data-table" matSort>
+                                                <!-- ID Column -->
+                                                <ng-container matColumnDef="localidad">
+                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> LOCALIDAD </th>
+                                                    <td mat-cell *matCellDef="let row">
+                                                        <b>{{ row.descripcion }}</b>
+                                                        <div style="font-size: 8pt;"> {{ row.id }}</div>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="distancia">
+                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> DISTANCIA (KM) </th>
+                                                    <td mat-cell *matCellDef="let row">
+                                                        <b>{{ row.distancia }}</b>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="tiempo">
+                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> TIEMPO </th>
+                                                    <td mat-cell *matCellDef="let row">
+                                                        <b>{{ row.tiempo }}</b>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="tipo">
+                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO </th>
+                                                    <td mat-cell *matCellDef="let row">
+                                                        <b>{{ row.tipo_localidad_regionalizacion }}</b>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="noResultsFound">
+                                                    <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                                                        No se encontraron registros
+                                                    </td>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                                <tr mat-row [ngClass]="{'selected-item': i==selectedItemIndex}" *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+
+                                                <tr mat-footer-row *matFooterRowDef="['noResultsFound']" class="not-results-found" [ngClass]="{'hide':!(dataSource!=null && dataSource.length==0)}"></tr>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                    <div fxFlex="25" fxFlex.xs="100">
+                                        <div style="width: 100%; height:500px; overflow: auto;">
+                                            <mat-list fxFlex.xs="100">
+                                                <div mat-subheader>Personal Salud</div>
+                                                <mat-list-item *ngFor="let item of PersonalSalud">
+                                                    <mat-icon mat-list-icon>person_pin</mat-icon>
+                                                    <div mat-line>{{ item.abreviatura}} {{ item.descripcion }}</div>
+                                                    <div mat-line>{{ item.cantidad }} </div>
+                                                </mat-list-item>
+                                                <mat-list-item *ngIf="PersonalSalud.length == 0">
+                                                    <mat-icon mat-list-icon>person_pin</mat-icon>
+                                                    <div mat-line>SIN REGISTROS</div>
+
+                                                </mat-list-item>
+                                                <mat-divider></mat-divider>
+
+                                                <div mat-subheader>Personal Externo</div>
+                                                <mat-list-item *ngFor="let item of PersonalExterno">
+                                                    <mat-icon mat-list-icon>person</mat-icon>
+                                                    <div mat-line>{{ item.abreviatura}} {{ item.descripcion }}</div>
+                                                    <div mat-line>{{ item.cantidad }} </div>
+                                                </mat-list-item>
+                                                <mat-list-item *ngIf="PersonalExterno.length == 0">
+                                                    <mat-icon mat-list-icon>person</mat-icon>
+                                                    <div mat-line>SIN REGISTROS</div>
+
+                                                </mat-list-item>
+                                                <mat-divider></mat-divider>
+                                            </mat-list>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </section>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+
+    </mat-drawer-content>
+
+</mat-drawer-container>

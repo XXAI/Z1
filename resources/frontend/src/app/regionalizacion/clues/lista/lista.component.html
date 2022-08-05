@@ -8,7 +8,7 @@
                 <div fxLayout="row" fxLayout.xs="column">
                     <div fxFlex fxLayout="row wrap">
                         <mat-form-field fxFill appearance="outline">
-                            <mat-label>Buscar</mat-label>
+                            <mat-label>HBuscar</mat-label>
                             <input matInput [(ngModel)]="searchQuery" (keyup.escape)="cleanSearch()" (keyup.enter)="applyFilter()" placeholder="Buscar">
                             <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                 <mat-icon>close</mat-icon>
@@ -79,7 +79,9 @@
                             </ng-container>
 
                             <ng-container matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef  style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
+                                <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                                    <mat-icon>more_vert</mat-icon>
+                                </th>
                                 <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
                                     <button mat-button [matMenuTriggerFor]="menu">
                                         <mat-icon>more_vert</mat-icon>

@@ -1,1 +1,0 @@
-{"ast":null,"code":"export class CustomValidator {\n  static notEqualToValidator(formControlName) {\n    return control => {\n      if (control.value != null) {\n        return control.value == control.parent.get(formControlName).value ? {\n          notEqualTo: true\n        } : null;\n      }\n    };\n  }\n\n}","map":null,"metadata":{},"sourceType":"module"}

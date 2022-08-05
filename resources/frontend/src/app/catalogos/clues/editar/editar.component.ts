@@ -29,8 +29,8 @@ export class EditarComponent implements OnInit {
   clues:any;
   estatus_clues:boolean = false;
   datos_clues:any;
-  filteredClues: Observable<any[]>;
-  filteredLocalidad: Observable<any[]>;
+  filteredClues: any[];
+  filteredLocalidad: any[];
   cluesIsLoading: boolean = false;
   localidadIsLoading: boolean = false;
 
@@ -46,7 +46,7 @@ export class EditarComponent implements OnInit {
   statusIcon: string;
 
   responsableIsLoading: boolean = false;
-  filteredResponsable: Observable<any[]>;
+  filteredResponsable: any[];
   
   fechaActual:any = '';
   maxDate:Date;

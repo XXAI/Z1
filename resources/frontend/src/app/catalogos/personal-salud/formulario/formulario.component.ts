@@ -25,7 +25,7 @@ export interface FormularioComponentData {
 export class FormularioComponent implements OnInit {
   catalogo:any = [];
   cluesIsLoading: boolean = false;
-  filteredClues: Observable<any[]>;
+  filteredClues: any[];
   isLoading:boolean = false;
   localidad_municipio_sede:string = "";
   

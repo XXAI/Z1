@@ -4,11 +4,12 @@
             <div class="data-loading-shade" *ngIf="isLoading">
                 <mat-spinner></mat-spinner>
             </div>
+
             <mat-card fxFlex.xs="100%" fxFlex="90%">
                 <div fxLayout="row" fxLayout.xs="column">
                     <div fxFlex fxLayout="row wrap">
                         <mat-form-field fxFill appearance="outline">
-                            <mat-label>Buscar</mat-label>
+                            <mat-label>Buscar x</mat-label>
                             <input matInput [(ngModel)]="searchQuery" (keyup.escape)="cleanSearch()" (keyup.enter)="applyFilter()" placeholder="Buscar">
                             <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                 <mat-icon>close</mat-icon>
@@ -46,8 +47,8 @@
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> CLUES </th>
                                 <td mat-cell *matCellDef="let row">
                                     <b>{{ row.clues }}</b>
-                                <div style="font-size: 9pt;">DISTRITO {{ row.distrito.clave_distrito }} {{ row.distrito.descripcion }}</div>
-                            </td>
+                                    <div style="font-size: 9pt;">SDISTRITO {{ row.distrito.clave_distrito }} {{ row.distrito.descripcion }}</div>
+                                </td>
                             </ng-container>
                             <!-- Unidad Medica Column  -->
                             <ng-container matColumnDef="Unidad">
@@ -58,7 +59,7 @@
                             <!-- Localidad Column  -->
                             <ng-container matColumnDef="Localidad">
                                 <th mat-header-cell *matHeaderCellDef> LOCALIDAD (SEDE)</th>
-                                <td mat-cell *matCellDef="let row"> 
+                                <td mat-cell *matCellDef="let row">
                                     <div *ngIf="row.catalogo_localidad != null">
                                         <b> [{{ row.catalogo_localidad.clave_localidad }}] {{ row.catalogo_localidad.descripcion }}</b>
                                         <div style="font-size: 9pt">[{{ row.catalogo_localidad.municipio.clave_municipio }}] {{row.catalogo_localidad.municipio.descripcion }}</div>
@@ -66,13 +67,15 @@
                                     <div *ngIf="row.catalogo_localidad == null">
                                         NO ASIGNADO
                                     </div>
- 
+
                                 </td>
                             </ng-container>
 
-                           
+
                             <ng-container matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
+                                <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                                    <mat-icon>more_vert</mat-icon>
+                                </th>
                                 <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
                                     <button mat-button [matMenuTriggerFor]="menu">
                                         <mat-icon>more_vert</mat-icon>

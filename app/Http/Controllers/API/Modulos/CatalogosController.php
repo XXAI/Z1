@@ -18,6 +18,7 @@ use App\Models\TipoTrabajador;
 use App\Models\TipoCamino;
 use App\Models\TipoLocalidad;
 use App\Models\Microrregion;
+use App\Models\TipoUnidad;
 
 class CatalogosController extends Controller
 {
@@ -73,6 +74,40 @@ class CatalogosController extends Controller
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
     }
+
+    public function getDistritos()
+    {
+        try{
+            $distrito           = Distrito::orderBy("id")->get();
+            
+            return response()->json($distrito,HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
+    public function getTipoUnidad()
+    {
+        try{
+            $obj           = TipoUnidad::orderBy("id")->get();
+            
+            return response()->json($obj,HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
+
+    public function getCatalogoMapa()
+    {
+        try{
+            $obj['distrito'] = $this->getDistritos()->original;
+            $obj['tipoUnidad'] = $this->getTipoUnidad()->original;
+            
+            
+            return response()->json($obj,HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
     
     public function catalogoMunicipio(Request $request, $id)
     {
@@ -82,6 +117,18 @@ class CatalogosController extends Controller
             $municipio = Municipio::where("catalogo_distrito_id", $id)->orderBy("id")->get();
             
             return response()->json($municipio,HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
+    
+    public function catalogoMicrorregion(Request $request, $id)
+    {
+        try{
+            $params = $request->all();
+            $obj = Microrregion::where("catalogo_tipo_unidad_id", $id)->orderBy("id")->get();
+            
+            return response()->json($obj,HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
@@ -105,6 +152,7 @@ class CatalogosController extends Controller
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
     }
+
     
     public function catalogoLocalidad(Request $request)
     {

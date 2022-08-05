@@ -16,9 +16,9 @@ import { startWith, map, throwIfEmpty, debounceTime, tap, switchMap, finalize } 
 export class RegionesDialogComponent implements OnInit {
 
   capacitacionIsLoading: boolean = false;
-  filteredTitulo: Observable<any[]>;
+  filteredTitulo: any[];
   institucionIsLoading: boolean = false;
-  filteredInstitucion: Observable<any[]>;
+  filteredInstitucion: any[];
   resultado:any = { estatus: false, datos:{}, dias:[]};
   texto_grado_seleccionado:string = "";
   tituloIsLoading:boolean = false;
@@ -27,7 +27,7 @@ export class RegionesDialogComponent implements OnInit {
   catalogos: any = {};
   filteredCatalogs:any = {};
 
-  filteredClues: Observable<any[]>;
+  filteredClues: any[];
   cluesIsLoading: boolean = false;
   
   constructor(

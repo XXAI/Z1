@@ -104,13 +104,10 @@
         [disableDoubleClickZoom]="true"
         [zoomControl]="false">
 
-        <agm-marker 
+        <!--<agm-marker 
             [latitude]="lat"
             [longitude]="long"
-            [iconUrl]="iconMap"
-
-
-            >
+            [iconUrl]="iconMap">
             <agm-info-window>
                 <strong>({{ dataClues.clues }}) - {{ dataClues.descripcion }}</strong>
                 <br>
@@ -122,7 +119,7 @@
                 <br>
                 <strong>Teléfono: </strong>  {{ dataClues.telefono }}
             </agm-info-window>
-        </agm-marker>
+        </agm-marker>-->
 
         <div *ngFor="let reg of dataClues.regionalizaciones">
 

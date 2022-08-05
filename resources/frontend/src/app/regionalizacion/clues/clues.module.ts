@@ -27,7 +27,7 @@ import { FormularioComponent } from './formulario/formulario.component';
     MatDatepickerModule,
     MatNativeDateModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyARYKzaXSeSg_CeqzNVLTz2xtPX-EzQZnY'
+      apiKey: 'AIzaSyDs6qDgnfMwaHCrOhA0tCvaUPgANTD0Urw'
     })
   ],
   providers:[
