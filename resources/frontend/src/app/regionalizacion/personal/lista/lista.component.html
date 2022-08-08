@@ -13,16 +13,18 @@
                             <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                 <mat-icon>close</mat-icon>
                             </button>
-
+                            <mat-hint>
+                                <mat-slide-toggle #showAdvancedFilter (change)="toggleAdvancedFilter(showAdvancedFilter.checked)">Filtro Avanzado</mat-slide-toggle>
+                            </mat-hint>
                         </mat-form-field>
                     </div>
                     <div fxFlex="none" fxFlex.xs="100">
                         <div fxFlex></div>
                         <section class="search-button">
-                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt; padding: 5pt;">
+                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt; padding: 5pt;" *ngIf="!showAdvancedFilter.checked">
                                 <mat-icon >search</mat-icon> 
                             </button>
-                            
+
                             <button mat-raised-button color="primary" (click)="agregar()" style="margin-right: 10pt; padding: 5pt;">
                                 <mat-icon >add_circle</mat-icon> 
                             </button>
@@ -30,6 +32,29 @@
                     </div>
                 </div>
             </mat-card>
+            <mat-accordion class="advanced-filter-container">
+                <mat-expansion-panel #advancedFilter class="advanced-filter" [formGroup]="filterForm">
+                    <br>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-evenly center">
+                        <mat-form-field fxFlex="100">
+                            <mat-label>CLUES</mat-label>
+                            <input matInput placeholder="CLUES" formControlName='clues'>
+                        </mat-form-field>
+                        <div fxFlex></div>
+                        <div fxFlex="none">
+                            <button mat-flat-button (click)="filterForm.reset()">
+                                Limpiar
+                            </button>
+                        </div>
+                        <div fxFlex="none">
+                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt; padding: 5pt;">
+                                <mat-icon>search</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+            </mat-accordion>
             <mat-tab-group>
                 <mat-tab label="PERSONAL SALUD">
                     <mat-card fxFlex.xs="100%" fxFlex="100%">
@@ -70,12 +95,14 @@
 
 
                                     <ng-container matColumnDef="actions">
-                                        <th mat-header-cell *matHeaderCellDef  style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
+                                        <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </th>
                                         <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
                                             <button mat-button [matMenuTriggerFor]="menu">
                                                 <mat-icon>more_vert</mat-icon>
                                             </button>
-        
+
                                             <mat-menu #menu="matMenu">
                                                 <button mat-menu-item (click)="editar(row, 1)"><mat-icon color="primary">edit</mat-icon>Editar</button>
                                                 <button mat-menu-item (click)="transferir(row, 1)"><mat-icon color="primary">call_split</mat-icon>Transferir</button>
@@ -138,12 +165,14 @@
 
 
                                     <ng-container matColumnDef="actions">
-                                        <th mat-header-cell *matHeaderCellDef  style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
+                                        <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </th>
                                         <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
                                             <button mat-button [matMenuTriggerFor]="menu">
                                                 <mat-icon>more_vert</mat-icon>
                                             </button>
-        
+
                                             <mat-menu #menu="matMenu">
                                                 <button mat-menu-item (click)="editar(row, 2)"><mat-icon color="primary">edit</mat-icon>Editar</button>
                                                 <button mat-menu-item (click)="eliminar(row, 2)"><mat-icon color="warn">close</mat-icon>Eliminar</button>

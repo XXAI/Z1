@@ -26,6 +26,7 @@ export class ListaComponent implements OnInit {
   showMyStepper:boolean = false;
   searchQuery: string = '';
   mediaSize:string;
+  panel:boolean = true;
   
   pageEvent: PageEvent;
   resultsLength: number = 0;
@@ -49,6 +50,10 @@ export class ListaComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) usersTable: MatTable<any>;
   @ViewChild(MatExpansionPanel) advancedFilter: MatExpansionPanel;
+
+  filterForm = this.fb.group({
+    'clues': [undefined]
+  });
 
   ngOnInit(): void {
     this.loadData();
@@ -97,7 +102,20 @@ export class ListaComponent implements OnInit {
         per_page: event.pageSize
       };
     }
+    let filterFormValues = this.filterForm.value;
+    let countFilter = 0;
+    for(let i in filterFormValues){
+      if(filterFormValues[i]){
+        if(i == 'clues'){
+          params[i] = filterFormValues[i];
+        }
+        countFilter++;
+      }
+    }
 
+    if(countFilter > 0){
+      params.active_filter = true;
+    }
     params.query = this.searchQuery;
 
     this.regionalizacionService.getPersonalList(params).subscribe(
@@ -234,5 +252,15 @@ export class ListaComponent implements OnInit {
 
   applyFilter(){
     this.loadData();
+  }
+
+  toggleAdvancedFilter(status){
+    if(status){
+      this.panel = false;
+      this.advancedFilter.open();
+    }else{
+      this.panel = true;
+      this.advancedFilter.close();
+    }
   }
 }

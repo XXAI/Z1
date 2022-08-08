@@ -40,10 +40,10 @@ export class ListaComponent implements OnInit {
 
   ngOnInit() {
     let appStoredData = this.sharedService.getArrayDataFromCurrentApp(['searchQuery','paginator','filter']);
-    console.log(appStoredData);
-
+    
     if(appStoredData['searchQuery']){
       this.searchQuery = appStoredData['searchQuery'];
+      
     }
 
     let event = null
@@ -117,6 +117,9 @@ export class ListaComponent implements OnInit {
 
   cleanSearch(){
     this.searchQuery = '';
+    this.sharedService.setDataToCurrentApp('searchQuery',"");
+    console.log(this.sharedService.getArrayDataFromCurrentApp(['searchQuery']));
+
   }
 
   applyFilter(){

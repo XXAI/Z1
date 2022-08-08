@@ -55,6 +55,7 @@ export class EditarComponent implements OnInit {
   inicio_operacion:string = "0000-00-00";
   fecha_acreditacion:string = "0000-00-00";
 
+
   constructor(
     private sharedService: SharedService, 
     private cluesService: CluesService,
@@ -102,7 +103,10 @@ export class EditarComponent implements OnInit {
   }
 
   displayLocalidadFn(item: any) {
-    if (item) { return item.descripcion; }
+    if (item) { 
+      return item.descripcion; 
+    }
+    
   }
 
   public IniciarCatalogos(obj:any)
@@ -160,6 +164,8 @@ export class EditarComponent implements OnInit {
   displayFn(value: any, valueLabel: string){
     return value ? value[valueLabel] : value;
   }
+
+
 
   validarFecha(valor)
   {

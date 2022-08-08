@@ -69,6 +69,7 @@ export class GeneralComponent implements OnInit {
   public regionalizacionForm = this.fb.group({
     'jurisdiccion_id': [0],
     'municipio_id': [''],
+    'localidad': [''],
     'tipo': [0],
     'microrregion': [''],
     'clues': [''],

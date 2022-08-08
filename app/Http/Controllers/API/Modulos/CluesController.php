@@ -12,6 +12,7 @@ use \Validator,\Hash, \Response, \DB;
 
 use App\Models\Clues;
 use App\Models\Municipio;
+use App\Models\RegionalizacionClues;
 
 
 class CluesController extends Controller
@@ -111,22 +112,21 @@ class CluesController extends Controller
 
         DB::beginTransaction();
         try {
-            
             if($inputs['catalogo_localidad']['id'] != $object->catalogo_localidad_id)
             {
-                $relacion = RelRegionalizacionClues::where("clues",$id)->where('tipo_localidad_regionalizacion','SEDE')->first();
+                $relacion = RegionalizacionClues::whereRaw("clues = '".$id."'")->where('tipo_localidad_regionalizacion','SEDE')->first();
                 if($relacion)
                 {
                     $relacion->delete();
                 }
-                $object = new RegionalizacionClues();
-                $object->catalogo_localidad_id =    $inputs['localidad_id']['id'];
-                $object->catalogo_tipo_camino_id =  1;
-                $object->distancia =                0;
-                $object->tiempo =                   0;
-                $object->clues =                    $id;
-                $object->save();
-                DB::commit();
+                $objecto = new RegionalizacionClues();
+                $objecto->catalogo_localidad_id             =    $inputs['catalogo_localidad']['id'];
+                $objecto->catalogo_tipo_camino_id           =  1;
+                $objecto->distancia                         =  0;
+                $objecto->tiempo                            =  0;
+                $objecto->clues                             =  $id;
+                $objecto->tipo_localidad_regionalizacion    =  "SEDE";
+                $objecto->save();
             }
 
             //$object->clues                          =    $inputs['clues'];

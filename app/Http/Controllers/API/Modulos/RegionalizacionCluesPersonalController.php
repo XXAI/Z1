@@ -23,7 +23,18 @@ class RegionalizacionCluesPersonalController extends Controller
         try{
             $access = $this->getUserAccessData();
             $parametros = $request->all();
-            $objeto = Trabajador::with("rel_rh.clues", "personal_salud", "ur")->whereRaw("trabajador.id in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=1 and deleted_at is null)");
+
+            $filtro_salud = "";
+            $filtro_externo = "";
+            if(isset($parametros['active_filter']) && $parametros['active_filter'])
+            {
+                if($parametros['clues']!="")
+                {
+                    $filtro_salud = " and clues like '".$parametros['clues']."'";
+                    $filtro_externo = " and clues like '".$parametros['clues']."'";
+                }
+            }
+            $objeto = Trabajador::with("rel_rh.clues", "personal_salud", "ur")->whereRaw("trabajador.id in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=1 ".$filtro_salud." and deleted_at is null)");
 
             if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){
@@ -32,6 +43,8 @@ class RegionalizacionCluesPersonalController extends Controller
                                 ->orWhere('rfc','LIKE','%'.$parametros['query'].'%');
                 });
             }
+
+            
             
             if(!$access->is_admin){
                 $objeto = $objeto->where(function($query)use($parametros, $access){
@@ -55,13 +68,16 @@ class RegionalizacionCluesPersonalController extends Controller
             }
 
             if(!$access->is_admin){
-                $objeto_externo = $objeto_externo->where(function($query)use($parametros, $access){
+                $objeto_externo = $objeto_externo->where(function($query)use($parametros, $access, $filtro_externo){
                     return $query->whereRaw("trabajador_externo.id in (select trabajador_id from regionalizacion_rh where deleted_at is null and tipo_trabajador_id=2 and catalogo_localidad_id in 
                                             (select catalogo_localidad_id from regionalizacion_clues where clues in 
-                                            (select clues from catalogo_clues where distrito_id in (".$access->distrito."))))");
+                                            (select clues from catalogo_clues where distrito_id in (".$access->distrito.") ".$filtro_externo.")))");
                 });
             }else{
-                $objeto_externo = $objeto_externo->whereRaw("trabajador_externo.id in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=2 and deleted_at is null)");
+                $objeto_externo = $objeto_externo->whereRaw("trabajador_externo.id in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=2 and deleted_at is null)")
+                ->whereRaw("trabajador_externo.id in (select trabajador_id from regionalizacion_rh where deleted_at is null and tipo_trabajador_id=2 and catalogo_localidad_id in 
+                (select catalogo_localidad_id from regionalizacion_clues where clues in 
+                (select clues from catalogo_clues where deleted_at is null ".$filtro_externo.")) )");;
             }
             if(isset($parametros['page'])){
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;

@@ -1,82 +1,91 @@
 <mat-drawer-container class="example-container" hasBackdrop="true">
     <mat-drawer #drawer mode="over" class="filtro" style="text-align: center;">
         <form [formGroup]="regionalizacionForm" style="width: 100%;">
-            <section fxFlex="100" fxLayout="column" fxLayoutAlign="space-evenly stretch">
-                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
-                    <mat-form-field fxFlex="100" fxFlex.xs="100">
-                        <mat-label>JURISDICCIÓN</mat-label>
-                        <mat-select formControlName="jurisdiccion_id" #jurisdiccion (selectionChange)="CargarMunicipios(jurisdiccion.value)">
-                            <mat-option [value]="0">
-                                TODOS
-                            </mat-option>
-                            <mat-option *ngFor="let item of jurisdicciones" [value]="item.id">
-                                {{ item.clave_distrito }}.- {{item.descripcion}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
-                    <mat-form-field fxFlex="100" fxFlex.xs="100">
-                        <mat-label>MUNICIPIO</mat-label>
-                        <mat-select formControlName="municipio_id">
-                            <mat-option [value]="0">
-                                TODOS
-                            </mat-option>
-                            <mat-option *ngFor="let item of municipios" [value]="item.id">
-                                {{ item.clave_municipio }} - {{item.descripcion}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
-                    <mat-form-field fxFlex="100" fxFlex.xs="100">
-                        <mat-label>TIPO UNIDAD</mat-label>
-                        <mat-select formControlName="tipo" #FtipoUnidad (selectionChange)="CargarMicrorregion(FtipoUnidad.value)">
-                            <mat-option [value]="0">
-                                TODOS
-                            </mat-option>
-                            <mat-option *ngFor="let item of tipoUnidad" [value]="item.id" matTooltip="{{item.descripcion}}">
-                                {{ item.id }}.- {{item.descripcion}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
-                    <mat-form-field fxFlex="100" fxFlex.xs="100">
-                        <mat-label>TIPO MICRORREGIÓN</mat-label>
-                        <mat-select formControlName="microrregion">
-                            <mat-option [value]="0">
-                                TODOS
-                            </mat-option>
-                            <mat-option *ngFor="let item of tipoMicrorregion" [value]="item.id" matTooltip="{{item.descripcion_tipo}}">
-                                {{ item.id }}.- {{item.descripcion_tipo}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
-                    <mat-form-field fxFlex="100" fxFlex.xs="100">
-                        <mat-label>CLUES</mat-label>
-                        <input matInput autocomplete="off" formControlName="clues" placeholder="CLUES">
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
-                    <mat-form-field fxFlex="100" fxFlex.xs="100">
-                        <mat-label>REGIONALIZADO</mat-label>
-                        <mat-select formControlName="regionalizacion">
-                            <mat-option [value]="0">
-                                TODOS
-                            </mat-option>
-                            <mat-option *ngFor="let item of regionalizado" [value]="item.id">
-                                {{item.descripcion}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
-                    <button mat-raised-button color="primary" fxFlex="100" fxFlex.xs="100" (click)="BuscarUnidades()" [disabled]="DisplayFiltro"><mat-icon>search</mat-icon> BUSCAR</button>
-                </div>
-            </section>
+            <div style="padding: 8px">
+                <section fxFlex="100" fxLayout="column" fxLayoutAlign="space-evenly stretch">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                        <mat-form-field fxFlex="100" fxFlex.xs="100">
+                            <mat-label>JURISDICCIÓN</mat-label>
+                            <mat-select formControlName="jurisdiccion_id" #jurisdiccion (selectionChange)="CargarMunicipios(jurisdiccion.value)">
+                                <mat-option [value]="0">
+                                    TODOS
+                                </mat-option>
+                                <mat-option *ngFor="let item of jurisdicciones" [value]="item.id">
+                                    {{ item.clave_distrito }}.- {{item.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                        <mat-form-field fxFlex="100" fxFlex.xs="100">
+                            <mat-label>MUNICIPIO</mat-label>
+                            <mat-select formControlName="municipio_id">
+                                <mat-option [value]="0">
+                                    TODOS
+                                </mat-option>
+                                <mat-option *ngFor="let item of municipios" [value]="item.id">
+                                    {{ item.clave_municipio }} - {{item.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                        <mat-form-field fxFlex="100" fxFlex.xs="100">
+                            <mat-label>LOCALIDAD</mat-label>
+                            <input matInput autocomplete="off" formControlName="localidad" placeholder="LOCALIAD">
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                        <mat-form-field fxFlex="100" fxFlex.xs="100">
+                            <mat-label>TIPO UNIDAD</mat-label>
+                            <mat-select formControlName="tipo" #FtipoUnidad (selectionChange)="CargarMicrorregion(FtipoUnidad.value)">
+                                <mat-option [value]="0">
+                                    TODOS
+                                </mat-option>
+                                <mat-option *ngFor="let item of tipoUnidad" [value]="item.id" matTooltip="{{item.descripcion}}">
+                                    {{ item.id }}.- {{item.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                        <mat-form-field fxFlex="100" fxFlex.xs="100">
+                            <mat-label>TIPO MICRORREGIÓN</mat-label>
+                            <mat-select formControlName="microrregion">
+                                <mat-option [value]="0">
+                                    TODOS
+                                </mat-option>
+                                <mat-option *ngFor="let item of tipoMicrorregion" [value]="item.id" matTooltip="{{item.descripcion_tipo}}">
+                                    {{ item.id }}.- {{item.descripcion_tipo}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                        <mat-form-field fxFlex="100" fxFlex.xs="100">
+                            <mat-label>CLUES</mat-label>
+                            <input matInput autocomplete="off" formControlName="clues" placeholder="CLUES">
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                        <mat-form-field fxFlex="100" fxFlex.xs="100">
+                            <mat-label>REGIONALIZADO</mat-label>
+                            <mat-select formControlName="regionalizacion">
+                                <mat-option [value]="0">
+                                    TODOS
+                                </mat-option>
+                                <mat-option *ngFor="let item of regionalizado" [value]="item.id">
+                                    {{item.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+                        <button mat-raised-button color="primary" fxFlex="100" fxFlex.xs="100" (click)="BuscarUnidades()" [disabled]="DisplayFiltro"><mat-icon>search</mat-icon> BUSCAR</button>
+                    </div>
+                </section>
+            </div>
+
         </form>
     </mat-drawer>
 
@@ -100,7 +109,7 @@
             </agm-marker>
             <agm-marker *ngFor="let item of localidadesNoReg" [longitude]="item.longitud" [latitude]="item.latitud" [iconUrl]="$any(iconLocalidadNoReg)">
                 <agm-info-window>
-                    <strong>{{ item.descripcion }}</strong>
+                    <strong>{{ item.clave_localidad }} - {{ item.descripcion }}</strong>
                 </agm-info-window>
             </agm-marker>
             <agm-marker *ngFor="let item of localidadesPoint" [longitude]="item.longitud" [latitude]="item.latitud" [iconUrl]="$any(iconLocalidadReg)">

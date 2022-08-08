@@ -59,6 +59,7 @@ export class ListaComponent implements OnInit {
 
   cleanSearch(){
     this.searchQuery = '';
+    this.sharedService.setDataToCurrentApp('searchQuery',"");
   }
 
   loadData(event?:PageEvent)

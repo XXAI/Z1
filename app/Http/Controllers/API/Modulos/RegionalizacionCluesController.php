@@ -34,6 +34,8 @@ class RegionalizacionCluesController extends Controller
                 "longitud"
             );
 
+            
+
             if(!$access->is_admin){
                 $objeto = $objeto->whereIn('distrito_id', $access->distrito);
             }
@@ -302,6 +304,8 @@ class RegionalizacionCluesController extends Controller
             {
                 $objeto = $objeto->whereRaw("catalogo_localidad_id in (select id from catalogo_localidad where catalogo_municipio_id =".$inputs['municipio_id'].")");
             }
+
+            
             
             if($inputs['tipo']!=0 && $inputs['tipo']!="")
             {
@@ -318,11 +322,23 @@ class RegionalizacionCluesController extends Controller
             {
                 $objeto = $objeto->where("clues",$inputs['clues']);
             }
+
+            if($inputs['localidad']!="")
+            {
+                $objeto = $objeto->whereRaw("catalogo_localidad_id in (select id from catalogo_localidad where descripcion like '".$inputs['localidad']."' and deleted_at is null)");
+            }
+
             $objeto = $objeto->get();
             
             if($inputs['regionalizacion'] != 0)
             {
                 
+                if($inputs['localidad']!="")
+                {
+                    $localidadesReg = $localidadesReg->where("descripcion",$inputs['localidad']);
+                    $localidadesNoReg = $localidadesNoReg->where("descripcion",$inputs['localidad']);
+                }
+
                 if($inputs['jurisdiccion_id']!=0 && $inputs['jurisdiccion_id']!="")
                 {
                     if($inputs['municipio_id']!=0 && $inputs['municipio_id']!="")
@@ -342,6 +358,8 @@ class RegionalizacionCluesController extends Controller
                     $localidadesNoReg = $localidadesNoReg->whereRaw("id not in (select catalogo_localidad_id from regionalizacion_clues where deleted_at is null)");
                     $localidadesNoReg = $localidadesNoReg->get();
                 }
+
+                
                     
             }
 
