@@ -13,13 +13,15 @@
                             <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                 <mat-icon>close</mat-icon>
                             </button>
-
+                            <mat-hint>
+                                <mat-slide-toggle #showAdvancedFilter (change)="toggleAdvancedFilter(showAdvancedFilter.checked)">Filtro Avanzado</mat-slide-toggle>
+                            </mat-hint>
                         </mat-form-field>
                     </div>
                     <div fxFlex="none" fxFlex.xs="100">
                         <div fxFlex></div>
                         <section class="search-button">
-                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;">
+                            <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt;" *ngIf="panel">
                                 <mat-icon>search</mat-icon>
                             </button>
                             <button mat-raised-button (click)="agregar()"><mat-icon>add</mat-icon></button>
@@ -27,7 +29,45 @@
                     </div>
                 </div>
             </mat-card>
+            <mat-accordion class="advanced-filter-container">
+                <mat-expansion-panel #advancedFilter class="advanced-filter" [formGroup]="filterForm">
+                    <br>
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-evenly center">
 
+                        <mat-form-field fxFlex="20">
+                            <mat-label>GRUPO</mat-label>
+                            <mat-select formControlName="grupo" #grupo (selectionChange)="getTipo(grupo.value)">
+                                <mat-option>Sin Filtro</mat-option>
+                                <mat-option *ngFor="let item of filtroCatalogos" [value]="item.id">
+                                    {{item.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="20">
+                            <mat-label>TIPO</mat-label>
+                            <mat-select formControlName="tipo">
+                                <mat-option>TODOS</mat-option>
+                                <mat-option *ngFor="let item of tipos" [value]="item.id">
+                                    {{item.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <div fxFlex></div>
+                        <div fxFlex="none">
+                            <button mat-flat-button (click)="filterForm.reset()">
+                                Limpiar
+                            </button>
+                        </div>
+                        <div fxFlex="none">
+                            <button mat-raised-button color="accent" (click)="applyFilter()">
+                                <mat-icon>search</mat-icon> Aplicar
+                            </button>
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+            </mat-accordion>
             <mat-card fxFlex.xs="100%" fxFlex="90%">
                 <mat-divider [inset]="true"></mat-divider>
 
@@ -71,7 +111,9 @@
                             </ng-container>
 
                             <ng-container matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef  style="text-align: center;"><mat-icon>more_vert</mat-icon></th>
+                                <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                                    <mat-icon>more_vert</mat-icon>
+                                </th>
                                 <td mat-cell *matCellDef="let row; let i = index" style="text-align: center;">
                                     <button mat-button [matMenuTriggerFor]="menu">
                                         <mat-icon>more_vert</mat-icon>

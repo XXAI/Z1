@@ -19,25 +19,45 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public isAuthenticated:boolean;
   authSubscription: Subscription;
-  selectedApp: any;
+  selectedApp: any = {children:[]};
+  pendientes:number = 0;
+  Listapendientes:any = [{icon:'person_search', descripcion:"PRUEBA", link:'/tramites/adscripcion'}];
   user: User;
   apps: App[];
+  modules:any  = [];
   breakpoint = 6;
+  selectedChild: any;
+  expandDrawer:boolean = true;
 
   constructor(private authService:AuthService, private appsService: AppsListService, private sharedService: SharedService, private router: Router) {
+
     router.events.pipe(
       filter(event => event instanceof NavigationEnd)  
     ).subscribe((event: NavigationEnd) => {
       
       this.getApps();
-      let routes = event.url.split('/',2);
+      
+      let routes = event.url.split('/',3);
+      this.modules = [];
+      /*routes.forEach(element => {
+        if(element != "")
+        {
+          this.modules.push({nombre: element.toUpperCase(), link:element});
+        }
+        
+      });*/
       let selected_route = routes[1];
+      let selected_child = '';
 
       let currentApp = this.sharedService.getCurrentApp();
       if(currentApp.name != selected_route ){
         this.sharedService.newCurrentApp(selected_route);
       }
-      
+
+      if(routes.length > 2){
+        selected_child = routes[2];
+      }
+
       if(selected_route){
         this.selectedApp = this.apps.find(function(element) {
           return element.route == selected_route;
@@ -45,7 +65,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }else{
         this.selectedApp = undefined;
       }
+      this.selectedChild = {};
+      if(this.selectedApp && this.selectedApp.children && selected_child){
+        this.selectedChild = this.selectedApp.children.find(function(element) {
+          return (element)?element.route == selected_child:false;
+        });
+      }
+
     });
+    console.log(this.selectedApp);
   }
 
   ngOnInit() {
@@ -64,7 +92,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     );
     this.breakpoint = (window.innerWidth <= 599) ? 3 : 6;
+
+    this.calcularPendientes();
   }
+
+  calcularPendientes()
+  {
+
+  }
+
+  navegarPendientes= function (link) {
+    this.router.navigateByUrl(link);
+  };
 
   getApps():void{
     this.apps = this.appsService.getApps();

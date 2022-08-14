@@ -172,7 +172,7 @@
                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
                         <div fxFlex="100" fxFlex.xs="100">
                             <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
+                                <mat-form-field fxFlex="25" fxFlex.xs="100" appearance="fill">
                                     <mat-label>TIPO CAMINO</mat-label>
                                     <mat-select formControlName="catalogo_tipo_camino_id" required>
                                         <mat-option *ngFor="let item of catalogo['camino']" [value]="item.id">
@@ -183,18 +183,25 @@
                                         <span *ngIf="regionalizacionForm.get('catalogo_tipo_camino_id').errors.required">Campo obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
-                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>DISTANCIA</mat-label>
+                                <mat-form-field fxFlex="25" fxFlex.xs="100" appearance="fill">
+                                    <mat-label>DISTANCIA (KM)</mat-label>
                                     <input matInput autocomplete="off" formControlName="distancia" placeholder="DISTANCIA">
                                     <mat-error *ngIf="regionalizacionForm.get('distancia').invalid && (regionalizacionForm.get('distancia').dirty || regionalizacionForm.get('distancia').touched)">
                                         <span *ngIf="regionalizacionForm.get('distancia').errors.required">Campo obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
-                                <mat-form-field fxFlex="33" fxFlex.xs="100" appearance="fill">
-                                    <mat-label>TIEMPO</mat-label>
+                                <mat-form-field fxFlex="25" fxFlex.xs="100" appearance="fill">
+                                    <mat-label>TIEMPO (HH:MM)</mat-label>
                                     <input matInput autocomplete="off" formControlName="tiempo" placeholder="TIEMPO">
                                     <mat-error *ngIf="regionalizacionForm.get('tiempo').invalid && (regionalizacionForm.get('tiempo').dirty || regionalizacionForm.get('tiempo').touched)">
                                         <span *ngIf="regionalizacionForm.get('tiempo').errors.required">Campo obligatorio</span>
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="25" fxFlex.xs="100" appearance="fill">
+                                    <mat-label>POBLACIÓN REAL</mat-label>
+                                    <input matInput autocomplete="off" formControlName="poblacion_real" placeholder="POBLACIÓN REAL">
+                                    <mat-error *ngIf="regionalizacionForm.get('poblacion_real').invalid && (regionalizacionForm.get('poblacion_real').dirty || regionalizacionForm.get('poblacion_real').touched)">
+                                        <span *ngIf="regionalizacionForm.get('poblacion_real').errors.required">Campo obligatorio</span>
                                     </mat-error>
                                 </mat-form-field>
                             </div>

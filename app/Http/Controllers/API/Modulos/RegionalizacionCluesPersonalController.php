@@ -13,6 +13,7 @@ use App\Models\Clues;
 use App\Models\Localidad;
 use App\Models\Trabajador;
 use App\Models\RelRegionalizacionRh;
+use App\Models\GrupoPersonal;
 
 
 class RegionalizacionCluesPersonalController extends Controller
@@ -30,11 +31,12 @@ class RegionalizacionCluesPersonalController extends Controller
             {
                 if($parametros['clues']!="")
                 {
-                    $filtro_salud = " and clues like '".$parametros['clues']."'";
-                    $filtro_externo = " and clues like '".$parametros['clues']."'";
+                    $filtro_salud = " and (clues like '".$parametros['clues']."' or descripcion like '%".$parametros['clues']."%')";
+                    $filtro_salud_no_admin = " and clues in (select clues from catalogo_clues where (clues like '".$parametros['clues']."' or descripcion like '%".$parametros['clues']."%')) ";
+                    $filtro_externo = " and (clues like '".$parametros['clues']."' or descripcion like '%".$parametros['clues']."%')";
                 }
             }
-            $objeto = Trabajador::with("rel_rh.clues", "personal_salud", "ur")->whereRaw("trabajador.id in (select trabajador_id from regionalizacion_rh where tipo_trabajador_id=1 ".$filtro_salud." and deleted_at is null)");
+            $objeto = Trabajador::with("rel_rh.clues", "personal_salud", "ur")->whereRaw("trabajador.id in (select trabajador_id from regionalizacion_rh where  tipo_trabajador_id=1 ".$filtro_salud_no_admin." and deleted_at is null)");
 
             if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){
@@ -47,8 +49,9 @@ class RegionalizacionCluesPersonalController extends Controller
             
             
             if(!$access->is_admin){
-                $objeto = $objeto->where(function($query)use($parametros, $access){
-                    return $query->whereRaw("trabajador.id in (select trabajador_id from regionalizacion_rh where deleted_at is null and clues in (select clues from catalogo_clues where distrito_id in (".$access->distrito.")))");
+                $objeto = $objeto->where(function($query)use($parametros, $access, $filtro_salud){
+                    return $query->whereRaw("trabajador.id in (select trabajador_id from regionalizacion_rh where deleted_at is null 
+                                            and clues in (select clues from catalogo_clues where distrito_id in (".$access->distrito.") ".$filtro_salud."))");
                 });
             }
 
@@ -353,6 +356,18 @@ class RegionalizacionCluesPersonalController extends Controller
         }
     }
     
+    public function getExterno()
+    {
+        try{
+            
+            $grupo           = GrupoPersonal::where("id","!=",1)->orderBy("id")->get();
+            
+            return response()->json($grupo,HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+        
+    }
     private function getUserAccessData($loggedUser = null){
         if(!$loggedUser){
             $loggedUser = auth()->userOrFail();

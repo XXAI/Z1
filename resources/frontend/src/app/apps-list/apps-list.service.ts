@@ -49,6 +49,8 @@ export class AppsListService {
             j -= 1;
           }
         }
+      }else{
+        app.children = [];
       }
 
       if((app.permission && !permissions[app.permission]) || (app.isHub && app.children && app.children.length == 0)){

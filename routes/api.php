@@ -73,7 +73,10 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::get('get-data-mapa',                         'API\Modulos\RegionalizacionCluesController@getMapa');
     Route::get('get-data-regionalizacion/{id}',              'API\Modulos\RegionalizacionCluesController@getLocalidades');
     
+    
     Route::apiResource('reginalizacion-clues-personal',  'API\Modulos\RegionalizacionCluesPersonalController');
+    Route::get('catalogo-personal-externo',              'API\Modulos\RegionalizacionCluesPersonalController@getExterno');
+    Route::get('catalogo-grupo-personal/{id}',           'API\Modulos\CatalogosController@getTipoGrupo');
     Route::apiResource('localidad',                      'API\Modulos\LocalidadController');
     Route::get('regionalizacion-salud-filtro/{id}',      'API\Modulos\RegionalizacionCluesPersonalController@filtroSalud');
     Route::get('regionalizacion-externo-filtro/{id}',    'API\Modulos\RegionalizacionCluesPersonalController@filtroExterno');

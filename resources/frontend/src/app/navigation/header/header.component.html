@@ -1,79 +1,117 @@
-<mat-toolbar color="primary" class="">
+<mat-toolbar color="primary" class="" style="height: 48px !important;">
     <!--button mat-icon-button aria-label="Ir al inicio" routerLink="/" fxShow.xs fxHide.gt-sm>
-      <mat-icon>home</mat-icon>
-    </button-->
-    <!--<img src="{{(selectedApp)?selectedApp.icon:'assets/LogoSistemaBlanco.png'}}" alt="" style="height: 60%; width:auto;" fxHide.xs="true">-->
-    <a routerLink="/">
-        <mat-icon>apps</mat-icon>
-    </a>
-    <span style="margin-left:10px" *ngIf="!selectedApp"><a routerLink="/">Secretaria de Salud</a></span> <span *ngIf="selectedApp">&nbsp; {{selectedApp.name}}</span>
+    <mat-icon>home</mat-icon>
+  </button-->
+    <!--<button mat-button *ngIf="isAuthenticated && selectedApp && selectedApp.children.length > 0" routerLink="/"><mat-icon>apps</mat-icon></button>-->
+
+    <div *ngIf="selectedApp && selectedApp.children.length > 0">
+        <button mat-button [matMenuTriggerFor]="menuModulo" *ngIf="isAuthenticated"><mat-icon>menu</mat-icon></button>
+        <mat-menu #menuModulo="matMenu">
+            <button mat-menu-item *ngFor="let app of selectedApp.children" routerLink="{{ app.route }}"><mat-icon>{{ app.icon }}</mat-icon> {{ app.name }}</button>
+        </mat-menu>
+    </div>
+    <img src="{{(selectedApp)?selectedApp.icon:'assets/app-icon.png'}}" alt="" style="height: 60%; width:auto;" fxHide.xs="true">
+    <span style="margin-left:10px" *ngIf="!selectedApp">
+      <a routerLink="/">Secretaria de Salud</a>
+  </span>
+    <span *ngIf="selectedApp">&nbsp; 
+      <a routerLink="{{selectedApp.route}}" style="font-size: 12pt;" >{{selectedApp.name}}</a>
+      <!--<a *ngFor="let item of modules" routerLink="{{item.link}}" style="font-size: 12pt;" >{{item.nombre}}</a>-->
+  </span>
+
+
+
 
     <span class="spacer"></span>
+    <button mat-button [matMenuTriggerFor]="menu" *ngIf="isAuthenticated"><mat-icon>contact_support</mat-icon></button>
+    <mat-menu #menu="matMenu">
+        <div class="titulo_soporte">
+            SOPORTE TÉCNICO
+        </div>
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image">
+                    <mat-icon mat-card-sm-image> call</mat-icon>
+                </div>
+                <mat-card-title>DRA. JACQUELINE COELLO</mat-card-title>
+                <mat-card-subtitle>961-658-6425</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image">
+                    <mat-icon mat-card-sm-image> call</mat-icon>
+                </div>
+                <mat-card-title>DRA. ERIKA DOMINGUEZ</mat-card-title>
+                <mat-card-subtitle>961-185-3462</mat-card-subtitle>
+            </mat-card-header>
+        </mat-card>
 
-    <ng-template [ngIf]="isAuthenticated">
+        <div class="titulo_soporte">DESARROLLADOR</div>
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image">
+                    <mat-icon mat-card-sm-image> code</mat-icon>
+                </div>
+                <mat-card-title>ING. MARIO ALBERTO VILLATORO DIAZ</mat-card-title>
+                <mat-card-subtitle>INGENIERO EN SISTEMAS COMPUTACIONALES</mat-card-subtitle>
+            </mat-card-header>
+        </mat-card>
+
+
+    </mat-menu>
+    <ng-template [ngIf]="isAuthenticated" style="max-width: 320px !important;">
+
         <!--button mat-icon-button color="white" [matMenuTriggerFor]="menuApps" fxHide.xs>
-        <mat-icon aria-label="Apps">apps</mat-icon>
-      </button-->
+      <mat-icon aria-label="Apps">apps</mat-icon>
+    </button-->
 
         <button mat-icon-button aria-label="Mostrar Sidenav" (click)="toggleSidenav()" fxShow.xs fxHide.gt-sm>
-        <img src="{{user.avatar}}" alt="" style="width:auto; margin:auto">
-        <!--mat-icon>menu</mat-icon-->
-      </button>
+      <img src="{{user.avatar}}" alt="" style="width:auto; margin:auto">
+      <!--mat-icon>menu</mat-icon-->
+    </button>
+
+        <button mat-icon-button [matMenuTriggerFor]="menu" style="margin-right: 10pt;" *ngIf="pendientes > 0"><mat-icon matBadge="{{ pendientes }}" matBadgeColor="warn">mode_comment</mat-icon></button>
+        <mat-menu #menu="matMenu">
+
+            <button mat-menu-item *ngFor="let app of Listapendientes" [routerLink]="app.link"><mat-icon>{{app.icon}}</mat-icon> {{ app.descripcion }}</button>
+        </mat-menu>
 
         <button mat-icon-button [matMenuTriggerFor]="menuAccount" fxHide.xs="true">
-        <!--mat-icon svgIcon="user-icon" aria-label="Avatar"></mat-icon-->
-        <img src="{{user.avatar}}" alt="" style="width:auto; margin:auto">
-      </button>
+      <img src="{{user.avatar}}" alt="" style="width:71%; margin:auto">
+    </button>
+        <mat-menu #menuAccount="matMenu" style="color: red !important;">
 
-        <!--mat-menu #menuApps="matMenu">
-        <div class="apps" fxLayout="row" fxLayoutAlign="center center">
-          <ng-container *ngFor="let app of apps; let i = index">
-              <figure [routerLink]="['/'+app.route]" *ngIf="i<12" matTooltip="{{app.name}}">
-                  <img src="{{ app.icon }}" alt="Icon">
-                  <figcaption class="ellipsis">{{ app.name }}</figcaption>
-              </figure>
-          </ng-container>
-        </div>
-        <mat-divider></mat-divider>
-        <button mat-menu-item style="text-align:center" routerLink="/apps">
-          <mat-icon>more_horiz</mat-icon>
-        </button>
-      </mat-menu-->
-
-        <mat-menu #menuAccount="matMenu">
-            <div style="width:280px;" style="display:flex; justify-content: start center; background-color: rgba(0,99,0,0.3);">
+            <div style="display:flex; justify-content: start center">
                 <img src="{{user.avatar}}" alt="" style="width:80px; margin:10px">
                 <div style="width:160px; margin:10px;  display: flex; flex-direction:column; justify-content: center; font-size:0.8em;">
-                    <strong style="font-size: 12pt;">{{user.name}}</strong>
-                    <small style="color: #000;font-size: 10pt;">{{user.email}}</small>
+                    <strong>{{user.name}}</strong>
+                    <small style="color:#777">{{user.email}}</small>
                     <br>
-                    <!--<button mat-button mat-raised-button color="primary" routerLink="/profile">
-                <mat-icon>account_circle</mat-icon> 
-                <span>&nbsp;Editar cuenta</span>
-            </button>-->
+                    <button mat-button mat-raised-button color="primary" routerLink="/profile">
+                    <mat-icon>account_circle</mat-icon> 
+                    <span>&nbsp;Editar cuenta</span>
+                </button>
                 </div>
             </div>
             <mat-divider></mat-divider>
 
-            <div style="background-color: rgba(200,200,200,0.3);">
+            <div>
                 <div class="apps" fxLayout="row" fxLayoutAlign="center center">
                     <ng-container *ngFor="let app of apps; let i = index">
-                        <figure [routerLink]="['/'+app.route]" *ngIf="i<9">
-                            <img src="{{ app.icon }}" alt="Icon">
-                            <figcaption class="ellipsis">{{ app.name }}</figcaption>
+                        <figure [routerLink]="['/'+app.route]" *ngIf="i<9" style="width: 28% !important;">
+                            <img src="{{ app.icon }}" alt="Icon" matTooltip="{{ app.name }}" matTooltipClass="tooltip-primary">
+                            <!--<figcaption class="ellipsis">{{ app.name }}</figcaption>-->
                         </figure>
                     </ng-container>
                 </div>
                 <button mat-menu-item style="text-align:center" routerLink="/apps">
-            <mat-icon>apps</mat-icon>
-          </button>
+          <mat-icon>apps</mat-icon>
+        </button>
             </div>
-
             <mat-divider></mat-divider>
             <button mat-menu-item (click)="logout()">
-          <mat-icon>exit_to_app</mat-icon>
-          <span>Cerrar sesión</span>
-        </button>
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Cerrar sesión</span>
+      </button>
         </mat-menu>
     </ng-template>
 

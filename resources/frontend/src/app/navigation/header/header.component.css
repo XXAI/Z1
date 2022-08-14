@@ -3,7 +3,7 @@ a {
     color: white;
 }
 
-a:hover ,
+a:hover,
 a:active {
     color: lightgray;
 }
@@ -16,23 +16,26 @@ a:active {
 
 .app-toolbar {
     position: sticky;
-    position: -webkit-sticky; /* For macOS/iOS Safari */
-    top: 0; /* Sets the sticky toolbar to be on top */
-    z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+    position: -webkit-sticky;
+    /* For macOS/iOS Safari */
+    top: 0;
+    /* Sets the sticky toolbar to be on top */
+    z-index: 1000;
+    /* Ensure that your app's content doesn't overlap the toolbar */
 }
 
 .spacer {
     flex: 1 1 auto;
 }
 
-.apps {    
+.apps {
     display: flex;
-    flex:1;
-    width:100%;
+    flex: 1;
+    width: 100%;
     margin: auto;
     height: auto;
     flex-direction: row;
-    justify-content: flex-start;    
+    justify-content: flex-start;
     align-content: flex-start;
     flex-wrap: wrap;
     flex-flow: row wrap;
@@ -41,25 +44,48 @@ a:active {
 .apps figure {
     display: block;
     flex-direction: column;
-    text-align: center; 
+    text-align: center;
     width: 33.33%;
     min-width: 50px;
-    margin:0;  
-    cursor: pointer; 
+    margin: 0;
+    cursor: pointer;
 }
 
- 
 .apps figure img {
     display: block;
-    width:50px;
+    width: 50px;
     height: 50px;
-    margin:auto;
-    margin-top:15px;      
-    margin-bottom:15px;  
+    margin: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
-.apps figcaption{
+.apps figcaption {
     font-size: 0.75em;
-    color: #555;    
-    margin-bottom:15px;  
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.mat-menu-panel {
+    max-width: 310px !important;
+}
+
+.titulo_soporte {
+    background-color: #EFEFEF;
+    font-weight: bold;
+    padding: 13px 0px;
+    font-size: 11pt;
+    text-align: center;
+}
+
+.mat-card-title {
+    font-size: 15px !important;
+}
+
+.tooltip-primary {
+    background: #3f51b5 !important;
+}
+
+.mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: none;
 }

@@ -128,7 +128,8 @@ class RegionalizacionCluesController extends Controller
             'catalogo_tipo_camino_id'   => 'required',
             'distancia'                 => 'required',
             'tiempo'                    => 'required',
-            'clues'                     => 'required'
+            'clues'                     => 'required',
+            'poblacion_real'            => 'required'
         ];
         
         
@@ -149,6 +150,13 @@ class RegionalizacionCluesController extends Controller
             $object->clues                          = $inputs['clues'];
             $object->tipo_localidad_regionalizacion = $inputs['tipo_localidad_regionalizacion'];
             $object->save();
+
+            $localidad = Localidad::find($inputs['localidad_id']['id']);
+            if($localidad)
+            {
+                $localidad->poblacion_real = $inputs['poblacion_real'];
+                $localidad->save();
+            }
             DB::commit();
             
         return response()->json(["data"=>$object],HttpResponse::HTTP_OK);
@@ -179,7 +187,8 @@ class RegionalizacionCluesController extends Controller
             'catalogo_tipo_camino_id'   => 'required',
             'distancia'                 => 'required',
             'tiempo'                    => 'required',
-            'clues'                     => 'required'
+            'clues'                     => 'required',
+            'poblacion_real'            => 'required'
         ];
         
         DB::beginTransaction();
@@ -204,6 +213,13 @@ class RegionalizacionCluesController extends Controller
             $object->clues =                    $inputs['clues'];
             $object->tipo_localidad_regionalizacion = $inputs['tipo_localidad_regionalizacion'];
             $object->save();
+            
+            $localidad = Localidad::find($inputs['localidad_id']['id']);
+            if($localidad)
+            {
+                $localidad->poblacion_real = $inputs['poblacion_real'];
+                $localidad->save();
+            }
             DB::commit();
             
         return response()->json(["data"=> $object],HttpResponse::HTTP_OK);

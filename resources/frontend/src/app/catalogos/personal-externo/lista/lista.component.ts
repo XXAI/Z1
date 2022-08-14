@@ -28,9 +28,17 @@ export class ListaComponent implements OnInit {
   currentPage: number = 0;
   pageSize: number = 20;
   selectedItemIndex: number = -1;
+  panel:boolean = true;
+  filtroCatalogos:any;
+  tipos:any;
 
   displayedColumns: string[] = ['trabajador','tipo', 'localidad','unidad','actions'];
   dataSource: any = [];
+
+  filterForm = this.fb.group({
+    'grupo': [undefined],
+    'tipo': [undefined]
+  });
 
   constructor(private sharedService: SharedService, public dialog: MatDialog, private personalExternoService:PersonalExternoService, private fb: FormBuilder, public mediaObserver: MediaObserver) { }
 
@@ -39,7 +47,43 @@ export class ListaComponent implements OnInit {
   @ViewChild(MatExpansionPanel) advancedFilter: MatExpansionPanel;
 
   ngOnInit(): void {
+    this.catalogos();
     this.loadData();
+  }
+
+  catalogos()
+  {
+    this.personalExternoService.getCatalogo().subscribe(
+      response =>{
+        console.log(response);
+        this.filtroCatalogos = response;
+      },
+      errorResponse =>{
+        var errorMessage = "Ocurrió un error.";
+        if(errorResponse.status == 409){
+          errorMessage = errorResponse.error.message;
+        }
+        this.sharedService.showSnackBar(errorMessage, null, 3000);
+        this.isLoading = false;
+      }
+    );
+  }
+
+  getTipo(valor){
+    this.personalExternoService.getTipo(valor).subscribe(
+      response =>{
+        console.log(response);
+        this.tipos = response;
+      },
+      errorResponse =>{
+        var errorMessage = "Ocurrió un error.";
+        if(errorResponse.status == 409){
+          errorMessage = errorResponse.error.message;
+        }
+        this.sharedService.showSnackBar(errorMessage, null, 3000);
+        this.isLoading = false;
+      }
+    );
   }
 
   agregar()
@@ -69,6 +113,17 @@ export class ListaComponent implements OnInit {
       }
     });
   }
+
+  toggleAdvancedFilter(status){
+    if(status){
+      this.panel = false;
+      this.advancedFilter.open();
+    }else{
+      this.panel = true;
+      this.advancedFilter.close();
+    }
+  }
+
   editar(obj:any)
   {
     let configDialog = {};
@@ -143,12 +198,28 @@ export class ListaComponent implements OnInit {
       };
     }
 
+    let filterFormValues = this.filterForm.value;
+    let countFilter = 0;
+
+    for(let i in filterFormValues){
+      if(filterFormValues[i]){
+        if(i == 'grupo'){
+          params[i] = filterFormValues[i];
+        }else if(i == 'tipo'){
+          params[i] = filterFormValues[i];
+        }
+        countFilter++;
+      }
+    }
+    
+    if(countFilter > 0){
+      params.active_filter = true;
+    }
     params.query = this.searchQuery;
 
     this.personalExternoService.getTrabajador(params).subscribe(
       response =>{
         this.dataSource = response.data.data;
-        console.log(this.dataSource);
         this.isLoading = false;
       },
       errorResponse =>{

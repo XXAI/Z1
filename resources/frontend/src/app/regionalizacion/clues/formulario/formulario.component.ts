@@ -103,6 +103,7 @@ export class FormularioComponent implements OnInit {
     'tipo_localidad_regionalizacion': ['',[Validators.required]],
     'distancia': ['',[Validators.required]],
     'tiempo': ['',[Validators.required]],
+    'poblacion_real': ['',[Validators.required]],
     'clues': ['',[Validators.required]],
   });
 
@@ -180,8 +181,8 @@ export class FormularioComponent implements OnInit {
 
   editar(obj:any)
   {
-    console.log(obj.catalogo_localidad.municipio.id);
-    console.log(obj.catalogo_tipo_camino.id);
+    //console.log(obj.catalogo_localidad.municipio.id);
+    //console.log(obj.catalogo_tipo_camino.id);
     this.regionalizacionForm.patchValue(
       {
         municipio_id: obj.catalogo_localidad.municipio.id,
@@ -190,7 +191,8 @@ export class FormularioComponent implements OnInit {
         distancia: obj.distancia,
         tiempo:obj.tiempo,
         clues: obj.clues,
-        tipo_localidad_regionalizacion:obj.tipo_localidad_regionalizacion
+        tipo_localidad_regionalizacion:obj.tipo_localidad_regionalizacion,
+        poblacion_real:obj.catalogo_localidad.poblacion_real
       }
     );
     this.id_editar = obj.id;

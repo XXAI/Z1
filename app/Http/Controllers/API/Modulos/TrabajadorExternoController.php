@@ -21,7 +21,8 @@ class TrabajadorExternoController extends Controller
                                 ->join("catalogo_localidad", "regionalizacion_rh.catalogo_localidad_id", "catalogo_localidad.id")
                                 ->join("catalogo_municipio", "catalogo_municipio.id", "catalogo_localidad.catalogo_municipio_id")
                                 ->join("catalogo_tipo_trabajador", "trabajador_externo.tipo_personal_id", "catalogo_tipo_trabajador.id")
-                                    ->where("regionalizacion_rh.tipo_trabajador_id", 2)->whereNull("trabajador_externo.deleted_at")
+                                    ->where("regionalizacion_rh.tipo_trabajador_id","!=", 1)
+                                    ->whereNull("trabajador_externo.deleted_at")
                                     ->select("trabajador_externo.id", 
                                     "trabajador_externo.rfc", 
                                     "trabajador_externo.curp", 
@@ -38,6 +39,8 @@ class TrabajadorExternoController extends Controller
                                     DB::RAW("(select descripcion from catalogo_clues where clues =(select clues from regionalizacion_clues where catalogo_localidad_id = regionalizacion_rh.catalogo_localidad_id)) as nombre_unidad")
                                 );
 
+            $objeto = $this->aplicarFiltros($objeto, $parametros);                     
+            
             if(!$access->is_admin){
                 $objeto = $objeto->whereRaw("regionalizacion_rh.catalogo_localidad_id in (select catalogo_localidad_id from regionalizacion_clues where clues in (select clues from catalogo_clues where distrito_id in (".$access->distrito.")))")
                             ->orWhereRaw(" catalogo_localidad.id in (select catalogo_localidad_id from catalogo_clues where distrito_id in (". $access->distrito."))");
@@ -231,5 +234,27 @@ class TrabajadorExternoController extends Controller
         }
 
         return $accessData;
+    }
+
+    private function aplicarFiltros($main_query, $parametros){
+        //Filtros, busquedas, ordenamiento
+        if(isset($parametros['query']) && $parametros['query']){
+            $main_query = $main_query->where(function($query)use($parametros){
+                return $query->whereRaw(' concat(nombre," ", apellido_paterno, " ", apellido_materno) like "%'.$parametros['query'].'%"' )
+                            ->orWhere('rfc','LIKE','%'.$parametros['query'].'%')
+                            ->orWhere('curp','LIKE','%'.$parametros['query'].'%');
+            });
+        }
+        
+        if(isset($parametros['active_filter']) && $parametros['active_filter']){
+            if(isset($parametros['grupo']) && $parametros['grupo']){
+                $main_query = $main_query->where('catalogo_tipo_trabajador.catalogo_grupo_personal_id',$parametros['grupo']);
+            }
+            
+            if(isset($parametros['tipo']) && $parametros['tipo']){
+                $main_query = $main_query->where('catalogo_tipo_trabajador.id',$parametros['tipo']);
+            }
+        }
+        return $main_query;
     }
 }

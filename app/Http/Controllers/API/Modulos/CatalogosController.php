@@ -85,6 +85,19 @@ class CatalogosController extends Controller
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
         }
     }
+    
+    public function getTipoGrupo(Request $request, $id)
+    {
+        try{
+            $obj    = TipoTrabajador::where("catalogo_grupo_personal_id", $id)->orderBy("descripcion")->get();
+            
+            
+            return response()->json($obj,HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
+    
     public function getTipoUnidad()
     {
         try{

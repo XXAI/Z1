@@ -12,6 +12,8 @@ export class PersonalExternoService {
 
   url                     = `${environment.base_url}/trabajador-externo`;
   url_catalogos           = `${environment.base_url}/catalogos`;
+  url_catalogos_externo   = `${environment.base_url}/catalogo-personal-externo`;
+  url_grupo_externo       = `${environment.base_url}/catalogo-grupo-personal`;
   url_clues               = `${environment.base_url}/catalogo-clues`;
   url_localidad           = `${environment.base_url}/catalogo-localidad`;
 
@@ -19,6 +21,21 @@ export class PersonalExternoService {
 
   getCatalogos():Observable<any> {
     return this.http.get<any>(this.url_catalogos,{}).pipe(
+      map( response => {
+        return response;
+      })
+    );
+  }
+
+  getCatalogo():Observable<any> {
+    return this.http.get<any>(this.url_catalogos_externo,{}).pipe(
+      map( response => {
+        return response;
+      })
+    );
+  }
+  getTipo(id):Observable<any> {
+    return this.http.get<any>(this.url_grupo_externo+"/"+id,{}).pipe(
       map( response => {
         return response;
       })
