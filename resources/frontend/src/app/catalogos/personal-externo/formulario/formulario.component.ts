@@ -83,7 +83,7 @@ export class FormularioComponent implements OnInit {
       },
       responsError =>{
         console.log(responsError);
-        this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
+        this.sharedService.showSnackBar('Error al intentar recuperar datos', null, 4000);
       }
     );
 
@@ -102,7 +102,7 @@ export class FormularioComponent implements OnInit {
       },
       responsError =>{
         console.log(responsError);
-        this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
+        this.sharedService.showSnackBar('Error al intentar recuperar datos', null, 4000);
       }
     );
 
@@ -144,7 +144,7 @@ export class FormularioComponent implements OnInit {
         },
         responsError =>{
           console.log(responsError);
-          this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
+          this.sharedService.showSnackBar('Error al registrar el trabajador', null, 4000);
         }
       );
     }else{
@@ -155,7 +155,7 @@ export class FormularioComponent implements OnInit {
         },
         responsError =>{
           console.log(responsError);
-          this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
+          this.sharedService.showSnackBar('Error al registrar el trabajador', null, 4000);
         }
       );
     } 

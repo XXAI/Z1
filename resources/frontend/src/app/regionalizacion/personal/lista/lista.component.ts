@@ -130,7 +130,7 @@ export class ListaComponent implements OnInit {
       responsError =>{
         this.isLoading = false;
         console.log(responsError);
-        this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
+        this.sharedService.showSnackBar('Error al intentar recuperar datos de', null, 4000);
       }
     );
     return event;

@@ -57,6 +57,7 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::get('catalogo-microrregion/{id}',       'API\Modulos\CatalogosController@catalogoMicrorregion');
     
     Route::get('catalogo-localidad',            'API\Modulos\CatalogosController@catalogoLocalidad');
+    Route::get('catalogo-localidad-regionalizado',            'API\Modulos\CatalogosController@catalogoLocalidadRegionalizadas');
     Route::get('catalogo-clues',                'API\Modulos\CatalogosController@catalogoClues');
     Route::apiResource('profile',               'API\ProfileController')->only([ 'show', 'update']);
     Route::apiResource('clues',         'API\Modulos\CluesController');

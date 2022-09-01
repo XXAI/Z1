@@ -176,6 +176,27 @@ class CatalogosController extends Controller
             $obj = Localidad::where("catalogo_municipio_id", $params['municipio_id'])->where('descripcion','LIKE','%'.$params['query'].'%');
             if(!$access->is_admin){
                 $obj = $obj->where(function($obj)use($params, $access){
+                    return $obj->whereRaw(" catalogo_localidad.catalogo_municipio_id IN (SELECT id FROM catalogo_municipio WHERE catalogo_distrito_id IN (".$access->distrito.")) and catalogo_localidad.id not in (select catalogo_localidad_id from regionalizacion_clues where deleted_at is null)");
+                                //->orWhereRaw("catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues where clues in (select catalogo_localidad_id from catalogo_clues where distrito_id in (".$access->distrito.")))");
+                });
+            }
+            $obj = $obj->limit(5);
+            $obj = $obj->get();
+            return response()->json($obj,HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
+
+    public function catalogoLocalidadRegionalizadas(Request $request)
+    {
+        try{
+            $params = $request->all();
+            $access = $this->getUserAccessData();
+
+            $obj = Localidad::where("catalogo_municipio_id", $params['municipio_id'])->where('descripcion','LIKE','%'.$params['query'].'%');
+            if(!$access->is_admin){
+                $obj = $obj->where(function($obj)use($params, $access){
                     return $obj->whereRaw(" catalogo_localidad.catalogo_municipio_id IN (SELECT id FROM catalogo_municipio WHERE catalogo_distrito_id IN (".$access->distrito.")) and catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues where deleted_at is null)");
                                 //->orWhereRaw("catalogo_localidad.id in (select catalogo_localidad_id from regionalizacion_clues where clues in (select catalogo_localidad_id from catalogo_clues where distrito_id in (".$access->distrito.")))");
                 });

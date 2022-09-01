@@ -16,6 +16,7 @@ export class PersonalExternoService {
   url_grupo_externo       = `${environment.base_url}/catalogo-grupo-personal`;
   url_clues               = `${environment.base_url}/catalogo-clues`;
   url_localidad           = `${environment.base_url}/catalogo-localidad`;
+  url_localidad_regionalizado = `${environment.base_url}/catalogo-localidad-regionalizado`;
 
   constructor(private http: HttpClient) { }
 
@@ -67,7 +68,7 @@ export class PersonalExternoService {
   }
   
   buscarLocalidad(obj:any):Observable<any> {
-    return this.http.get<any>(this.url_localidad,{params: obj}).pipe(
+    return this.http.get<any>(this.url_localidad_regionalizado,{params: obj}).pipe(
       map( response => {
         return response;
       })

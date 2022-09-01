@@ -122,7 +122,7 @@ export class TransferirComponent implements OnInit {
         this.dialogRef.close(true);
       },
       responsError =>{
-        this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
+        this.sharedService.showSnackBar('Error al intentar recuperar datos de', null, 4000);
       }
     );
   }

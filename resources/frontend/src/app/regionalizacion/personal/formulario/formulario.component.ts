@@ -137,7 +137,7 @@ export class FormularioComponent implements OnInit {
        },
       responsError =>{
         console.log(responsError);
-        this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
+        this.sharedService.showSnackBar('Error al intentar recuperar datos de', null, 4000);
       }
     );
     this.regionalizacionForm.get('localidad_id').valueChanges
@@ -241,7 +241,7 @@ export class FormularioComponent implements OnInit {
         }
       },
       responsError =>{
-        this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
+        this.sharedService.showSnackBar('Error al intentar recuperar datos de', null, 4000);
       }
     );
   }  
@@ -277,7 +277,7 @@ export class FormularioComponent implements OnInit {
           this.regionalizacionForm.reset();
         },
         responsError =>{
-          this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
+          this.sharedService.showSnackBar('Error al intentar recuperar datos de', null, 4000);
         }
       );
     }else{
@@ -287,7 +287,7 @@ export class FormularioComponent implements OnInit {
           this.regionalizacionForm.reset();
         },
         responsError =>{
-          this.sharedService.showSnackBar('Error al intentar recuperar datos de asistencia', null, 4000);
+          this.sharedService.showSnackBar('Error al intentar recuperar datos de', null, 4000);
         }
       );
     } 

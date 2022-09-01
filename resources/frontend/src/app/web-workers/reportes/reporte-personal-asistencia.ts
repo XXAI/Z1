@@ -34,7 +34,7 @@ export class ReportePersonalAsistencia{
                 },
                 {
                     margin: [10, 0, 0, 0],
-                    text: 'SECRETARÍA DE SALUD\nREPORTE DE ASISTENCIA DEL ' + reportData.data.fecha_inicial + ' AL ' + reportData.data.fecha_final,
+                    text: 'SECRETARÍA DE SALUD\nREPORTE DE DEL ' + reportData.data.fecha_inicial + ' AL ' + reportData.data.fecha_final,
                     bold: true,
                     fontSize: 12,
                     alignment: 'center'
