@@ -27,6 +27,7 @@ class RegionalizacionCluesPersonalController extends Controller
 
             $filtro_salud = "";
             $filtro_externo = "";
+            $filtro_salud_no_admin = "";
             if(isset($parametros['active_filter']) && $parametros['active_filter'])
             {
                 if($parametros['clues']!="")
