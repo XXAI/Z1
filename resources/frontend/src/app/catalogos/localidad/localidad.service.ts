@@ -13,8 +13,17 @@ export class LocalidadService {
   url                     = `${environment.base_url}/localidad`;
   url_catalogos           = `${environment.base_url}/catalogos`;
   url_catalogo_municipio  = `${environment.base_url}/catalogo_municipio`;
+  url_permisos            = `${environment.base_url}/getPermisos`;
   
   constructor(private http: HttpClient) { }
+
+  getPermisos(payload:any):Observable<any> {
+    return this.http.get<any>(this.url_permisos, payload).pipe(
+      map( (response: any) => {        
+        return response;
+      }
+    ));
+  }
 
   getCatalogos():Observable<any> {
     return this.http.get<any>(this.url_catalogos,{}).pipe(

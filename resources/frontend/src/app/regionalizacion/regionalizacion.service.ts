@@ -22,6 +22,7 @@ export class RegionalizacionService {
   url_salud_filtro          = `${environment.base_url}/regionalizacion-salud-filtro`;
   url_personal_delete       = `${environment.base_url}/delete-personal`;
   url_externo_filtro        = `${environment.base_url}/regionalizacion-externo-filtro`;
+  url_permisos              = `${environment.base_url}/getPermisos`;
 
   constructor(private http: HttpClient) { }
 
@@ -163,6 +164,14 @@ export class RegionalizacionService {
 
   editPersonal(id:number, payload:any):Observable<any> {
     return this.http.put<any>(this.url_personal+"/"+id, payload).pipe(
+      map( (response: any) => {        
+        return response;
+      }
+    ));
+  }
+  
+  getPermisos(payload:any):Observable<any> {
+    return this.http.get<any>(this.url_permisos, payload).pipe(
       map( (response: any) => {        
         return response;
       }

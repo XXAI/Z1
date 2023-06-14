@@ -17,9 +17,18 @@ export class PersonalExternoService {
   url_clues               = `${environment.base_url}/catalogo-clues`;
   url_localidad           = `${environment.base_url}/catalogo-localidad`;
   url_localidad_regionalizado = `${environment.base_url}/catalogo-localidad-regionalizado`;
+  url_permisos            = `${environment.base_url}/getPermisos`;
 
   constructor(private http: HttpClient) { }
 
+  getPermisos(payload:any):Observable<any> {
+    return this.http.get<any>(this.url_permisos, payload).pipe(
+      map( (response: any) => {        
+        return response;
+      }
+    ));
+  }
+  
   getCatalogos():Observable<any> {
     return this.http.get<any>(this.url_catalogos,{}).pipe(
       map( response => {

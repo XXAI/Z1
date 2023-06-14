@@ -13,6 +13,7 @@ import { DetailsComponentClue } from './details-clue/details-clue.component'
 import { RegionesDialogComponent } from './regiones-dialog/regiones-dialog.component';
 import { EditarComponent } from './editar/editar.component';
 import { ListaComponent } from './lista/lista.component';
+import { NuevoComponent } from './nuevo/nuevo.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { ListaComponent } from './lista/lista.component';
     ListaComponent,
     EditarComponent,
     DetailsComponentClue,
-    RegionesDialogComponent
+    RegionesDialogComponent,
+    NuevoComponent
   ],
   imports: [
     CommonModule,

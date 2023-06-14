@@ -16,6 +16,7 @@ export class CluesService {
   url_clue_catalogo       = `${environment.base_url}/busqueda-clues`;
 
   url_localidad           = `${environment.base_url}/localidad`;
+  url_permisos            = `${environment.base_url}/getPermisos`;
 
 
   constructor(private http: HttpClient) { }
@@ -46,6 +47,14 @@ export class CluesService {
 
   actualizarClues(id:any, form:any):Observable<any> {
     return this.http.put<any>(this.url +"/"+ id, form).pipe(
+      map( (response: any) => {        
+        return response;
+      }
+    ));
+  }
+
+  guardarClues(form:any):Observable<any> {
+    return this.http.post<any>(this.url , form).pipe(
       map( (response: any) => {        
         return response;
       }
@@ -84,6 +93,11 @@ export class CluesService {
     );
   }
   
-  
-
+  getPermisos(payload:any):Observable<any> {
+    return this.http.get<any>(this.url_permisos, payload).pipe(
+      map( (response: any) => {        
+        return response;
+      }
+    ));
+  }
 }

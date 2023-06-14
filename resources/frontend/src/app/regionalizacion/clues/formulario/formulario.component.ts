@@ -66,6 +66,7 @@ export class FormularioComponent implements OnInit {
   //lineas:any = [{lat}]
   tipoLocalidad:any = [{id:'AREA DE INFLUENCIA', descripcion: 'AREA DE INFLUENCIA'}, {id:'ACCIÓN INTENSIVA', descripcion: 'ACCIÓN INTENSIVA'}];
 
+  btn_guardar = false;
  iconMap = {
     url: '../../assets/icons/pin_localidad_reg.png',
     iconHeigh: 10,
@@ -112,8 +113,25 @@ export class FormularioComponent implements OnInit {
     this.lat = Number(this.data.latitud);
     this.long = Number(this.data.longitud);
     this.cargarCatalogos();
+    this.loadPermisos();
     //this.loadData();
     //console.log(this.data);
+  }
+
+  loadPermisos()
+  {
+    this.regionalizacionService.getPermisos({}).subscribe(
+      response => {
+        
+        response.permisos.forEach(element => {
+          if(element == "permiso_visor")
+          {
+            this.btn_guardar == true;
+          }
+        });
+        
+      }
+    );
   }
 
   loadData(event?:PageEvent)

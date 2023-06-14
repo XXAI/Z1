@@ -84,6 +84,7 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::get('delete-personal/{id}',                   'API\Modulos\RegionalizacionCluesPersonalController@deletePersonal');
     Route::get('buscador-personal',                      'API\Modulos\RegionalizacionCluesPersonalController@buscarPersonal');
     Route::post('transferir-personal',                    'API\Modulos\RegionalizacionCluesPersonalController@transferirPersonal');
+    Route::get('getPermisos',                             'API\Modulos\PermisosController@getPermisos');
 });
 
 Route::middleware('auth')->get('/avatar-images', function (Request $request) {

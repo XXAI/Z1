@@ -13,7 +13,17 @@ export class ColoniasService {
   url_catalogosMunicipio  = `${environment.base_url}/catalogo-municipio`;
   url_catalogosLocalidad  = `${environment.base_url}/catalogo-localidad`;
   url                     = `${environment.base_url}/colonias`;
+  url_permisos            = `${environment.base_url}/getPermisos`;
+  
   constructor(private http: HttpClient) { }
+
+  getPermisos(payload:any):Observable<any> {
+    return this.http.get<any>(this.url_permisos, payload).pipe(
+      map( (response: any) => {        
+        return response;
+      }
+    ));
+  }
 
   getCatalogos():Observable<any> {
     return this.http.get<any>(this.url_catalogos,{}).pipe(

@@ -11,9 +11,18 @@ export class GruposService {
 
   url = `${environment.base_url}/grupos_unidades`;
   url_empleados = `${environment.base_url}/listado-empleados`;
+  url_permisos            = `${environment.base_url}/getPermisos`;
   //url_cat_tipo_profesion = `${environment.base_url}/catalogo-tipo-profesion`;
   
   constructor(private http: HttpClient) { }
+
+  getPermisos(payload:any):Observable<any> {
+    return this.http.get<any>(this.url_permisos, payload).pipe(
+      map( (response: any) => {        
+        return response;
+      }
+    ));
+  }
 
   obtenerListaGrupos(payload):Observable<any> {
     return this.http.get<any>(this.url,{params: payload}).pipe(

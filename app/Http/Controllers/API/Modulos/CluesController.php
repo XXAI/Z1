@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use \Validator,\Hash, \Response, \DB;
 
 use App\Models\Clues;
+use App\Models\Localidad;
 use App\Models\Municipio;
 use App\Models\RegionalizacionClues;
 
@@ -68,6 +69,77 @@ class CluesController extends Controller
         }
     }
 
+    public function store(Request $request)
+    {
+
+        $mensajes = [
+            
+            'required'      => "required",
+            'email'         => "email",
+            'unique'        => "unique"
+        ];
+
+        $reglas = [
+            'catalogo_microrregion_id'              => 'required',
+            'catalogo_localidad'                    => 'required',
+            'descripcion'                           => 'required',
+            'cp'                                    => 'required',
+            'telefono'                              => 'required',
+            'nucleos_camas'                         => 'required',
+            'latitud'                               => 'required',
+            'longitud'                              => 'required',
+        ];
+
+        $inputs = $request->all();
+        $v = Validator::make($inputs, $reglas, $mensajes);
+
+        if ($v->fails()) {
+            return response()->json(['error' => "Error en campos requeridos"], HttpResponse::HTTP_NOT_FOUND);
+        }
+
+        DB::beginTransaction();
+        $object = new Clues();
+        try {
+           
+            $localidad = Municipio::find($inputs['municipio_id']);
+            $object->clues                          =    \Str::upper($inputs['clues']);
+            $object->descripcion                    =    \Str::upper($inputs['descripcion']);
+            $object->direccion                      =    \Str::upper($inputs['direccion']);
+            $object->cp                             =    $inputs['cp'];
+            $object->telefono                       =    $inputs['telefono'];
+            $object->nucleos_camas                  =    $inputs['nucleos_camas'];
+            $object->latitud                        =    $inputs['latitud'];
+            $object->longitud                       =    $inputs['longitud'];
+            $object->inicio_operacion               =    $inputs['inicio_operacion'];
+            $object->fecha_operacion                =    $inputs['fecha_operacion'];
+            $object->distrito_id                    =    $localidad->catalogo_distrito_id;
+            $object->catalogo_microrregion_id       =    $inputs['catalogo_microrregion_id'];
+            $object->catalogo_localidad_id          =    $inputs['catalogo_localidad']['id'];
+
+            $object->save();
+    
+            if($inputs['catalogo_localidad']['id'] != $object->catalogo_localidad_id)
+            {
+                $objecto = new RegionalizacionClues();
+                $objecto->catalogo_localidad_id             =  $inputs['catalogo_localidad']['id'];
+                $objecto->catalogo_tipo_camino_id           =  1;
+                $objecto->distancia                         =  0;
+                $objecto->tiempo                            =  0;
+                $objecto->clues                             =  $inputs['clues'];
+                $objecto->tipo_localidad_regionalizacion    =  "SEDE";
+                $objecto->save();
+            }
+
+            DB::commit();
+            
+            return response()->json($object,HttpResponse::HTTP_OK);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return Response::json(['error' => $e->getMessage()], HttpResponse::HTTP_CONFLICT);
+        }
+
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -130,8 +202,8 @@ class CluesController extends Controller
             }
 
             //$object->clues                          =    $inputs['clues'];
-            $object->descripcion                    =    $inputs['descripcion'];
-            $object->direccion                      =    $inputs['direccion'];
+            $object->descripcion                    =    \Str::upper($inputs['descripcion']);
+            $object->direccion                      =    \Str::upper($inputs['direccion']);
             $object->cp                             =    $inputs['cp'];
             $object->telefono                       =    $inputs['telefono'];
             $object->nucleos_camas                  =    $inputs['nucleos_camas'];

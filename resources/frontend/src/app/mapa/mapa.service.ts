@@ -14,6 +14,7 @@ export class MapaService {
   url_catalogo              = `${environment.base_url}/catalogo-mapa`;
   url_mapa                  = `${environment.base_url}/get-data-mapa`;
   url_regionalizacion       = `${environment.base_url}/get-data-regionalizacion`;
+  url_permisos              = `${environment.base_url}/getPermisos`;
 
   constructor(private http: HttpClient) { }
 
@@ -53,5 +54,13 @@ export class MapaService {
         return response;
       })
     );
+  }
+
+  getPermisos(payload:any):Observable<any> {
+    return this.http.get<any>(this.url_permisos, payload).pipe(
+      map( (response: any) => {        
+        return response;
+      }
+    ));
   }
 }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MapaService } from '../mapa.service';
 import { SharedService } from 'src/app/shared/shared.service';
-import { stringToKeyValue } from '@angular/flex-layout/extended/style/style-transforms';
 
 @Component({
   selector: 'app-general',
