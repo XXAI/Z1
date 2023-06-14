@@ -31,6 +31,10 @@ class PermisosController extends Controller
                         {
                             $permisos_aplicacion[] = "permiso_visor";
                         }
+                        if($value2->id == 'qTDSf7RjLNAivN2O0qEEBaDoGSs230B9')
+                        {
+                            $permisos_aplicacion[] = "permiso_guardar_clues";
+                        }
                     }
                 }
                     
@@ -39,7 +43,10 @@ class PermisosController extends Controller
                     {
                         $permisos_aplicacion[] = "permiso_visor";
                     }
-                
+                    if($value2->id == 'qTDSf7RjLNAivN2O0qEEBaDoGSs230B9')
+                    {
+                        $permisos_aplicacion[] = "permiso_guardar_clues";
+                    }
                 }
                 
             }else

@@ -96,10 +96,11 @@ export class NuevoComponent implements OnInit {
       response => {
         
         response.permisos.forEach(element => {
-          if(element == "permiso_visor")
+          if(element == "permiso_guardar_clues")
           {
             this.btn_guardar == true;
           }
+          
         });
         
       }
