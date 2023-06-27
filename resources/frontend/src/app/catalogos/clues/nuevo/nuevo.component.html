@@ -155,7 +155,7 @@
                 <mat-card-actions fxHide.xs="true" fxLayout.xs="column">
                     <span fxFlex></span>
                     <button mat-raised-button routerLink="/catalogos/clues">Volver a la lista</button>
-                    <ng-container *ngIf="!btn_guardar">
+                    <ng-container *ngIf="btn_guardar">
                         <button mat-raised-button (click)="accionGuardar()" color="success" [disabled]="!cluesForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
                     </ng-container>
                 </mat-card-actions>
