@@ -210,7 +210,7 @@
                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
                         <div fxFlex="100" fxFlex.xs="100">
                             <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="3px">
-                                <button mat-raised-button (click)="accionGuardar(1)" color="success" *ngIf="!btn_guardar" [disabled]="!regionalizacionForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
+                                <button mat-raised-button (click)="accionGuardar(1)" color="success" *ngIf="btnGuardar" [disabled]="!regionalizacionForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
                                 <button mat-raised-button (click)="cancelar()" *ngIf="edicion" color="warn"><mat-icon>close</mat-icon> Cancelar</button>
                                 <button mat-raised-button (click)="cerrar()" *ngIf="id_editar==0" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
                             </div>

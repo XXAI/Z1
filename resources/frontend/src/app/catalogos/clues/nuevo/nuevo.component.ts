@@ -94,14 +94,26 @@ export class NuevoComponent implements OnInit {
   {
     this.cluesService.getPermisos({}).subscribe(
       response => {
+        let admin = response.data.admin;
+        if(!admin == true)
+        {
+          response.permisos.forEach(element => {
+            if(element == "permiso_guardar_clues")
+            {
+              this.btn_guardar == true;
+            }
+          });
+          response.data.permisos.forEach(element => {
+            if(element == "permiso_visor")
+            {
+              this.btn_guardar == true;
+            }
+          });
+        }else
+        {
+          this.btn_guardar = true;
+        }
         
-        response.permisos.forEach(element => {
-          if(element == "permiso_guardar_clues")
-          {
-            this.btn_guardar == true;
-          }
-          
-        });
         
       }
     );

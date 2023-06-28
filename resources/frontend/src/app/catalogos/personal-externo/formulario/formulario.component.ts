@@ -27,6 +27,7 @@ export class FormularioComponent implements OnInit {
   isLoading:boolean = false;
   localidadIsLoading: boolean = false;
   filteredLocalidad: any[];
+  btnGuardar:boolean = false;
 
   constructor(
     private sharedService: SharedService, 
@@ -59,6 +60,27 @@ export class FormularioComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarCatalogos();
+    this.loadPermisos();
+  }
+
+  loadPermisos()
+  {
+    this.personalExternoService.getPermisos({}).subscribe(
+      response => {
+        let admin = response.data.admin;
+        if(!admin == true)
+        {
+          response.data.permisos.forEach(element => {
+            if(element == "permiso_visor")
+            {
+              this.btnGuardar == true;
+            }
+          });
+        }else{
+          this.btnGuardar = true;
+        } 
+      }
+    );
   }
 
   cargarDatos()

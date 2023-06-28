@@ -105,14 +105,18 @@ export class EditarComponent implements OnInit {
   {
     this.cluesService.getPermisos({}).subscribe(
       response => {
-        
-        response.permisos.forEach(element => {
-          if(element == "permiso_visor")
-          {
-            this.btn_guardar == true;
-          }
-        });
-        
+        let admin = response.data.admin;
+        if(!admin == true)
+        {
+          response.data.permisos.forEach(element => {
+            if(element == "permiso_visor")
+            {
+              this.btn_guardar == true;
+            }
+          });
+        }else{
+          this.btn_guardar = true;
+        }    
       }
     );
   }

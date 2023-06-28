@@ -50,6 +50,7 @@ export class TransferirComponent implements OnInit {
   nombre_unidad:string  = "";
   rfc:string            = "";
   nombre:string         = "";
+  btnGuardar:boolean = false;
   
   constructor(
     private sharedService: SharedService, 
@@ -72,6 +73,27 @@ export class TransferirComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarCatalogos();
+    this.loadPermisos();
+  }
+
+  loadPermisos()
+  {
+    this.regionalizacionService.getPermisos({}).subscribe(
+      response => {
+        let admin = response.data.admin;
+        if(!admin == true)
+        {
+          response.data.permisos.forEach(element => {
+            if(element == "permiso_visor")
+            {
+              this.btnGuardar == true;
+            }
+          });
+        }else{
+          this.btnGuardar = true;
+        } 
+      }
+    );
   }
 
   displayCluesFn(item: any) {

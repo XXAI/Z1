@@ -59,14 +59,14 @@ export class FormularioComponent implements OnInit {
   unidadMedica:any = {};
   localidadUnidad:string ="";
   tipoMicroregion:string = "";
-
+  btnGuardar:boolean = false;
+  
   localidadesRegionalizadas:any = [];
 
   nombre_unidad:string = "";
   //lineas:any = [{lat}]
   tipoLocalidad:any = [{id:'AREA DE INFLUENCIA', descripcion: 'AREA DE INFLUENCIA'}, {id:'ACCIÓN INTENSIVA', descripcion: 'ACCIÓN INTENSIVA'}];
 
-  btn_guardar = false;
  iconMap = {
     url: '../../assets/icons/pin_localidad_reg.png',
     iconHeigh: 10,
@@ -122,14 +122,18 @@ export class FormularioComponent implements OnInit {
   {
     this.regionalizacionService.getPermisos({}).subscribe(
       response => {
-        
-        response.permisos.forEach(element => {
-          if(element == "permiso_visor")
-          {
-            this.btn_guardar == true;
-          }
-        });
-        
+        let admin = response.data.admin;
+        if(!admin == true)
+        {
+          response.data.permisos.forEach(element => {
+            if(element == "permiso_visor")
+            {
+              this.btnGuardar == true;
+            }
+          });
+        }else{
+          this.btnGuardar = true;
+        } 
       }
     );
   }

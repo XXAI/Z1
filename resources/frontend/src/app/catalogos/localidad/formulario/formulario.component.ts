@@ -32,6 +32,7 @@ export class FormularioComponent implements OnInit {
   filteredLocalidad: any[];
   isLoading:boolean = false;
   poblacion:any;
+  btnGuardar:boolean = false;
 
   displayedColumns: string[] = ['AÑO', 'CANTIDAD'];
   dataSource:any;
@@ -61,6 +62,29 @@ export class FormularioComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarCatalogos();
+    this.loadPermisos();
+  }
+
+  loadPermisos()
+  {
+    this.localidadService.getPermisos({}).subscribe(
+      response => {
+        let admin = response.data.admin;
+        if(!admin == true)
+        {
+          response.data.permisos.forEach(element => {
+            if(element == "permiso_visor")
+            {
+              this.btnGuardar == true;
+            }
+          });
+        }else{
+          this.btnGuardar = true;
+        } 
+        
+        
+      }
+    );
   }
 
   cargarDatos()

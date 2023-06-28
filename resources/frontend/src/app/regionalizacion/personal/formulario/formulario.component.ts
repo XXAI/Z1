@@ -40,7 +40,7 @@ export class FormularioComponent implements OnInit {
   indexTab:number = 0;
   id_tipo_edicion:number = 0;
   edicion:boolean = false;
-  
+  btnGuardar:boolean = false;
   tipo:boolean = true;
   
   constructor(
@@ -68,9 +68,28 @@ export class FormularioComponent implements OnInit {
   ngOnInit(): void {
     this.cargarCatalogos();
     //console.log(this.data);
+    this.loadPermisos();
   }
 
-
+  loadPermisos()
+  {
+    this.regionalizacionService.getPermisos({}).subscribe(
+      response => {
+        let admin = response.data.admin;
+        if(!admin == true)
+        {
+          response.data.permisos.forEach(element => {
+            if(element == "permiso_visor")
+            {
+              this.btnGuardar == true;
+            }
+          });
+        }else{
+          this.btnGuardar = true;
+        } 
+      }
+    );
+  }
   cargaForm(value)
   {
     if(value == 1)
