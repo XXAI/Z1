@@ -40,7 +40,7 @@ export class FormularioComponent implements OnInit {
   indexTab:number = 0;
   id_tipo_edicion:number = 0;
   edicion:boolean = false;
-  btnGuardar:boolean = false;
+  btnGuardar:boolean = true;
   tipo:boolean = true;
   
   constructor(
@@ -76,12 +76,12 @@ export class FormularioComponent implements OnInit {
     this.regionalizacionService.getPermisos({}).subscribe(
       response => {
         let admin = response.data.admin;
-        if(!admin == true)
+        if(admin == false)
         {
           response.data.permisos.forEach(element => {
             if(element == "permiso_visor")
             {
-              this.btnGuardar == true;
+              this.btnGuardar == false;
             }
           });
         }else{

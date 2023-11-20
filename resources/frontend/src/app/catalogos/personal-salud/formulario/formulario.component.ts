@@ -28,7 +28,7 @@ export class FormularioComponent implements OnInit {
   filteredClues: any[];
   isLoading:boolean = false;
   localidad_municipio_sede:string = "";
-  btnGuardar:boolean = false;
+  btnGuardar:boolean = true;
   
   constructor(
     private sharedService: SharedService, 
@@ -68,12 +68,12 @@ export class FormularioComponent implements OnInit {
     this.personalService.getPermisos({}).subscribe(
       response => {
         let admin = response.data.admin;
-        if(!admin == true)
+        if(admin == false)
         {
           response.data.permisos.forEach(element => {
             if(element == "permiso_visor")
             {
-              this.btnGuardar == true;
+              this.btnGuardar == false;
             }
           });
         }else{

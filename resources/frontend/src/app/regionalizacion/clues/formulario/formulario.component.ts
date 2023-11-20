@@ -59,7 +59,7 @@ export class FormularioComponent implements OnInit {
   unidadMedica:any = {};
   localidadUnidad:string ="";
   tipoMicroregion:string = "";
-  btnGuardar:boolean = false;
+  btnGuardar:boolean = true;
   
   localidadesRegionalizadas:any = [];
 
@@ -123,12 +123,12 @@ export class FormularioComponent implements OnInit {
     this.regionalizacionService.getPermisos({}).subscribe(
       response => {
         let admin = response.data.admin;
-        if(!admin == true)
+        if(admin == false)
         {
           response.data.permisos.forEach(element => {
             if(element == "permiso_visor")
             {
-              this.btnGuardar == true;
+              this.btnGuardar == false;
             }
           });
         }else{
