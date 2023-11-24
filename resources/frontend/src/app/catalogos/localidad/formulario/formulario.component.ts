@@ -33,6 +33,7 @@ export class FormularioComponent implements OnInit {
   isLoading:boolean = false;
   poblacion:any;
   btnGuardar:boolean = false;
+  permiso_guardar:boolean = false;
 
   displayedColumns: string[] = ['AÑO', 'CANTIDAD'];
   dataSource:any;
@@ -70,17 +71,19 @@ export class FormularioComponent implements OnInit {
     this.localidadService.getPermisos({}).subscribe(
       response => {
         let admin = response.data.admin;
-        if(!admin == true)
+        let permisos = response.data.permisos;
+        if(admin == false)
         {
-          response.data.permisos.forEach(element => {
-            if(element == "permiso_visor")
+          permisos.forEach(element => {
+            if(element == "permiso_admin_simoss")
             {
-              this.btnGuardar == true;
+              this.permiso_guardar = true;
             }
           });
+          
         }else{
-          this.btnGuardar = true;
-        } 
+          this.permiso_guardar = true;
+        }    
         
         
       }

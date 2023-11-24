@@ -33,6 +33,7 @@ export class ListaComponent implements OnInit {
   currentPage: number = 0;
   pageSize: number = 20;
   selectedItemIndex: number = -1;
+  permiso_guardar:boolean = false;
 
   pageEventExterno: PageEvent;
   resultsLengthExterno: number = 0;
@@ -57,6 +58,38 @@ export class ListaComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    this.loadPermisos();
+  }
+
+  loadPermisos()
+  {
+    this.regionalizacionService.getPermisos({}).subscribe(
+      response => {
+        let admin = response.data.admin;
+        let permisos = response.data.permisos;
+        
+        if(admin == false)
+        {
+          permisos.forEach(element => {
+            if(element == "permiso_admin_simoss")
+            {
+              this.permiso_guardar = true;
+            }
+            if(element == "permiso_guardar_general")
+            {
+              this.permiso_guardar = true;
+            }
+            if(element == "permiso_visor")
+            {
+              this.permiso_guardar = false;
+            }
+          });
+          
+        }else{
+          this.permiso_guardar = true;
+        }    
+      }
+    );
   }
 
   regionalizacion(obj:any)

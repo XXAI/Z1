@@ -45,7 +45,7 @@ export class NuevoComponent implements OnInit {
 
   inicio_operacion:string = "0000-00-00";
   fecha_acreditacion:string = "0000-00-00";
-  btn_guardar = false;
+  permiso_guardar:boolean = false;
 
   constructor(
     private sharedService: SharedService, 
@@ -95,24 +95,19 @@ export class NuevoComponent implements OnInit {
     this.cluesService.getPermisos({}).subscribe(
       response => {
         let admin = response.data.admin;
-        if(!admin == true)
+        let permisos = response.data.permisos;
+        if(admin == false)
         {
-          response.permisos.forEach(element => {
-            if(element == "permiso_guardar_clues")
+          permisos.forEach(element => {
+            if(element == "permiso_admin_simoss")
             {
-              this.btn_guardar == true;
+              this.permiso_guardar = true;
             }
           });
-          response.data.permisos.forEach(element => {
-            if(element == "permiso_visor")
-            {
-              this.btn_guardar == true;
-            }
-          });
-        }else
-        {
-          this.btn_guardar = true;
-        }
+          
+        }else{
+          this.permiso_guardar = true;
+        }    
         
         
       }

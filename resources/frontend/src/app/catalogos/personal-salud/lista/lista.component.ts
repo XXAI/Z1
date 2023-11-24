@@ -30,6 +30,7 @@ export class ListaComponent implements OnInit {
   currentPage: number = 0;
   pageSize: number = 20;
   selectedItemIndex: number = -1;
+  permiso_editar:boolean = false;
 
   displayedColumns: string[] = ['trabajador','clues','distrito','actions'];
   dataSource: any = [];
@@ -42,6 +43,38 @@ export class ListaComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    this.loadPermisos();
+  }
+
+  loadPermisos()
+  {
+    this.personalService.getPermisos({}).subscribe(
+      response => {
+        let admin = response.data.admin;
+        let permisos = response.data.permisos;
+        console.log(response);
+        if(admin == false)
+        {
+          permisos.forEach(element => {
+            if(element == "permiso_admin_simoss")
+            {
+              this.permiso_editar = true;
+            }
+            if(element == "permiso_guardar_general")
+            {
+              this.permiso_editar = true;
+            }
+            if(element == "permiso_visor")
+            {
+              this.permiso_editar = false;
+            }
+          });
+          
+        }else{
+          this.permiso_editar = true;
+        }    
+      }
+    );
   }
 
   agregar()

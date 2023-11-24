@@ -31,6 +31,7 @@ export class ListaComponent implements OnInit {
   panel:boolean = true;
   filtroCatalogos:any;
   tipos:any;
+  permiso_guardar: boolean = false;
 
   displayedColumns: string[] = ['trabajador','tipo', 'localidad','unidad','actions'];
   dataSource: any = [];
@@ -49,13 +50,14 @@ export class ListaComponent implements OnInit {
   ngOnInit(): void {
     this.catalogos();
     this.loadData();
+    this.loadPermisos();
   }
 
   catalogos()
   {
     this.personalExternoService.getCatalogo().subscribe(
       response =>{
-        console.log(response);
+        
         this.filtroCatalogos = response;
       },
       errorResponse =>{
@@ -69,10 +71,39 @@ export class ListaComponent implements OnInit {
     );
   }
 
+  loadPermisos()
+  {
+    this.personalExternoService.getPermisos({}).subscribe(
+      response => {
+        let admin = response.data.admin;
+        let permisos = response.data.permisos;
+        if(admin == false)
+        {
+          permisos.forEach(element => {
+            if(element == "permiso_admin_simoss")
+            {
+              this.permiso_guardar = true;
+            }
+            if(element == "permiso_guardar_general")
+            {
+              this.permiso_guardar = true;
+            }
+            if(element == "permiso_visor")
+            {
+              this.permiso_guardar = false;
+            }
+          });
+          
+        }else{
+          this.permiso_guardar = true;
+        }    
+      }
+    );
+  }
+
   getTipo(valor){
     this.personalExternoService.getTipo(valor).subscribe(
       response =>{
-        console.log(response);
         this.tipos = response;
       },
       errorResponse =>{
@@ -107,9 +138,6 @@ export class ListaComponent implements OnInit {
     dialogRef.afterClosed().subscribe(valid => {
       if(valid){
         this.loadData();
-        //console.log('Aceptar');
-      }else{
-        console.log('Cancelar');
       }
     });
   }
@@ -146,8 +174,6 @@ export class ListaComponent implements OnInit {
     dialogRef.afterClosed().subscribe(valid => {
       if(valid){
         this.loadData();
-      }else{
-        console.log('Cancelar');
       }
     });
   }
@@ -162,7 +188,7 @@ export class ListaComponent implements OnInit {
       if(valid){
         this.personalExternoService.eliminarTrabajador(obj.id).subscribe(
           response =>{
-            console.log(response);
+            
             this.sharedService.showSnackBar("Se ha Actualizado Correctamente", null, 3000);
             this.isLoading = false;
             this.loadData();
@@ -220,6 +246,7 @@ export class ListaComponent implements OnInit {
     this.personalExternoService.getTrabajador(params).subscribe(
       response =>{
         this.dataSource = response.data.data;
+        this.resultsLength = response.data.total;
         this.isLoading = false;
       },
       errorResponse =>{

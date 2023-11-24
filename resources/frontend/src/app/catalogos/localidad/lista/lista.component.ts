@@ -34,6 +34,7 @@ export class ListaComponent implements OnInit {
   selectedItemIndex: number = -1;
   filteredCatalogs:any = {};
   filterCatalogs:any = {};
+  permisoModificar:boolean = false;
 
   displayedColumns: string[] = ['distrito','localidad','sede', 'regionalizacion','actions'];
 
@@ -62,6 +63,28 @@ export class ListaComponent implements OnInit {
     this.sharedService.setDataToCurrentApp('searchQuery',"");
   }
 
+  loadPermisos()
+  {
+    this.localidadService.getPermisos({}).subscribe(
+      response => {
+        let admin = response.data.admin;
+        if(!admin == true)
+        {
+          response.data.permisos.forEach(element => {
+            if(element == "permiso_modificar")
+            {
+              this.permisoModificar == true;
+            }
+          });
+        }else{
+          this.permisoModificar = true;
+        } 
+        
+        
+      }
+    );
+  }
+
   loadData(event?:PageEvent)
   {
     this.isLoading = true;
@@ -74,18 +97,13 @@ export class ListaComponent implements OnInit {
         per_page: event.pageSize
       };
     }
-    console.log(this.searchQuery);
-    console.log("------------------1");
     params.query = this.searchQuery;
 
     let filterFormValues = this.filterForm.value;
-    console.log(this.filterForm.value);
-    console.log("------------------2");
     
     let countFilter = 0;
 
     for(let i in filterFormValues){
-      console.log(i);
       if(filterFormValues[i]){
         if(i == 'municipio'){
           params[i] = filterFormValues[i];
@@ -95,8 +113,6 @@ export class ListaComponent implements OnInit {
         }else if(i == 'regionalizado'){
           params[i] = filterFormValues[i];
         }else if(i == 'orden'){
-          console.log("orden");
-          console.log(filterFormValues[i]);
           params[i] = filterFormValues[i];
         }else{ //profesion y rama (grupos)
           params[i] = filterFormValues[i].id;
@@ -104,9 +120,7 @@ export class ListaComponent implements OnInit {
         countFilter++;
       }
     }
-    console.log(params);
-    console.log("------------------3");
-
+    
     if(countFilter > 0){
       params.active_filter = true;
     }
@@ -124,8 +138,6 @@ export class ListaComponent implements OnInit {
     }
 
     let appStoredData = this.sharedService.getArrayDataFromCurrentApp(['searchQuery','paginator','filter']);
-    console.log(appStoredData);
-    console.log("------------------4");
     
     if(appStoredData['searchQuery']){
       this.searchQuery = appStoredData['searchQuery'];
@@ -150,10 +162,7 @@ export class ListaComponent implements OnInit {
       this.filterForm.patchValue(appStoredData['filter']);
     }*/
 
-    console.log(appStoredData['filter']);
-    console.log("------------------5");
     
-
     this.sharedService.setDataToCurrentApp('searchQuery',this.searchQuery);
     //this.sharedService.setDataToCurrentApp('filter',params);
     this.sharedService.setDataToCurrentApp('filter',filterFormValues);
@@ -208,8 +217,6 @@ export class ListaComponent implements OnInit {
       if(valid){
         this.loadData();
         //console.log('Aceptar');
-      }else{
-        console.log('Cancelar');
       }
     });
   }
@@ -236,8 +243,6 @@ export class ListaComponent implements OnInit {
     dialogRef.afterClosed().subscribe(valid => {
       if(valid){
         this.loadData();
-      }else{
-        console.log('Cancelar');
       }
     });
   }
@@ -329,7 +334,6 @@ export class ListaComponent implements OnInit {
       if(valid){
         this.localidadService.deleteLocalidad(obj.id).subscribe(
           response =>{
-            console.log(response);
             this.sharedService.showSnackBar("Se ha Actualizado Correctamente", null, 3000);
             this.isLoading = false;
             this.loadData();

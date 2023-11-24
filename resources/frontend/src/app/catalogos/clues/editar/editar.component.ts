@@ -43,6 +43,7 @@ export class EditarComponent implements OnInit {
   statusIcon: string;
 
   btn_guardar = false;
+  permiso_guardar:boolean = false;
 
   responsableIsLoading: boolean = false;
   filteredResponsable: any[];
@@ -106,17 +107,20 @@ export class EditarComponent implements OnInit {
     this.cluesService.getPermisos({}).subscribe(
       response => {
         let admin = response.data.admin;
-        if(!admin == true)
+        let permisos = response.data.permisos;
+        if(admin == false)
         {
-          response.data.permisos.forEach(element => {
-            if(element == "permiso_visor")
+          permisos.forEach(element => {
+            if(element == "permiso_admin_simoss")
             {
-              this.btn_guardar == true;
+              this.permiso_guardar = true;
             }
           });
+          
         }else{
-          this.btn_guardar = true;
+          this.permiso_guardar = true;
         }    
+        
       }
     );
   }

@@ -105,8 +105,8 @@
 
                                             <mat-menu #menu="matMenu">
                                                 <button mat-menu-item (click)="editar(row, 1)"><mat-icon color="primary">edit</mat-icon>Editar</button>
-                                                <button mat-menu-item (click)="transferir(row, 1)"><mat-icon color="primary">call_split</mat-icon>Transferir</button>
-                                                <button mat-menu-item (click)="eliminar(row, 1)"><mat-icon color="warn">close</mat-icon>Eliminar</button>
+                                                <button mat-menu-item (click)="transferir(row, 1)" *ngIf="permiso_guardar"><mat-icon color="primary">call_split</mat-icon>Transferir</button>
+                                                <button mat-menu-item (click)="eliminar(row, 1)" *ngIf="permiso_guardar"><mat-icon color="warn">close</mat-icon>Eliminar</button>
                                             </mat-menu>
                                         </td>
                                     </ng-container>
@@ -175,7 +175,7 @@
 
                                             <mat-menu #menu="matMenu">
                                                 <button mat-menu-item (click)="editar(row, 2)"><mat-icon color="primary">edit</mat-icon>Editar</button>
-                                                <button mat-menu-item (click)="eliminar(row, 2)"><mat-icon color="warn">close</mat-icon>Eliminar</button>
+                                                <button mat-menu-item (click)="eliminar(row, 2)" *ngIf="permiso_guardar"><mat-icon color="warn">close</mat-icon>Eliminar</button>
                                             </mat-menu>
                                         </td>
                                     </ng-container>

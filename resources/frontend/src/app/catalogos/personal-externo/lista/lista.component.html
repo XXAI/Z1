@@ -120,7 +120,7 @@
                                     </button>
                                     <mat-menu #menu="matMenu">
                                         <button mat-menu-item (click)="editar(row)"><mat-icon color="primary">edit</mat-icon>Editar</button>
-                                        <button mat-menu-item (click)="eliminar(row)"><mat-icon color="warn">delete</mat-icon>Eliminar</button>
+                                        <button mat-menu-item (click)="eliminar(row)" *ngIf="permiso_guardar"><mat-icon color="warn">delete</mat-icon>Eliminar</button>
                                     </mat-menu>
                                 </td>
                             </ng-container>

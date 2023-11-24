@@ -31,9 +31,13 @@ class PermisosController extends Controller
                         {
                             $permisos_aplicacion[] = "permiso_visor";
                         }
+                        if($value2->id == 'LUvn3O7BFIAyUbBl4wHqU6RZKWXrbL0T')
+                        {
+                            $permisos_aplicacion[] = "permiso_admin_simoss";
+                        }
                         if($value2->id == 'qTDSf7RjLNAivN2O0qEEBaDoGSs230B9')
                         {
-                            $permisos_aplicacion[] = "permiso_guardar_clues";
+                            $permisos_aplicacion[] = "permiso_guardar_general";
                         }
                     }
                 }
@@ -43,9 +47,13 @@ class PermisosController extends Controller
                     {
                         $permisos_aplicacion[] = "permiso_visor";
                     }
+                    if($value2->id == 'LUvn3O7BFIAyUbBl4wHqU6RZKWXrbL0T')
+                    {
+                        $permisos_aplicacion[] = "permiso_admin_simoss";
+                    }
                     if($value2->id == 'qTDSf7RjLNAivN2O0qEEBaDoGSs230B9')
                     {
-                        $permisos_aplicacion[] = "permiso_guardar_clues";
+                        $permisos_aplicacion[] = "permiso_guardar_general";
                     }
                 }
                 

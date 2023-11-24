@@ -123,5 +123,5 @@
 </div>
 <mat-dialog-actions>
     <button mat-raised-button (click)="this.dialogRef.close(true);" color="warn"><mat-icon>close</mat-icon> Cerrar</button>
-    <button mat-raised-button  *ngIf="btnGuardar" (click)="accionGuardar(1)" color="success" [disabled]="!trabajadorForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
+    <button mat-raised-button  *ngIf="permiso_guardar" (click)="accionGuardar(1)" color="success" [disabled]="!trabajadorForm.valid || isLoading"><mat-icon>save</mat-icon> Guardar</button>
 </mat-dialog-actions>
