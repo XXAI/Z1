@@ -46,7 +46,7 @@ export class FormularioComponent implements OnInit {
   pageSize: number = 20;
   selectedItemIndex: number = -1;
 
-  displayedColumns: string[] = ['localidad','camino', 'distancia', 'tipo','actions'];
+  displayedColumns: string[] = ['localidad','camino', 'distancia', 'tipo', 'poblacion','actions'];
   dataSource: any = [];
 
   lat: number = 15.404130;

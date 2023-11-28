@@ -129,7 +129,18 @@
                                     <div *ngIf="row.clues.length == 0">No asignado</div>
                                 </td>
                             </ng-container>
-
+                            <ng-container matColumnDef="poblacion">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> POBLACIÓN </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <div *ngIf="row.poblacion_inegi.length > 0">
+                                        {{ row.poblacion_inegi[0].cantidad }}
+                                        <div style="font-size: 8pt;">({{ row.poblacion_inegi[0].anio }}) </div>
+                                    </div>
+                                    <div *ngIf="row.poblacion_inegi.length == 0">
+                                        SIN DATO
+                                    </div>
+                                </td>
+                            </ng-container>
                             <ng-container matColumnDef="regionalizacion">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> REGIONALIZACIÓN </th>
                                 <td mat-cell *matCellDef="let row">

@@ -28,6 +28,8 @@ class RegionalizacionCluesController extends Controller
                 DB::RAW("(select count(*) from regionalizacion_clues where clues=catalogo_clues.clues and deleted_at is null) as cantidad_localidades"),
                 DB::RAW("(select clave_localidad from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id) as clave_localidad"),
                 DB::RAW("(select descripcion from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id) as localidad"),
+                DB::RAW("(select cantidad from catalogo_poblacion_inegi where catalogo_localidad_id=catalogo_clues.catalogo_localidad_id ORDER BY anio DESC LIMIT 1 ) as poblacion_inegi"),
+                DB::RAW("(select anio from catalogo_poblacion_inegi where catalogo_localidad_id=catalogo_clues.catalogo_localidad_id ORDER BY anio DESC LIMIT 1 ) as poblacion_anio_inegi"),
                 DB::RAW("(select clave_municipio from catalogo_municipio where id =(select catalogo_municipio_id from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id)) as clave_municipio"),
                 DB::RAW("(select descripcion from catalogo_municipio where id =(select catalogo_municipio_id from catalogo_localidad where id=catalogo_clues.catalogo_localidad_id)) as municipio"),
                 "latitud",
@@ -88,7 +90,10 @@ class RegionalizacionCluesController extends Controller
                         //                    ->where("regionalizacion_clues.clues", $id);
             */
 
-            $objeto = RegionalizacionClues::with("catalogo_localidad.municipio", "catalogo_tipo_camino", "catalogo_clues")->where("clues", $id)->orderBy("tipo_localidad_regionalizacion",'ASC');
+            $objeto = RegionalizacionClues::with("catalogo_localidad.municipio", 
+                                                "catalogo_localidad.poblacionInegi", 
+                                                "catalogo_tipo_camino", 
+                                                "catalogo_clues")->where("clues", $id)->orderBy("tipo_localidad_regionalizacion",'ASC');
 
             if(isset($parametros['query'])){
                 $objeto = $objeto->where(function($query)use($parametros){

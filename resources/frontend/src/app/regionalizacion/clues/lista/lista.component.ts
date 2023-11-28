@@ -31,7 +31,7 @@ export class ListaComponent implements OnInit {
   pageSize: number = 20;
   selectedItemIndex: number = -1;
 
-  displayedColumns: string[] = ['clues','tipo','sede','localidades','actions'];
+  displayedColumns: string[] = ['clues','tipo','sede', 'poblacion','localidades','actions'];
   dataSource: any = [];
 
   constructor(private sharedService: SharedService, public dialog: MatDialog, private regionalizacionService:RegionalizacionService, private fb: FormBuilder, public mediaObserver: MediaObserver) { }

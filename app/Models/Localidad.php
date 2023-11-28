@@ -27,6 +27,6 @@ class Localidad extends Model
     }
 
     public function poblacionInegi(){
-        return $this->hasMany('App\Models\PoblacionInegi','catalogo_localidad_id');
+        return $this->hasMany('App\Models\PoblacionInegi','catalogo_localidad_id')->orderBy("anio", "desc");
     }
 }

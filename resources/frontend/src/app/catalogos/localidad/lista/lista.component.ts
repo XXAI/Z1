@@ -36,7 +36,7 @@ export class ListaComponent implements OnInit {
   filterCatalogs:any = {};
   permisoModificar:boolean = false;
 
-  displayedColumns: string[] = ['distrito','localidad','sede', 'regionalizacion','actions'];
+  displayedColumns: string[] = ['distrito','localidad','sede', 'poblacion', 'regionalizacion','actions'];
 
   dataSource: any = [];
 

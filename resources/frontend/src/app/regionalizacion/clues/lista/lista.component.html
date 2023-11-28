@@ -58,6 +58,20 @@
                                 </td>
                             </ng-container>
 
+                             <!-- Username Column  -->
+                             <ng-container matColumnDef="poblacion">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> POBLACIÓN </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <div *ngIf="row.poblacion_inegi">
+                                        <b>{{ row.poblacion_inegi }}</b>
+                                        <div style="font-size: 8pt;">({{ row.poblacion_anio_inegi}})</div>
+                                    </div>
+                                    <div *ngIf="!row.poblacion_inegi">
+                                        SIN DATO
+                                    </div>
+                                </td>
+                            </ng-container>
+
                             <ng-container matColumnDef="sede">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> SEDE </th>
                                 <td mat-cell *matCellDef="let row">
