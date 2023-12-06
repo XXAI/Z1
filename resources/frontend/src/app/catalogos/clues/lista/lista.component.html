@@ -84,8 +84,8 @@
                                         <mat-icon>more_vert</mat-icon>
                                     </button>
                                     <mat-menu #menu="matMenu">
-                                        <button mat-menu-item routerLink="/catalogos/clues/editar/{{row.clues}}" matTooltip="Editar Datos de la Clue"><mat-icon color="primary">edit</mat-icon>Editar</button>
-                                        <!--<button mat-menu-item (click)="verClue(row.clues,i)" matTooltip="Ver Detalle de la Clues"><mat-icon color="primary">remove_red_eye</mat-icon>Detalles</button>-->
+                                        <button mat-menu-item routerLink="/catalogos/clues/editar/{{row.clues}}" matTooltip="Editar Datos de la Clue"><mat-icon color="primary">edit</mat-icon>EDITAR</button>
+                                        <button mat-menu-item *ngIf="permiso_guardar" (click)="eliminarClue(row.clues)" matTooltip="Eliminar Clues"><mat-icon color="primary">delete</mat-icon>DAR DE BAJA</button>
                                     </mat-menu>
 
                                 </td>

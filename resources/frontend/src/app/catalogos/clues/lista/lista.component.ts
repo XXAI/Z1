@@ -9,6 +9,7 @@ import { FormBuilder, Validators, FormControl } from '@angular/forms';
 
 import { MediaObserver } from '@angular/flex-layout';
 import { DetailsComponentClue } from '../details-clue/details-clue.component';
+import { ConfirmActionDialogComponent } from '../../../utils/confirm-action-dialog/confirm-action-dialog.component';
 
 @Component({
   selector: 'app-lista',
@@ -28,6 +29,7 @@ export class ListaComponent implements OnInit {
   currentPage: number = 0;
   pageSize: number = 20;
   selectedItemIndex: number = -1;
+  permiso_guardar:boolean = false;
 
   displayedColumns: string[] = ['Clues', 'Localidad','Unidad', 'actions'];
   dataSource: any = [];
@@ -71,6 +73,30 @@ export class ListaComponent implements OnInit {
     // }
 
     this.loadCluesData(null);
+    this.loadPermisos();
+  }
+
+  loadPermisos()
+  {
+    this.cluesService.getPermisos({}).subscribe(
+      response => {
+        let admin = response.data.admin;
+        let permisos = response.data.permisos;
+        if(admin == false)
+        {
+          permisos.forEach(element => {
+            if(element == "permiso_admin_simoss")
+            {
+              this.permiso_guardar = true;
+            }
+          });
+          
+        }else{
+          this.permiso_guardar = true;
+        }    
+        
+      }
+    );
   }
 
   public loadCluesData(event?:PageEvent){
@@ -115,6 +141,32 @@ export class ListaComponent implements OnInit {
     return event;
   }
 
+  eliminarClue(clues:string)
+  {
+    const dialogRef = this.dialog.open(ConfirmActionDialogComponent, {
+      width: '500px',
+      data:{dialogTitle:'ELIMINAR',dialogMessage:'¿Realmente desea eliminar este registro? Escriba ACEPTAR a continuación para realizar el proceso.',validationString:'ACEPTAR',btnColor:'primary',btnText:'Aceptar'}
+    });
+
+    dialogRef.afterClosed().subscribe(valid => {
+      if(valid){
+        let params = clues ;
+        this.cluesService.deleteClues(params).subscribe(
+          response =>{
+            this.loadCluesData();
+          },
+          errorResponse =>{
+            var errorMessage = "Ocurrió un error.";
+            if(errorResponse.status == 409){
+              errorMessage = errorResponse.error.message;
+            }
+            this.sharedService.showSnackBar(errorMessage, null, 3000);
+            this.isLoading = false;
+          }
+        );
+      }
+    });
+  }
   cleanSearch(){
     this.searchQuery = '';
     this.sharedService.setDataToCurrentApp('searchQuery',"");

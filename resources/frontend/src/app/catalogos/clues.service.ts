@@ -28,6 +28,14 @@ export class CluesService {
       })
     );
   }
+ 
+  deleteClues(payload):Observable<any> {
+  return this.http.delete<any>(this.url + "/" + payload).pipe(
+      map( response => {
+        return response;
+      })
+    );
+  }
 
   verInfoClue(id:any,payload:any):Observable<any>{
     return this.http.get<any>(this.url_info_clue + id, {params:payload}).pipe(

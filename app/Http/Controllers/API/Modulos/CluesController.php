@@ -14,6 +14,7 @@ use App\Models\Clues;
 use App\Models\Localidad;
 use App\Models\Municipio;
 use App\Models\RegionalizacionClues;
+use App\Models\RelRegionalizacionRh;
 
 
 class CluesController extends Controller
@@ -225,6 +226,24 @@ class CluesController extends Controller
             return Response::json(['error' => $e->getMessage()], HttpResponse::HTTP_CONFLICT);
         }
 
+    }
+
+    public function Destroy($id)
+    {
+        try{
+            $regionalizacion = RegionalizacionClues::where("clues", $id);
+            $regionalizacion->delete();
+            
+            $regionalizacionrh = RelRegionalizacionRh::where("clues", $id);
+            $regionalizacionrh->delete();
+
+            $object = Clues::find($id);
+            $object->delete();
+
+            return response()->json(['data'=>"Registro Eliminado"], HttpResponse::HTTP_OK);
+        }catch(\Exception $e){
+            return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
     }
 
     private function getUserAccessData($loggedUser = null){
