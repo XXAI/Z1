@@ -255,7 +255,12 @@ export class FormularioComponent implements OnInit {
         this.latUnidad = Number(response.clues.latitud);
         this.longUnidad = Number(response.clues.longitud);
         this.unidadMedica = response.clues;
-        this.tipoMicroregion = this.unidadMedica.catalogo_microrregion.descripcion+" "+this.unidadMedica.catalogo_microrregion.descripcion_tipo;
+        if(this.unidadMedica.catalogo_microrregion)
+        {
+          this.tipoMicroregion = this.unidadMedica.catalogo_microrregion.descripcion+" "+this.unidadMedica.catalogo_microrregion.descripcion_tipo;
+        }else{
+          this.tipoMicroregion = "SIN TIPO";
+        }
         
         if(this.unidadMedica.catalogo_localidad != null)
         {
