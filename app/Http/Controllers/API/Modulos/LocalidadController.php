@@ -22,8 +22,6 @@ class LocalidadController extends Controller
                 $objeto = $objeto->whereRaw("catalogo_localidad.catalogo_municipio_id in (select id from catalogo_municipio where catalogo_distrito_id in (".$access->distrito."))");
             }
 
-            
-            
             $objeto = $this->aplicarFiltros($objeto, $parametros);
             
             if(isset($parametros['page'])){
@@ -43,6 +41,11 @@ class LocalidadController extends Controller
 
     private function aplicarFiltros($main_query, $parametros){
         //Filtros, busquedas, ordenamiento
+        
+        if(isset($parametros['municipio']) && $parametros['municipio']){
+            $main_query = $main_query->where("catalogo_municipio_id", $parametros['municipio']);
+        }
+
         if(isset($parametros['query']) && $parametros['query']){
             $main_query = $main_query->where(function($query)use($parametros){
                 return $query->where('descripcion','LIKE','%'.$parametros['query'].'%')
