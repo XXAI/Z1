@@ -9,9 +9,21 @@ export class SharedService {
 
   constructor(private snackBar: MatSnackBar) { }
 
-  showSnackBar(message, action, duration){
+  showSnackBar(message, action, duration, type = null){
+    let classType:string = '';
+    switch(type)
+    {
+      case 1://Exito
+        classType = 'snack-suceess';
+        break;
+        case 2://Exito
+        classType = 'snack-error';
+        break;
+    }
+    
     this.snackBar.open(message, action,{
-      duration: duration
+      duration: duration,
+      panelClass: [classType]
     });
   }
 

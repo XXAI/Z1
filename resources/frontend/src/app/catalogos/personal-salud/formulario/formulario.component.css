@@ -3,3 +3,13 @@
     line-height: 18px;
     height: 46px;
 }
+
+.snack-sucess
+{
+    background: #2c5905;
+}
+
+.snack-error
+{
+    background: #721702;
+}

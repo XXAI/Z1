@@ -142,7 +142,7 @@ export class ListaComponent implements OnInit {
       if(valid){
         this.personalService.eliminarTrabajador(obj.id).subscribe(
           response =>{
-            console.log(response);
+            
             this.sharedService.showSnackBar("Se ha Actualizado Correctamente", null, 3000);
             this.isLoading = false;
             this.loadData();

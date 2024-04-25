@@ -110,7 +110,7 @@ export class FormularioComponent implements OnInit {
           rfc:obj.rfc, 
           curp: obj.curp,
           sexo_id: obj.sexo_id,
-          ur: obj.ur.ur,
+          //ur: obj.ur.ur,
           edad: obj.edad,
           catalogo_lengua_id: obj.catalogo_lengua_id,
           clues: obj.rel_rh.clues,
@@ -180,22 +180,22 @@ export class FormularioComponent implements OnInit {
       this.personalService.editTrabajador(this.data.id, this.trabajadorForm.value).subscribe(
         response => {
           this.dialogRef.close(true);
-          this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000);
+          this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000, 1);
         },
         responsError =>{
           console.log(responsError);
-          this.sharedService.showSnackBar('Error al intentar recuperar datos de', null, 4000);
+          this.sharedService.showSnackBar('Error al intentar recuperar datos de', null, 4000, 2);
         }
       );
     }else{
       this.personalService.saveTrabajador(this.trabajadorForm.value).subscribe(
         response => {
           this.dialogRef.close(true);
-          this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000);
+          this.sharedService.showSnackBar("Se ha guardado el registro", null, 3000, 1);
         },
         responsError =>{
           console.log(responsError);
-          this.sharedService.showSnackBar('Error al intentar recuperar datos de', null, 4000);
+          this.sharedService.showSnackBar(responsError.error.error, null, 4000, 2);
         }
       );
     }

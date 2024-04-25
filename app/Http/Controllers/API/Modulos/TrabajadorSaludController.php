@@ -48,7 +48,7 @@ class TrabajadorSaludController extends Controller
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 20;
                 $objeto = $objeto->paginate($resultadosPorPagina);
             }
-
+            
             return response()->json(['data'=>$objeto],HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
@@ -101,7 +101,21 @@ class TrabajadorSaludController extends Controller
             return response()->json(['error' => "Hace falta campos obligatorios. ".$v->errors() ], HttpResponse::HTTP_CONFLICT);
         }
         try {
-            $object = new Trabajador();
+            $object = Trabajador::where("rfc",\Str::upper($inputs['rfc']))->withTrashed()->with("rel_rh.unidad")->first();
+            
+            if($object && $object->deleted_at != null)
+            {
+                $object->deleted_at = null;
+                $object->save();
+            }else if($object && $object->deleted_at == null && $object->rel_rh != null)
+            {
+                DB::rollback();
+                return Response::json(['error' => "ERROR: Este personal esta Asignado a: ".$object->rel_rh->unidad->descripcion], HttpResponse::HTTP_CONFLICT);
+            }else if(!$object)
+            {
+                $object = new Trabajador();
+            }
+
             $object->rfc =                  \Str::upper($inputs['rfc']);
             $object->curp =                  \Str::upper($inputs['curp']);
             $object->nombre =               \Str::upper($inputs['nombre']);
@@ -120,7 +134,7 @@ class TrabajadorSaludController extends Controller
             $relacion->save();
             DB::commit();
             
-        return response()->json(["data"=>$object/*, "r"=>$object_responsable/*, "d"=>$object_director*/],HttpResponse::HTTP_OK);
+        return response()->json(["data"=>$object],HttpResponse::HTTP_OK);
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -203,6 +217,7 @@ class TrabajadorSaludController extends Controller
             $object = Trabajador::with("rel_rh")->find($id);
             $relacion = RelRegionalizacionRh::find($object->rel_rh->id);
             $relacion->delete();
+            $object->delete();
 
             return response()->json(['data'=>$object], HttpResponse::HTTP_OK);
         }catch(\Exception $e){

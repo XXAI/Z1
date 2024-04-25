@@ -129,3 +129,16 @@ a.item-mini-side-menu div.mat-list-item-content {
     /*max-height: 80% !important;*/
     /*calc(80% - 300px) !important;*/
 }
+
+.snack-success, .snack-error{
+    color: white !important;
+}
+.snack-success
+{
+    background-color: #143a05 !important;
+}
+
+.snack-error
+{
+    background-color: #721702 !important;
+}
