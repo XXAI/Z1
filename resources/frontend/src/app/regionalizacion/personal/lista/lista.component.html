@@ -26,8 +26,17 @@
                             </button>
 
                             <button mat-raised-button color="primary" (click)="agregar()" style="margin-right: 10pt; padding: 5pt;">
-                                <mat-icon >add_circle</mat-icon> 
+                                <mat-icon>add_circle</mat-icon> 
                             </button>
+                            <button mat-raised-button [matMenuTriggerFor]="menu" color="primary" [disabled]="loadReporte" style="margin-right: 10pt; padding: 5pt;">
+                                <i class="uil uil-export"></i>
+                                <mat-progress-bar mode="query" *ngIf="loadReporte"></mat-progress-bar>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="reporteExcel()">REPORTE PERSONAL SALUD</button>
+                            <button mat-menu-item  (click)="reporteExcelExterno()">REPORTE PERSONAL EXTERNO</button>
+                            </mat-menu>
+                            <!-- <button mat-raised-button  color="primary" (click)="reporteExcel()" ><i class="uil uil-export"></i></button> -->
                         </section>
                     </div>
                 </div>
@@ -50,6 +59,7 @@
                             <button mat-raised-button color="accent" (click)="applyFilter()" style="margin-right: 10pt; padding: 5pt;">
                                 <mat-icon>search</mat-icon>
                             </button>
+                            
                         </div>
                     </div>
 

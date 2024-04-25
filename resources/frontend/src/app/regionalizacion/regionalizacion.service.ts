@@ -16,6 +16,7 @@ export class RegionalizacionService {
   url_localidad_filtro      = `${environment.base_url}/regionalizacion-localidades-filtro`;
 
   url_personal              = `${environment.base_url}/reginalizacion-clues-personal`;
+  url_personal_externo      = `${environment.base_url}/reginalizacion-clues-personal-externo`;
   url_buscador_personal     = `${environment.base_url}/buscador-personal`;
   url_transferir_personal   = `${environment.base_url}/transferir-personal`;
   url_clues                 = `${environment.base_url}/catalogo-clues`;
@@ -59,6 +60,9 @@ export class RegionalizacionService {
   }
 
   getCluesList(payload):Observable<any> {
+    if(payload.reporte && payload.export_excel){
+      return this.http.get<any>(this.url, {params:payload, responseType: 'blob' as 'json'});
+    }
     return this.http.get<any>(this.url,{params: payload}).pipe(
       map( response => {
         return response;
@@ -123,11 +127,22 @@ export class RegionalizacionService {
   }
 
   getPersonalList(params:any):Observable<any>{
+    
+    if(params.reporte && params.export_excel){
+      return this.http.get<any>(this.url_personal, {params:params, responseType: 'blob' as 'json'});
+    }
     return this.http.get<any>(this.url_personal, {params}).pipe(
       map( (response: any) => {
         return response;
       })
     );
+  }
+  
+  getPersonalListExterno(params:any):Observable<any>{
+    
+    if(params.reporte && params.export_excel){
+      return this.http.get<any>(this.url_personal_externo, {params:params, responseType: 'blob' as 'json'});
+    }
   }
   
   getFilterPersonalExternoList(id:any, params:any):Observable<any>{

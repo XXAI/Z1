@@ -12,6 +12,7 @@ import { map, startWith } from 'rxjs/operators';
 import { trigger, transition, animate, style } from '@angular/animations';
 import { MediaObserver } from '@angular/flex-layout';
 import { FormularioComponent } from '../formulario/formulario.component';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-lista',
@@ -21,6 +22,7 @@ import { FormularioComponent } from '../formulario/formulario.component';
 export class ListaComponent implements OnInit {
 
   isLoading: boolean = false;
+  loadReporte: boolean = false;
   
   showMyStepper:boolean = false;
   searchQuery: string = '';
@@ -44,9 +46,26 @@ export class ListaComponent implements OnInit {
     this.loadData();
   }
 
-  agregar()
+  reporteExcel():void
   {
-
+    this.loadReporte = true;
+    let data = { reporte:true,export_excel:true, query: this.searchQuery };
+    this.regionalizacionService.getCluesList(data).subscribe(
+      response =>{
+        FileSaver.saveAs(response,'Regionalizacion_clues');
+        this.loadReporte = false;
+      },
+      errorResponse =>{
+        this.isLoading = false;
+        this.loadReporte = false;
+        var errorMessage = "Ocurrió un error.";
+        if(errorResponse.status == 409){
+          errorMessage = errorResponse.error.error.message;
+        }
+        this.sharedService.showSnackBar(errorMessage, "ERROR", 3000);
+        
+      }
+    );
   }
 
   regionalizacion(obj:any)

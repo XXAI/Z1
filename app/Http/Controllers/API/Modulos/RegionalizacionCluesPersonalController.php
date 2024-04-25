@@ -14,7 +14,7 @@ use App\Models\Localidad;
 use App\Models\Trabajador;
 use App\Models\RelRegionalizacionRh;
 use App\Models\GrupoPersonal;
-
+use App\Exports\DevReportExport;
 
 class RegionalizacionCluesPersonalController extends Controller
 {
@@ -54,6 +54,65 @@ class RegionalizacionCluesPersonalController extends Controller
                     return $query->whereRaw("trabajador.id in (select trabajador_id from regionalizacion_rh where deleted_at is null 
                                             and clues in (select clues from catalogo_clues where distrito_id in (".$access->distrito.") ".$filtro_salud."))");
                 });
+            }
+            
+            
+            if(isset($parametros['reporte'])){
+               
+                if(isset($parametros['export_excel']) && $parametros['export_excel']){
+                    try{
+                        ini_set('memory_limit', '-1');
+                        
+                        $dataSalud = Trabajador::getModel();
+                        
+                        $dataSalud = $dataSalud
+                        ->Join("regionalizacion_rh", "regionalizacion_rh.trabajador_id", "trabajador.id")
+                        ->leftJoin("catalogo_tipo_trabajador", "catalogo_tipo_trabajador.id", "trabajador.tipo_personal_id")
+                        ->Join("catalogo_clues", "catalogo_clues.clues", "regionalizacion_rh.clues");
+                        $dataSalud = $dataSalud->select(
+                        "catalogo_clues.clues",
+                        "catalogo_clues.descripcion as unidad",
+                        "trabajador.rfc",
+                        "trabajador.curp",
+                        "trabajador.nombre",
+                        "trabajador.apellido_paterno",
+                        "trabajador.apellido_materno",
+                        "catalogo_tipo_trabajador.descripcion as tipo_trabajador"
+                        );
+                        
+                        $dataSalud = $dataSalud->whereNull("trabajador.deleted_at")
+                        ->whereNull("regionalizacion_rh.deleted_at")
+                        ->whereNull("catalogo_clues.deleted_at");
+
+                        
+                        $dataSalud = $dataSalud
+                        ->orderBy("catalogo_clues.clues", "asc")
+                        ->orderBy("trabajador.apellido_paterno", "asc")
+                        ->orderBy("trabajador.apellido_materno", "asc")
+                        ->orderBy("catalogo_tipo_trabajador.descripcion", "asc");
+                        /*if(isset($parametros['query'])){
+                            $data = $data->where(function($query)use($parametros){
+                                return $query->where('catalogo_clues.clues','LIKE','%'.$parametros['query'].'%')
+                                            ->orWhere('catalogo_clues.descripcion','LIKE','%'.$parametros['query'].'%');
+                            });
+                        }*/
+                        if(!$access->is_admin){
+                            $dataSalud = $dataSalud->whereIn('catalogo_clues.distrito_id', [$access->distrito]);
+                        }
+                        $dataSalud = $dataSalud->get();
+                        
+                        $columnas = array_keys(collect($dataSalud[0])->toArray());
+
+                        if(isset($parametros['nombre_archivo']) && $parametros['nombre_archivo']){
+                            $filename = $parametros['nombre_archivo'];
+                        }else{
+                            $filename = 'reporte-personal-activo';
+                        }
+                        return (new DevReportExport($dataSalud,$columnas))->download($filename.'.xlsx'); //Excel::XLSX, ['Access-Control-Allow-Origin'=>'*','Access-Control-Allow-Methods'=>'GET']*/
+                    }catch(\Exception $e){
+                        return response()->json(['error' => $e->getMessage(),'line'=>$e->getLine()], HttpResponse::HTTP_CONFLICT);
+                    }
+                }
             }
 
             if(isset($parametros['page'])){
@@ -138,6 +197,62 @@ class RegionalizacionCluesPersonalController extends Controller
             return response()->json($objeto,HttpResponse::HTTP_OK);
         }catch(\Exception $e){
             return response()->json(['error'=>['message'=>$e->getMessage(),'line'=>$e->getLine()]], HttpResponse::HTTP_CONFLICT);
+        }
+    }
+
+    public function externo(Request $request)
+    {
+        try{
+            $access = $this->getUserAccessData();
+            ini_set('memory_limit', '-1');
+            
+            $dataSalud = TrabajadorExterno::getModel();
+            
+            $dataSalud = $dataSalud
+            ->Join("regionalizacion_rh", "regionalizacion_rh.trabajador_id", "trabajador_externo.id")
+            ->leftJoin("catalogo_tipo_trabajador", "catalogo_tipo_trabajador.id", "trabajador_externo.tipo_personal_id")
+            ->Join("catalogo_localidad", "catalogo_localidad.id", "regionalizacion_rh.catalogo_localidad_id")
+            ->Join("catalogo_municipio", "catalogo_municipio.id", "catalogo_localidad.catalogo_municipio_id");
+            $dataSalud = $dataSalud->select(
+            "catalogo_municipio.descripcion as municipio",
+            "catalogo_localidad.descripcion as localidad",
+            "trabajador_externo.rfc",
+            "trabajador_externo.curp",
+            "trabajador_externo.nombre",
+            "trabajador_externo.apellido_paterno",
+            "trabajador_externo.apellido_materno",
+            "catalogo_tipo_trabajador.descripcion as tipo_trabajador"
+            );
+            
+            $dataSalud = $dataSalud->where("regionalizacion_rh.tipo_trabajador_id", 2);
+            $dataSalud = $dataSalud->whereNull("trabajador_externo.deleted_at")
+            ->whereNull("regionalizacion_rh.deleted_at")
+            ->whereNull("catalogo_localidad.deleted_at")
+            ->whereNull("catalogo_municipio.deleted_at");
+
+            
+            $dataSalud = $dataSalud
+            ->orderBy("catalogo_municipio.descripcion", "asc")
+            ->orderBy("catalogo_localidad.descripcion", "asc")
+            ->orderBy("trabajador_externo.apellido_paterno", "asc")
+            ->orderBy("trabajador_externo.apellido_materno", "asc")
+            ->orderBy("catalogo_tipo_trabajador.descripcion", "asc");
+           
+            if(!$access->is_admin){
+                $dataSalud = $dataSalud->whereIn('catalogo_municipio.catalogo_distrito_id', [$access->distrito]);
+            }
+            $dataSalud = $dataSalud->get();
+            
+            $columnas = array_keys(collect($dataSalud[0])->toArray());
+
+            if(isset($parametros['nombre_archivo']) && $parametros['nombre_archivo']){
+                $filename = $parametros['nombre_archivo'];
+            }else{
+                $filename = 'reporte-personal-activo';
+            }
+            return (new DevReportExport($dataSalud,$columnas))->download($filename.'.xlsx'); //Excel::XLSX, ['Access-Control-Allow-Origin'=>'*','Access-Control-Allow-Methods'=>'GET']*/
+        }catch(\Exception $e){
+            return response()->json(['error' => $e->getMessage(),'line'=>$e->getLine()], HttpResponse::HTTP_CONFLICT);
         }
     }
 

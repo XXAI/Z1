@@ -13,6 +13,7 @@ import { trigger, transition, animate, style } from '@angular/animations';
 import { MediaObserver } from '@angular/flex-layout';
 import { FormularioComponent } from '../formulario/formulario.component';
 import { TransferirComponent } from '../transferir/transferir.component';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-lista',
@@ -22,6 +23,7 @@ import { TransferirComponent } from '../transferir/transferir.component';
 export class ListaComponent implements OnInit {
 
   isLoading: boolean = false;
+  loadReporte: boolean = false;
   
   showMyStepper:boolean = false;
   searchQuery: string = '';
@@ -59,6 +61,52 @@ export class ListaComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
     this.loadPermisos();
+  }
+
+  reporteExcel():void
+  {
+    this.loadReporte = true;
+    let data = { reporte:true,export_excel:true, query: this.searchQuery };
+    this.regionalizacionService.getPersonalList(data).subscribe(
+      response =>{
+        this.loadReporte = false;
+        //console.log(response);
+        FileSaver.saveAs(response,'Regionalizacion_personal');
+      },
+      errorResponse =>{
+        this.loadReporte = false;
+        this.isLoading = false;
+        var errorMessage = "Ocurrió un error.";
+        if(errorResponse.status == 409){
+          errorMessage = errorResponse.error.error.message;
+        }
+        this.sharedService.showSnackBar(errorMessage, "ERROR", 3000);
+        
+      }
+    );
+  }
+  
+  reporteExcelExterno():void
+  {
+    this.loadReporte = true;
+    let data = { reporte:true,export_excel:true, query: this.searchQuery };
+    this.regionalizacionService.getPersonalListExterno(data).subscribe(
+      response =>{
+        this.loadReporte = false;
+        //console.log(response);
+        FileSaver.saveAs(response,'Regionalizacion_personal_externo');
+      },
+      errorResponse =>{
+        this.loadReporte = false;
+        this.isLoading = false;
+        var errorMessage = "Ocurrió un error.";
+        if(errorResponse.status == 409){
+          errorMessage = errorResponse.error.error.message;
+        }
+        this.sharedService.showSnackBar(errorMessage, "ERROR", 3000);
+        
+      }
+    );
   }
 
   loadPermisos()

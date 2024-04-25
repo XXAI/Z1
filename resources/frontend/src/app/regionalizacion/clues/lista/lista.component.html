@@ -13,7 +13,6 @@
                             <button matSuffix *ngIf="searchQuery" mat-icon-button (click)="cleanSearch()" [attr.aria-label]="'Clean Query'" [attr.aria-pressed]="'cleanQuery'">
                                 <mat-icon>close</mat-icon>
                             </button>
-
                         </mat-form-field>
                     </div>
                     <div fxFlex="none" fxFlex.xs="100">
@@ -23,7 +22,10 @@
                                 <mat-icon >search</mat-icon> 
                             </button>
 
-                            <!--<button mat-raised-button  color="primary" (click)="agregar()"><mat-icon>add_circle</mat-icon> Agregar Trabajador</button>-->
+                            <button mat-raised-button  color="primary" [disabled]="loadReporte" (click)="reporteExcel()" style="margin-right: 10pt; padding: 5pt;">
+                                <i class="uil uil-export"></i>
+                                <mat-progress-bar mode="query" *ngIf="loadReporte"></mat-progress-bar>
+                            </button>
                         </section>
                     </div>
                 </div>

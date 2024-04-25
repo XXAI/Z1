@@ -76,6 +76,7 @@ Route::group(['middleware'=>'auth'],function($router){
     
     
     Route::apiResource('reginalizacion-clues-personal',  'API\Modulos\RegionalizacionCluesPersonalController');
+    Route::get('reginalizacion-clues-personal-externo',  'API\Modulos\RegionalizacionCluesPersonalController@externo');
     Route::get('catalogo-personal-externo',              'API\Modulos\RegionalizacionCluesPersonalController@getExterno');
     Route::get('catalogo-grupo-personal/{id}',           'API\Modulos\CatalogosController@getTipoGrupo');
     Route::apiResource('localidad',                      'API\Modulos\LocalidadController');
