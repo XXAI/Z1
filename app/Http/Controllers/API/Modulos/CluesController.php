@@ -117,10 +117,10 @@ class CluesController extends Controller
             $object->catalogo_microrregion_id       =    $inputs['catalogo_microrregion_id'];
             $object->catalogo_localidad_id          =    $inputs['catalogo_localidad']['id'];
 
+            
             $object->save();
     
-            if($inputs['catalogo_localidad']['id'] != $object->catalogo_localidad_id)
-            {
+            
                 $objecto = new RegionalizacionClues();
                 $objecto->catalogo_localidad_id             =  $inputs['catalogo_localidad']['id'];
                 $objecto->catalogo_tipo_camino_id           =  1;
@@ -129,8 +129,7 @@ class CluesController extends Controller
                 $objecto->clues                             =  $inputs['clues'];
                 $objecto->tipo_localidad_regionalizacion    =  "SEDE";
                 $objecto->save();
-            }
-
+            
             DB::commit();
             
             return response()->json($object,HttpResponse::HTTP_OK);
@@ -162,7 +161,7 @@ class CluesController extends Controller
             'catalogo_microrregion_id'             => 'required',
             'catalogo_localidad'                => 'required',
             'descripcion'                => 'required',
-            //'direccion'                => 'required',
+            'direccion'                => 'required',
             'cp'                => 'required',
             'telefono'                => 'required',
             'nucleos_camas'                => 'required',
@@ -187,6 +186,7 @@ class CluesController extends Controller
         try {
             if($inputs['catalogo_localidad']['id'] != $object->catalogo_localidad_id)
             {
+                
                 $relacion = RegionalizacionClues::whereRaw("clues = '".$id."'")->where('tipo_localidad_regionalizacion','SEDE')->first();
                 if($relacion)
                 {
@@ -215,7 +215,7 @@ class CluesController extends Controller
             $object->catalogo_microrregion_id       =    $inputs['catalogo_microrregion_id'];
             $object->catalogo_localidad_id          =    $inputs['catalogo_localidad']['id'];
 
-            $object->update();
+            $object->save();
     
             DB::commit();
             

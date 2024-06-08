@@ -9,7 +9,7 @@ export class SharedService {
 
   constructor(private snackBar: MatSnackBar) { }
 
-  showSnackBar(message, action, duration, type = null){
+  showSnackBar(message, action, duration, type = 1){
     let classType:string = '';
     switch(type)
     {

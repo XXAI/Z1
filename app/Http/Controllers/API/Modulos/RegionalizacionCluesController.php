@@ -68,7 +68,9 @@ class RegionalizacionCluesController extends Controller
                             $data = $data->select(
                             "catalogo_clues.clues",
                             "catalogo_clues.descripcion as unidad",
+                            "catalogo_municipio.clave_municipio as clave_municipio",
                             "catalogo_municipio.descripcion as municipio",
+                            "catalogo_localidad.clave_localidad as clave_localidad",
                             "catalogo_localidad.descripcion as localidad",
                             "catalogo_tipo_camino.descripcion as tipo_camino",
                             "regionalizacion_clues.distancia",

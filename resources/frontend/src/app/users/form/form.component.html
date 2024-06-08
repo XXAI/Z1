@@ -171,6 +171,7 @@
                                 <div fxLayoutGap class="avatars-list">
                                     <div fxFlex="10" fxFlex.xs="25" *ngFor="let avatar of avatarList" class="avatar-item" >
                                         <button mat-raised-button (click)="selectedAvatar = avatar.file" [color]="(selectedAvatar == avatar.file)?'primary':''">
+                                            
                                             <mat-icon fxFlexFill svgIcon="{{avatar.id}}"></mat-icon>
                                         </button>
                                     </div>

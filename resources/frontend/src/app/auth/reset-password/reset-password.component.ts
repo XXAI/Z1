@@ -39,11 +39,11 @@ export class ResetPasswordComponent implements OnInit {
       (res) => {
         this.msg = res;
         this.isLoading = false;
-        this.sharedService.showSnackBar(this.msg?.message, 'Cerrar', 4000);
+        this.sharedService.showSnackBar(this.msg?.message, 'Cerrar', 4000,1);
       },(error) => {
         this.err = error.error.message;
         this.isLoading = false;
-        this.sharedService.showSnackBar(this.err, 'Cerrar', 4000);
+        this.sharedService.showSnackBar(this.err, 'Cerrar', 4000,2);
       }
     );
     

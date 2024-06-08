@@ -10,6 +10,8 @@ import { startWith, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from '../../auth/models/user';
 import { AVATARS } from '../../avatars';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-form',
@@ -25,8 +27,19 @@ export class FormComponent implements OnInit {
     private authService: AuthService, 
     private route: ActivatedRoute, 
     private fb: FormBuilder,
-    public dialog: MatDialog
-  ) { }
+    public dialog: MatDialog,
+    private matIconRegistry:MatIconRegistry,
+    private domSanitizer: DomSanitizer
+    
+  ) { 
+    AVATARS.forEach(element => {
+      this.matIconRegistry.addSvgIcon(
+        element.id,
+        this.domSanitizer.bypassSecurityTrustResourceUrl(element.file)
+      );  
+    });
+    
+  }
 
   isLoading:boolean = false;
   hidePassword:boolean = true;
@@ -450,12 +463,13 @@ export class FormComponent implements OnInit {
     if(this.usuario.id){
       this.usersService.updateUser(this.usuarioForm.value,this.usuario.id).subscribe(
         response=>{
+          console.log(response);
           if(response.guardado){
-            this.sharedService.showSnackBar('Datos guardados con éxito', null, 3000);
+            this.sharedService.showSnackBar('Datos guardados con éxito', null, 3000, 1);
             
-            if(this.authUser.id == response.usuario.id){
+            /*if(this.authUser.id == response.usuario.id){
               this.authService.updateUserData(response.usuario);
-            }
+            }*/          
           }
           
           this.isLoading = false;
@@ -464,8 +478,8 @@ export class FormComponent implements OnInit {
     }else{
       this.usersService.createUser(this.usuarioForm.value).subscribe(
         response =>{
-          this.sharedService.showSnackBar('Datos guardados con éxito', null, 3000);
-          this.usuario = response.data;
+          this.sharedService.showSnackBar('Datos guardados con éxito', null, 3000, 2);
+          //this.usuario = response.data,;
           this.isLoading = false;
         }
       );

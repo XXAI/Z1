@@ -45,7 +45,7 @@ export class UpdatePasswordComponent implements OnInit {
     this.authService.updatePassword(this.updatePwd.value).subscribe(
       result => {
         this.isLoading = false;
-        this.sharedService.showSnackBar('¡La contraseña se actualizo Correctamente! del usuario con el Correo:'+' '+this.updatePwd.value.email, 'Cerrar', 4000);
+        this.sharedService.showSnackBar('¡La contraseña se actualizo Correctamente! del usuario con el Correo:'+' '+this.updatePwd.value.email, 'Cerrar', 4000,1);
         this.updatePwd.reset();
         this.router.navigate(['/login']);
         //console.log(this.updatePwd.value)

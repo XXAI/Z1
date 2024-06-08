@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
         if(error.status != 401){
           errorMessage = "Ocurrió un error.";
         }
-        this.sharedService.showSnackBar(errorMessage, null, 3000);
+        this.sharedService.showSnackBar(errorMessage, null, 3000,2);
         this.isLoading = false;
       }
     );
