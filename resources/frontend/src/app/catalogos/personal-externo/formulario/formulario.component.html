@@ -127,6 +127,28 @@
                     </mat-error>
                 </mat-form-field>
             </div>
+
+            <!-- <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px" style="margin-top:10px">
+                <mat-form-field fxFlex="100" fxFlex.xs="50" appearance="fill">
+                    <mat-label>CLUES</mat-label>
+                    <input matInput placeholder="CLUES" [matAutocomplete]="cluesAutocomplete" formControlName='clues'>
+                    <mat-autocomplete #cluesAutocomplete="matAutocomplete" [displayWith]="displayCluesFn" [panelWidth]="'auto'">
+                        <mat-option *ngIf="cluesIsLoading" class="is-loading">
+                            <mat-spinner diameter="25"></mat-spinner>
+                        </mat-option>
+                        <ng-container *ngIf="!cluesIsLoading">
+                            <mat-option *ngFor="let item of filteredClues" [value]="item">
+                                [{{item.clues}}] {{ item.descripcion }}
+                                <div style="font-size: 9pt;">[{{ item.distrito.clave_distrito }}] {{ item.distrito.descripcion }}</div>
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="trabajadorForm.get('clues').invalid && (trabajadorForm.get('clues').dirty || trabajadorForm.get('clues').touched)">
+                        <span *ngIf="trabajadorForm.get('clues').errors.required">Campo obligatorio</span>
+                    </mat-error>
+                </mat-form-field>
+            </div> -->
+
         </section>
     </form>
 </div>

@@ -8,6 +8,7 @@ use Illuminate\Http\Response as HttpResponse;
 use App\Http\Controllers\Controller;
 use \Validator,\Hash, \Response, \DB;
 use App\Models\Localidad;
+use App\Exports\DevReportExport;
 
 class LocalidadController extends Controller
 {
@@ -28,9 +29,75 @@ class LocalidadController extends Controller
                 //$objeto = $objeto->orderBy('descripcion');
                 $resultadosPorPagina = isset($parametros["per_page"])? $parametros["per_page"] : 14;
                 $objeto = $objeto->paginate($resultadosPorPagina);
-            }else
-            {
-                $objeto = $objeto->get();
+            }else{
+
+                if(isset($parametros['reporte'])){
+                    if(isset($parametros['export_excel']) && $parametros['export_excel']){
+                        try{
+                            ini_set('memory_limit', '-1');
+                            
+                            $data = Localidad::getModel();
+
+                            $data = $data
+                            ->LeftJoin("catalogo_municipio", "catalogo_municipio.id", "catalogo_localidad.catalogo_municipio_id")
+                            ->LeftJoin("catalogo_distrito", "catalogo_distrito.id", "catalogo_municipio.catalogo_distrito_id")
+                            ->LeftJoin("catalogo_poblacion_inegi", "catalogo_poblacion_inegi.catalogo_localidad_id", "catalogo_localidad.id")
+                            ->LeftJoin("regionalizacion_clues", "regionalizacion_clues.catalogo_localidad_id", "catalogo_localidad.id")
+                            ->LeftJoin("catalogo_clues", "catalogo_clues.clues", "regionalizacion_clues.clues");
+                            $data = $data->select(
+                                "catalogo_localidad.clave_localidad as clave_localidad",
+                                "catalogo_localidad.descripcion as localidad",
+                                "catalogo_localidad.poblacion_real",
+                                "catalogo_municipio.clave_municipio as clave_municipio",
+                                "catalogo_municipio.descripcion as municipio",
+                                "catalogo_distrito.clave_distrito as jurisdiccion",
+                                "regionalizacion_clues.clues",
+                                "catalogo_clues.descripcion as unidad",
+                                "catalogo_poblacion_inegi.anio as anio_poblacion_inegi",
+                                "catalogo_poblacion_inegi.cantidad as cantidad_poblacion_inegi",
+                                "regionalizacion_clues.distancia",
+                                "regionalizacion_clues.tiempo",
+                                "regionalizacion_clues.tipo_localidad_regionalizacion",
+                                "catalogo_clues.latitud",
+                                "catalogo_clues.longitud"
+                            );
+                            
+                            $data = $data->whereNull("catalogo_clues.deleted_at")
+                            ->whereNull("catalogo_distrito.deleted_at")
+                            ->whereNull("regionalizacion_clues.deleted_at")
+                            ->whereNull("catalogo_localidad.deleted_at")
+                            ->whereNull("catalogo_municipio.deleted_at");
+
+                            $data = $data
+                            ->orderBy("catalogo_distrito.id", "asc")
+                            ->orderBy("catalogo_clues.clues", "asc")
+                            ->orderBy("catalogo_localidad.id", "asc")
+                            ->orderBy("catalogo_municipio.id", "asc");
+                            if(isset($parametros['query'])){
+                                $data = $data->where(function($query)use($parametros){
+                                    return $query->where('catalogo_clues.clues','LIKE','%'.$parametros['query'].'%')
+                                                ->orWhere('catalogo_localidad.descripcion','LIKE','%'.$parametros['query'].'%');
+                                });
+                            }
+                            if(!$access->is_admin){
+                                $data = $data->whereIn('distrito_id', $access->distrito);
+                            }
+                            $data = $data->get();
+                            $columnas = array_keys(collect($data[0])->toArray());
+
+
+                            if(isset($parametros['nombre_archivo']) && $parametros['nombre_archivo']){
+                                $filename = $parametros['nombre_archivo'];
+                            }else{
+                                $filename = 'reporte';
+                            }
+                            return (new DevReportExport($data,$columnas))->download($filename.'.xlsx'); //Excel::XLSX, ['Access-Control-Allow-Origin'=>'*','Access-Control-Allow-Methods'=>'GET']*/
+                        }catch(\Exception $e){
+                            return response()->json(['error' => $e->getMessage(),'line'=>$e->getLine()], HttpResponse::HTTP_CONFLICT);
+                        }
+                    }
+                }
+                
             }
 
             return response()->json(['data'=>$objeto],HttpResponse::HTTP_OK);

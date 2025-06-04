@@ -13,6 +13,7 @@ import { FormBuilder } from '@angular/forms';
 //import { trigger, transition, animate, style } from '@angular/animations';
 import { MediaObserver } from '@angular/flex-layout';
 import { FormularioComponent } from '../formulario/formulario.component';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-lista',
@@ -22,6 +23,7 @@ import { FormularioComponent } from '../formulario/formulario.component';
 export class ListaComponent implements OnInit {
 
   isLoading: boolean = false;
+  loadReporte: boolean = false;
   
   panel:boolean = true;
   showMyStepper:boolean = false;
@@ -245,6 +247,30 @@ export class ListaComponent implements OnInit {
         this.loadData();
       }
     });
+  }
+
+  reporteExcel():void{
+    
+      this.loadReporte = true;
+      let data = { reporte:true,export_excel:true, query: this.searchQuery };
+      this.localidadService.getLocaliadList(data).subscribe({
+          next: (response:any) => {
+            FileSaver.saveAs(response,'Reporte_catalogo_localidades');
+            this.loadReporte = false;
+          },
+          error: (errorResponse:any) => {
+            console.log(errorResponse);
+            this.isLoading = false;
+            this.loadReporte = false;
+            var errorMessage = "Ocurrió un error.";
+            if(errorResponse.status == 409){
+              errorMessage = errorResponse.error.error.message;
+            }
+            this.sharedService.showSnackBar(errorMessage, "ERROR", 3000); 
+          }
+
+      });
+
   }
 
   cargarMunicipios()

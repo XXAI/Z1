@@ -54,6 +54,7 @@ export class FormularioComponent implements OnInit {
     'catalogo_lengua_id': ['',[Validators.required]],
     'municipio_id': ['',[Validators.required]],
     'localidad_id': ['',[Validators.required]],
+    'clues': ['',[Validators.required]],
     
   });
 

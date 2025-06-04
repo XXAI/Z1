@@ -29,7 +29,12 @@
                                     add
                                 </mat-icon>
                             </button>
+                            <button mat-raised-button  color="primary" [disabled]="loadReporte" (click)="reporteExcel()" style="margin-right: 10pt; padding: 5pt;">
+                                <mat-icon>download</mat-icon>
+                                <mat-progress-bar mode="query" *ngIf="loadReporte"></mat-progress-bar>
+                            </button>
                         </section>
+
                     </div>
                 </div>
             </mat-card>
@@ -102,8 +107,8 @@
                             <ng-container matColumnDef="localidad">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> LOCALIDAD </th>
                                 <td mat-cell *matCellDef="let row">
-                                    <b>[ {{ row.clave_localidad }} ] {{ row.descripcion }}</b>
-                                    <div style="font-size: 8pt;">[ {{ row.municipio.clave_municipio }} ] {{ row.municipio.descripcion }} </div>
+                                    <b>[ {{ row?.clave_localidad }} ] {{ row?.descripcion }}</b>
+                                    <div style="font-size: 8pt;">[ {{ row.municipio?.clave_municipio }} ] {{ row.municipio?.descripcion }} </div>
                                 </td>
                             </ng-container>
 
@@ -122,7 +127,7 @@
                                         <!--<button mat-raised-button *ngIf="row.clues.length > 1" style="background-color: rgba(0,0,250,0.3);" (click)="verUnidades(row, 1)">...</button>
                                         <button mat-raised-button *ngIf="row.clues.length == 1" style="background-color: rgba(250,0,0,0.3);">...</button>-->
                                         <div style="font-weight: bold; display: contents; color: purple; cursor: pointer;" (click)="verUnidades(row, 1);" *ngIf="row.clues.length > 1"> [ {{ row.clues[0].clues }} ] {{ row.clues[0].descripcion }}</div>
-                                        <div style="font-weight: bold; display: contents;" *ngIf="row.clues.length == 1"> [ {{ row.clues[0].clues }} ] {{ row.clues[0].descripcion }}</div>
+                                        <div style="font-weight: bold; display: contents;" *ngIf="row.clues.length == 1"> [ {{ row?.clues[0]?.clues }} ] {{ row?.clues[0]?.descripcion }}</div>
                                         <!--<div  *ngIf="row.clues.length == 1" style="font-size: 9pt;">UNICO</div>-->
 
                                     </div>

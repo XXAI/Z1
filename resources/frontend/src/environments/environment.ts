@@ -1,5 +1,4 @@
 export const environment = {
   production: true,
-  base_url: "http://localhost/simoss/public/api",
-  
+  base_url: "http://127.0.0.1:8000/api",
 };
