@@ -50,7 +50,7 @@ class LocalidadController extends Controller
                                 "catalogo_localidad.poblacion_real",
                                 "catalogo_municipio.clave_municipio as clave_municipio",
                                 "catalogo_municipio.descripcion as municipio",
-                                "catalogo_distrito.clave_distrito as jurisdiccion",
+                                "catalogo_distrito.id as distrito_id",
                                 "regionalizacion_clues.clues",
                                 "catalogo_clues.descripcion as unidad",
                                 "catalogo_poblacion_inegi.anio as anio_poblacion_inegi",
@@ -299,7 +299,6 @@ class LocalidadController extends Controller
         if(!$loggedUser){
             $loggedUser = auth()->userOrFail();
         }
-        
         //$loggedUser->load('gruposUnidades.listaClues');
         $accessData = (object)[];
         $lista_clues = [];
@@ -313,7 +312,7 @@ class LocalidadController extends Controller
            if($key > 0){ $string_distrito .=",";}
            $string_distrito .= $value;
         }
-        $accessData->distrito = $string_distrito;
+        $accessData->distrito = $distrito;
         
         if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
             $accessData->is_admin = true;
