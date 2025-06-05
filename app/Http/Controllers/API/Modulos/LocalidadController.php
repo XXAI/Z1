@@ -79,8 +79,9 @@ class LocalidadController extends Controller
                                                 ->orWhere('catalogo_localidad.descripcion','LIKE','%'.$parametros['query'].'%');
                                 });
                             }
+                            $arrayDistrito = explode(',', $access->distrito);
                             if(!$access->is_admin){
-                                $data = $data->whereIn('distrito_id', $access->distrito);
+                                $data = $data->whereIn('distrito_id', $arrayDistrito);
                             }
                             $data = $data->get();
                             $columnas = array_keys(collect($data[0])->toArray());
@@ -312,7 +313,7 @@ class LocalidadController extends Controller
            if($key > 0){ $string_distrito .=",";}
            $string_distrito .= $value;
         }
-        $accessData->distrito = $distrito;
+        $accessData->distrito = $string_distrito;
         
         if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
             $accessData->is_admin = true;
