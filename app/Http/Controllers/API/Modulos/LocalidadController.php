@@ -8,6 +8,7 @@ use Illuminate\Http\Response as HttpResponse;
 use App\Http\Controllers\Controller;
 use \Validator,\Hash, \Response, \DB;
 use App\Models\Localidad;
+use App\Models\RegionalizacionClues;
 use App\Exports\DevReportExport;
 
 class LocalidadController extends Controller
@@ -36,53 +37,51 @@ class LocalidadController extends Controller
                         try{
                             ini_set('memory_limit', '-1');
                             
-                            $data = Localidad::getModel();
+                            //$data = Localidad::getModel();
+                            //$distritos = is_array($access->distritos) ? $access->distritos : $access->distrito;
 
-                            $data = $data
-                            ->LeftJoin("catalogo_municipio", "catalogo_municipio.id", "catalogo_localidad.catalogo_municipio_id")
-                            ->LeftJoin("catalogo_distrito", "catalogo_distrito.id", "catalogo_municipio.catalogo_distrito_id")
-                            ->LeftJoin("catalogo_poblacion_inegi", "catalogo_poblacion_inegi.catalogo_localidad_id", "catalogo_localidad.id")
-                            ->LeftJoin("regionalizacion_clues", "regionalizacion_clues.catalogo_localidad_id", "catalogo_localidad.id")
-                            ->LeftJoin("catalogo_clues", "catalogo_clues.clues", "regionalizacion_clues.clues");
-                            $data = $data->select(
-                                "catalogo_localidad.clave_localidad as clave_localidad",
-                                "catalogo_localidad.descripcion as localidad",
-                                "catalogo_localidad.poblacion_real",
-                                "catalogo_municipio.clave_municipio as clave_municipio",
-                                "catalogo_municipio.descripcion as municipio",
-                                "catalogo_distrito.id as distrito_id",
-                                "regionalizacion_clues.clues",
-                                "catalogo_clues.descripcion as unidad",
-                                "catalogo_poblacion_inegi.anio as anio_poblacion_inegi",
-                                "catalogo_poblacion_inegi.cantidad as cantidad_poblacion_inegi",
-                                "regionalizacion_clues.distancia",
-                                "regionalizacion_clues.tiempo",
-                                "regionalizacion_clues.tipo_localidad_regionalizacion",
-                                "catalogo_clues.latitud",
-                                "catalogo_clues.longitud"
-                            );
+                            $query_localidades = RegionalizacionClues::get()->pluck('catalogo_localidad_id');
+                            $data = Localidad::whereNotIn('catalogo_localidad.id', $query_localidades)
+                                    ->LeftJoin("catalogo_municipio", "catalogo_municipio.id", "catalogo_localidad.catalogo_municipio_id")
+                                    ->LeftJoin("catalogo_distrito", "catalogo_distrito.id", "catalogo_municipio.catalogo_distrito_id")
+                                    ->LeftJoin("catalogo_poblacion_inegi", "catalogo_poblacion_inegi.catalogo_localidad_id", "catalogo_localidad.id")
+                                    ->LeftJoin("regionalizacion_clues", "regionalizacion_clues.catalogo_localidad_id", "catalogo_localidad.id")
+                                    ->LeftJoin("catalogo_clues", "catalogo_clues.clues", "regionalizacion_clues.clues")
+                                    ->select(
+                                        "catalogo_localidad.clave_localidad as clave_localidad",
+                                        "catalogo_localidad.descripcion as localidad",
+                                        "catalogo_localidad.poblacion_real",
+                                        "catalogo_municipio.clave_municipio as clave_municipio",
+                                        "catalogo_municipio.descripcion as municipio",
+                                        "catalogo_distrito.id as distrito_id",
+                                        "regionalizacion_clues.clues",
+                                        "catalogo_clues.descripcion as unidad",
+                                        "catalogo_poblacion_inegi.anio as anio_poblacion_inegi",
+                                        "catalogo_poblacion_inegi.cantidad as cantidad_poblacion_inegi",
+                                        "regionalizacion_clues.distancia",
+                                        "regionalizacion_clues.tiempo",
+                                        "regionalizacion_clues.tipo_localidad_regionalizacion",
+                                        "catalogo_clues.latitud",
+                                        "catalogo_clues.longitud"
+                                    )->whereNull("catalogo_clues.deleted_at")
+                                     ->whereNull("catalogo_distrito.deleted_at")
+                                     ->whereNull("regionalizacion_clues.deleted_at")
+                                     ->whereNull("catalogo_localidad.deleted_at")
+                                     ->whereNull("catalogo_municipio.deleted_at");
+
+
                             
-                            $data = $data->whereNull("catalogo_clues.deleted_at")
-                            ->whereNull("catalogo_distrito.deleted_at")
-                            ->whereNull("regionalizacion_clues.deleted_at")
-                            ->whereNull("catalogo_localidad.deleted_at")
-                            ->whereNull("catalogo_municipio.deleted_at");
+                            // $arrayDistrito = explode(',', $access->distrito);
+                            
+                            if(!$access->is_admin){
+                                $data = $data->whereIn("catalogo_distrito.id", $access->distritos);
+                            }
 
-                            $data = $data
-                            ->orderBy("catalogo_distrito.id", "asc")
+                            $data = $data->orderBy("catalogo_distrito.id", "asc")
                             ->orderBy("catalogo_clues.clues", "asc")
                             ->orderBy("catalogo_localidad.id", "asc")
                             ->orderBy("catalogo_municipio.id", "asc");
-                            if(isset($parametros['query'])){
-                                $data = $data->where(function($query)use($parametros){
-                                    return $query->where('catalogo_clues.clues','LIKE','%'.$parametros['query'].'%')
-                                                ->orWhere('catalogo_localidad.descripcion','LIKE','%'.$parametros['query'].'%');
-                                });
-                            }
-                            $arrayDistrito = explode(',', $access->distrito);
-                            if(!$access->is_admin){
-                                $data = $data->whereIn('distrito_id', $arrayDistrito);
-                            }
+
                             $data = $data->get();
                             $columnas = array_keys(collect($data[0])->toArray());
 
@@ -314,6 +313,7 @@ class LocalidadController extends Controller
            $string_distrito .= $value;
         }
         $accessData->distrito = $string_distrito;
+        $accessData->distritos = $distrito;
         
         if (\Gate::allows('has-permission', \Permissions::ADMIN_PERSONAL_ACTIVO)){
             $accessData->is_admin = true;
