@@ -39,7 +39,7 @@ Route::group(['middleware'=>'auth'],function($router){
      */
     Route::apiResource('dashboard',                 'API\Modulos\DashboardController');
     Route::get('dashboard-activo',                  'API\Modulos\DashboardController@activeDashboard');
-    Route::post('catalogos',                        'API\Modulos\SearchCatalogsController@getCatalogs');
+    Route::post('obtener-catalogos',                        'API\Modulos\SearchCatalogsController@getCatalogs');
 
     Route::apiResource('grupos_unidades',           'API\Modulos\GrupoUnidadesController');
     Route::apiResource('distritos',                 'API\Modulos\DistritoController');
@@ -73,7 +73,6 @@ Route::group(['middleware'=>'auth'],function($router){
     Route::get('regionalizacion-localidades-filtro/{id}','API\Modulos\RegionalizacionCluesController@filtroLocalidades');
     Route::get('get-data-mapa',                         'API\Modulos\RegionalizacionCluesController@getMapa');
     Route::get('get-data-regionalizacion/{id}',              'API\Modulos\RegionalizacionCluesController@getLocalidades');
-    
     
     Route::apiResource('reginalizacion-clues-personal',  'API\Modulos\RegionalizacionCluesPersonalController');
     Route::get('reginalizacion-clues-personal-externo',  'API\Modulos\RegionalizacionCluesPersonalController@externo');

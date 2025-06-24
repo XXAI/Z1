@@ -5,8 +5,9 @@ import { CluesService } from '../../clues.service';
 import { Router, ActivatedRoute  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
+
+import { startWith, map } from 'rxjs/operators';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class NuevoComponent implements OnInit {
   localidadIsLoading: boolean = false;
 
   catalogos: any = {};
-  filteredCatalogs:any = [];
+  filteredCatalogs:any = {};
   
   statusLabel: string;
   statusIcon: string;
@@ -120,30 +121,83 @@ export class NuevoComponent implements OnInit {
     this.cluesService.obtenerCatalogos(obj).subscribe(
       response => {
         this.catalogos = response;
+        console.log(this.catalogos);
         this.isLoading = false; 
       } 
     );
 
-    this.cluesForm.get('catalogo_localidad').valueChanges
-      .pipe(
-        debounceTime(300),
-        tap( () => {
-          //this.element.loading = true;
-            this.localidadIsLoading = true; 
-        } ),
-        switchMap(value => {
-            if(!(typeof value === 'object')){
-              this.localidadIsLoading = false;
-              let municipio = this.cluesForm.get('municipio_id').value;
-                return this.cluesService.obtenerLocalidades({query:value, municipio:municipio }).pipe(finalize(() => this.localidadIsLoading = false ));
-               
-            }else{
-              this.localidadIsLoading = false; 
-              return [];
-            }
-          }
-        ),
-      ).subscribe(items => this.catalogos['localidades'] = items.data);
+    this.filteredCatalogs['localidades'] = this.cluesForm.get('catalogo_localidad').valueChanges.pipe(startWith(''),map(value => this._filter(value,'localidades','descripcion')));
+      
+  }
+
+  private _filter(value: any, catalog: string, valueField: string): string[] {
+    
+    if(this.catalogos[catalog]){
+      let filterValue = '';
+      if(value){
+        if(typeof(value) == 'object'){
+          filterValue = value[valueField].toLowerCase();
+        }else{
+          filterValue = value.toLowerCase();
+        }
+      }
+      
+      return this.catalogos[catalog].filter(option => option[valueField].toLowerCase().includes(filterValue));
+    }
+  }
+
+  cargarLocalidades(event:any){
+    console.log(event);
+    this.isLoading = true;
+    const municipio = event?.value;
+
+    const carga_catalogos = [
+      {nombre:'localidades',orden:'id',filtro_id:{campo:'catalogo_municipio_id',valor:municipio}},
+    ];
+
+    this.catalogos['localidades'] = false;
+    this.cluesForm.get('catalogo_localidad').reset();
+
+    this.cluesService.obtenerLocalidades(carga_catalogos).subscribe(
+      response => {
+        if(response.data['localidades'].length > 0){
+          this.catalogos['localidades'] = response.data['localidades'];
+        }
+        
+        this.actualizarValidacionesCatalogos('localidades');
+        this.isLoading = false;
+      }
+    );
+  }
+
+  actualizarValidacionesCatalogos(catalogo){
+    switch (catalogo) {
+      case 'localidades':
+        if(this.catalogos['localidades']){
+           this.cluesForm.get('catalogo_localidad').setValidators(null);
+           this.cluesForm.get('catalogo_localidad').setValidators([Validators.required]);
+        }else{
+          this.cluesForm.get('catalogo_localidad').setValidators([Validators.required]);
+           this.cluesForm.get('catalogo_localidad').setValidators(null);
+        }    
+         this.cluesForm.get('catalogo_localidad').updateValueAndValidity();
+         this.cluesForm.get('catalogo_localidad').updateValueAndValidity();
+        break;
+      default:
+        break;
+    }
+  }
+
+  checkAutocompleteValue(field_name) {
+    setTimeout(() => {
+      if (typeof(this.cluesForm.get(field_name).value) != 'object') {
+        this.cluesForm.get(field_name).reset();
+        if(field_name != 'catalogo_localidad'){
+          this.catalogos['localidades'] = false;
+          this.actualizarValidacionesCatalogos('localidades');  
+        }
+      } 
+    }, 300);
   }
 
   getDisplayFn(label: string){
@@ -159,8 +213,8 @@ export class NuevoComponent implements OnInit {
     this.cluesForm.get('inicio_operacion').disable();
   }
 
-  LimpiarLocalidad()
-  {
+  LimpiarLocalidad(e:any){
+    console.log(e);
     this.cluesForm.patchValue({catalogo_localidad:''});
   }
 
