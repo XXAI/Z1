@@ -46,7 +46,7 @@ export class FormularioComponent implements OnInit {
   pageSize: number = 20;
   selectedItemIndex: number = -1;
 
-  displayedColumns: string[] = ['localidad','camino', 'distancia', 'tipo', 'poblacion','actions'];
+  displayedColumns: string[] = ['localidad','camino', 'distancia', 'tipo', 'poblacion_inegi', 'poblacion_real', 'actions'];
   dataSource: any = [];
 
   lat: number = 15.404130;
@@ -105,6 +105,7 @@ export class FormularioComponent implements OnInit {
     'distancia': ['',[Validators.required]],
     'tiempo': ['',[Validators.required]],
     'poblacion_real': ['',[Validators.required]],
+    //'poblacion_inegi': ['',[Validators.required]],
     'clues': ['',[Validators.required]],
   });
 
@@ -225,7 +226,8 @@ export class FormularioComponent implements OnInit {
         tiempo:obj.tiempo,
         clues: obj.clues,
         tipo_localidad_regionalizacion:obj.tipo_localidad_regionalizacion,
-        poblacion_real:obj.catalogo_localidad.poblacion_real
+        poblacion_real:obj.catalogo_localidad.poblacion_real,
+        //poblacion_inegi:obj.catalogo_localidad?.poblacion_inegi[0]?.cantidad
       }
     );
     this.id_editar = obj.id;
@@ -251,6 +253,7 @@ export class FormularioComponent implements OnInit {
 
     this.regionalizacionService.getFilterLocalidadesList(this.data.clues, params).subscribe(
       response => {
+        console.log("respuesta",response);
         this.dataSource = response.data.data;
         this.latUnidad = Number(response.clues.latitud);
         this.longUnidad = Number(response.clues.longitud);

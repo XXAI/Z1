@@ -44,7 +44,7 @@ export class ListaComponent implements OnInit {
   selectedItemIndexExterno: number = -1;
 
   displayedColumns: string[] = ['nombre','tipo','unidad','actions'];
-  displayedExternoColumns: string[] = ['nombre','tipo','localidad','actions'];
+  displayedExternoColumns: string[] = ['nombre','tipo','localidad', 'unidad','actions'];
   dataSource: any = [];
   dataSourceExterno: any = [];
 

@@ -120,7 +120,7 @@ class RegionalizacionCluesPersonalController extends Controller
                 $objeto = $objeto->paginate($resultadosPorPagina);
             }
 
-            $objeto_externo = TrabajadorExterno::with("rel_rh.localidad.municipio", "tipoTrabajador");
+            $objeto_externo = TrabajadorExterno::with("rel_rh.localidad.municipio", "tipoTrabajador", "rel_rh.clues");
 
             if(isset($parametros['query'])){
                 $objeto_externo = $objeto_externo->where(function($query)use($parametros){
@@ -163,7 +163,7 @@ class RegionalizacionCluesPersonalController extends Controller
             {
                 $objeto = Trabajador::with("rel_rh.clues")->find($id);
             }else{
-                $objeto = TrabajadorExterno::with("rel_rh.localidad.municipio")->find($id);
+                $objeto = TrabajadorExterno::with("rel_rh.localidad.municipio", "rel_rh.clues")->find($id);
             }
             
             return response()->json(['data'=>$objeto],HttpResponse::HTTP_OK);
@@ -392,6 +392,7 @@ class RegionalizacionCluesPersonalController extends Controller
             }else if($inputs['tipo_trabajador_id'] == 2){
                 $object->trabajador_id          = $inputs['personal_id']['id'];
                 $object->catalogo_localidad_id  = $inputs['localidad_id']['id'];
+                $object->clues                  = $inputs['clues']['clues'];
             }
             $object->save();
             DB::commit();
@@ -445,6 +446,7 @@ class RegionalizacionCluesPersonalController extends Controller
                 $object->clues =                    $inputs['clues']['clues'];
             }else if($inputs['tipo_trabajador_id'] == 2){
                 $object->catalogo_localidad_id =    $inputs['localidad_id']['id'];
+                $object->clues =                    $inputs['clues']['clues'];
             }
 
             $object->save();

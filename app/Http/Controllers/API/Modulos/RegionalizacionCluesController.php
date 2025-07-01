@@ -13,6 +13,9 @@ use App\Models\Microrregion;
 use App\Models\Clues;
 use App\Models\Localidad;
 use App\Exports\DevReportExport;
+use App\Models\PoblacionInegi;
+
+use Carbon\Carbon;
 
 class RegionalizacionCluesController extends Controller
 {
@@ -286,6 +289,18 @@ class RegionalizacionCluesController extends Controller
                 $localidad->poblacion_real = $inputs['poblacion_real'];
                 $localidad->save();
             }
+
+            // $poblacion_inigi = PoblacionInegi::where('catalogo_localidad_id', $inputs['localidad_id']['id'])->first();
+            // $anio_actual = Carbon::now();
+
+            // if($poblacion_inigi){
+
+            //      $poblacion_inigi->anio     = $anio_actual->year;
+            //      $poblacion_inigi->cantidad = $inputs['poblacion_inegi'];
+            //      $poblacion_inigi->save();
+            // }
+            
+
             DB::commit();
             
         return response()->json(["data"=> $object],HttpResponse::HTTP_OK);

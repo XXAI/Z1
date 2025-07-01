@@ -138,6 +138,7 @@ export class FormularioComponent implements OnInit {
           municipio_id: obj.rel_rh.localidad.municipio.id,
           localidad_id: obj.rel_rh.localidad,
           personal_id: obj,
+          clues: obj.rel_rh.clues
         }
       );
 
@@ -146,6 +147,7 @@ export class FormularioComponent implements OnInit {
       this.regionalizacionForm.get('localidad_id').setValidators([Validators.required]);
       this.regionalizacionForm.updateValueAndValidity();
     }
+    console.log("value",this.regionalizacionForm.value);
     /**/
     this.id_tipo_edicion = tipo;
     this.id_editar = obj.rel_rh.id;
@@ -248,9 +250,10 @@ export class FormularioComponent implements OnInit {
   buscarTrabajador()
   {
     let params = { tipo: this.data.tipo_trabajador_id};
-    console.log(this.data);
+    console.log("la data",this.data);
     this.regionalizacionService.buscarTrabajador(this.data.trabajador_id, params).subscribe(
       response => {
+        console.log(response);
         //this.dialogRef.close(true);
         this.edicion = true;
         if(this.data.tipo_trabajador_id == 1)
@@ -258,7 +261,7 @@ export class FormularioComponent implements OnInit {
           this.regionalizacionForm.patchValue({
             tipo_trabajador_id: this.data.tipo_trabajador_id,
             personal_id: response.data,
-            clues: response.data.rel_rh.clues
+            clues: response.data?.rel_rh?.clues
           });
         }else if(this.data.tipo_trabajador_id == 2)
         {
@@ -266,7 +269,8 @@ export class FormularioComponent implements OnInit {
               tipo_trabajador_id: this.data.tipo_trabajador_id,
               personal_id: response.data,
               municipio_id: response.data.rel_rh.localidad.municipio.id,
-              localidad_id: response.data.rel_rh.localidad
+              localidad_id: response.data.rel_rh.localidad,
+              clues: response.data?.rel_rh?.clues
             });
         }
       },
