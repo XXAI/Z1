@@ -169,7 +169,7 @@ class RegionalizacionCluesController extends Controller
                 $objeto = $objeto->paginate($resultadosPorPagina);
             }
 
-            $clues = Clues::with("catalogo_localidad","catalogo_microrregion")->find($id);
+            $clues = Clues::with("catalogo_localidad","catalogo_microrregion", "regionalizaciones_personal")->find($id);
 
             return response()->json(["data"=>$objeto, "clues"=>$clues],HttpResponse::HTTP_OK);
         }catch(\Exception $e){

@@ -49,6 +49,9 @@ export class FormularioComponent implements OnInit {
   displayedColumns: string[] = ['localidad','camino', 'distancia', 'tipo', 'poblacion_inegi', 'poblacion_real', 'actions'];
   dataSource: any = [];
 
+  displayedColumnsTrabajadores: string[] = ['rfc','nombre_completo', 'edad', 'sexo', 'ur'];
+  dataSourceTrabajadores: any = [];
+
   lat: number = 15.404130;
   long: number = -92.655800;
   
@@ -258,6 +261,8 @@ export class FormularioComponent implements OnInit {
         this.latUnidad = Number(response.clues.latitud);
         this.longUnidad = Number(response.clues.longitud);
         this.unidadMedica = response.clues;
+        this.dataSourceTrabajadores = response?.clues?.regionalizaciones_personal;
+        console.log(this.dataSourceTrabajadores);
         if(this.unidadMedica.catalogo_microrregion)
         {
           this.tipoMicroregion = this.unidadMedica.catalogo_microrregion.descripcion+" "+this.unidadMedica.catalogo_microrregion.descripcion_tipo;
