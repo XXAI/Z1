@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, finalize, switchMap, tap, filter, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SharedService } from 'src/app/shared/shared.service';
 import { RegionalizacionService } from '../../regionalizacion.service';
@@ -49,7 +49,7 @@ export class FormularioComponent implements OnInit {
   displayedColumns: string[] = ['localidad','camino', 'distancia', 'tipo', 'poblacion_inegi', 'poblacion_real', 'actions'];
   dataSource: any = [];
 
-  displayedColumnsTrabajadores: string[] = ['rfc','nombre_completo', 'edad', 'sexo', 'ur'];
+  displayedColumnsTrabajadores: string[] = ['index', 'nombre_completo', 'edad', 'rfc', 'sexo', 'ur'];
   dataSourceTrabajadores: any = [];
 
   lat: number = 15.404130;
@@ -254,43 +254,54 @@ export class FormularioComponent implements OnInit {
 
     params.query = this.searchQuery;
 
-    this.regionalizacionService.getFilterLocalidadesList(this.data.clues, params).subscribe(
-      response => {
-        console.log("respuesta",response);
-        this.dataSource = response.data.data;
-        this.latUnidad = Number(response.clues.latitud);
-        this.longUnidad = Number(response.clues.longitud);
-        this.unidadMedica = response.clues;
-        this.dataSourceTrabajadores = response?.clues?.regionalizaciones_personal;
-        console.log(this.dataSourceTrabajadores);
-        if(this.unidadMedica.catalogo_microrregion)
-        {
-          this.tipoMicroregion = this.unidadMedica.catalogo_microrregion.descripcion+" "+this.unidadMedica.catalogo_microrregion.descripcion_tipo;
-        }else{
-          this.tipoMicroregion = "SIN TIPO";
-        }
-        
-        if(this.unidadMedica.catalogo_localidad != null)
-        {
-          this.localidadUnidad = this.unidadMedica.catalogo_localidad.clave_localidad+" - "+this.unidadMedica.catalogo_localidad.descripcion;
-        }else{
-          this.localidadUnidad = "SIN SEDE";
-        }
-        this.localidades = response.data.data;
-        this.localidadesRegionalizadas = [];
-        this.localidades.forEach(element => {
-          this.localidadesRegionalizadas.push({lat: Number(element.catalogo_localidad.latitud), long:Number(element.catalogo_localidad.longitud) });
-        });
-        this.regionalizacionForm.patchValue({clues:this.data.clues});
-        this.isLoading = false;
-        this.resultsLength = response.data.total;
+    this.regionalizacionService.getFilterLocalidadesList(this.data.clues, params).subscribe({
+      next: (response) => { 
+        // console.log("respuesta",response);
+          this.dataSource = response?.data?.data;
+          this.latUnidad = Number(response?.clues?.latitud);
+          this.longUnidad = Number(response?.clues?.longitud);
+          this.unidadMedica = response?.clues;
+          // console.log("clues", response.clues);
+
+          let trabajadores = [];
+          trabajadores = response?.clues?.regionalizaciones_personal.filter(item => item?.clues === response?.clues?.clues).map( (element) =>{
+            return {...element?.trabajadores}
+          });
+
+          this.dataSourceTrabajadores = trabajadores;
+
+          if(this.unidadMedica.catalogo_microrregion)
+          {
+            this.tipoMicroregion = this.unidadMedica.catalogo_microrregion.descripcion+" "+this.unidadMedica.catalogo_microrregion.descripcion_tipo;
+          }else{
+            this.tipoMicroregion = "SIN TIPO";
+          }
+          
+          if(this.unidadMedica.catalogo_localidad != null)
+          {
+            this.localidadUnidad = this.unidadMedica.catalogo_localidad.clave_localidad+" - "+this.unidadMedica.catalogo_localidad.descripcion;
+          }else{
+            this.localidadUnidad = "SIN SEDE";
+          }
+          this.localidades = response.data.data;
+          this.localidadesRegionalizadas = [];
+          this.localidades.forEach(element => {
+            this.localidadesRegionalizadas.push({lat: Number(element.catalogo_localidad.latitud), long:Number(element.catalogo_localidad.longitud) });
+          });
+          this.regionalizacionForm.patchValue({clues:this.data.clues});
+          this.isLoading = false;
+          this.resultsLength = response.data.total;
       },
-      responsError =>{
+      error: (error) => { 
         this.isLoading = false;
-        console.log(responsError);
+        console.log(error);
         this.sharedService.showSnackBar('Error al intentar recuperar datos de', null, 4000);
+      },
+      complete: () => { 
+        this.isLoading = false;
       }
-    );
+
+    });
     return event;
   }
 

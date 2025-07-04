@@ -267,33 +267,39 @@
                 <div class="data-container ">
                     <div class="data-table-container">
                         <table #dataTable mat-table [dataSource]="dataSourceTrabajadores" class="data-table" matSort>
-                            
-                            <ng-container matColumnDef="rfc">
 
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> RFC </th>
-                                <td mat-cell *matCellDef="let row">
-                                    <b>{{ row?.regionalizaciones_personal?.rfc }}</b>
+                            <ng-container matColumnDef="index">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> #</th>
+                                <td mat-cell *matCellDef="let row ; let i = index">
+                                    {{ i + 1 }}
                                 </td>
                             </ng-container>
 
                             <ng-container matColumnDef="nombre_completo">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRE </th>
                                 <td mat-cell *matCellDef="let row">
-                                    {{ row.catalogo_tipo_camino.descripcion }}
+                                    <b>{{ row?.nombre }} {{row?.apellido_paterno}} {{row?.apellido_maternidad}}</b>
+                                </td>
+                            </ng-container>
+                            
+                            <ng-container matColumnDef="rfc">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> RFC </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <b>{{ row?.rfc }}</b>
                                 </td>
                             </ng-container>
 
                             <ng-container matColumnDef="edad">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> EDAD</th>
                                 <td mat-cell *matCellDef="let row">
-                                    {{ row.catalogo_tipo_camino.descripcion }}
+                                    {{ row?.edad+' '+'Años' }}
                                 </td>
                             </ng-container>
 
                             <ng-container matColumnDef="sexo">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> SEXO</th>
                                 <td mat-cell *matCellDef="let row">
-                                    {{ row.regionalizaciones_personal.edad }}
+                                    {{ (row?.sexo_id === 1) ? 'M' : 'F' }}
                                 </td>
                             </ng-container>
 
@@ -301,7 +307,7 @@
                             <ng-container matColumnDef="ur">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> UR</th>
                                 <td mat-cell *matCellDef="let row">
-                                    {{ row.regionalizaciones_personal.edad }}
+                                    <b>{{ row?.ur?.descripcion }}</b>
                                 </td>
                             </ng-container>
 
@@ -318,7 +324,7 @@
                             <tr mat-footer-row *matFooterRowDef="['noResultsFound']" class="not-results-found" [ngClass]="{'hide':!(dataSourceTrabajadores!=null && dataSourceTrabajadores.length==0)}"></tr>
                         </table>
                     </div>
-                    <mat-paginator #paginator [pageSize]="pageSize" [pageIndex]="currentPage" [length]="resultsLength" [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons (page)="pageEvent = cargarDatos($event)"></mat-paginator>
+                    <!-- <mat-paginator #paginator [pageSize]="pageSize" [pageIndex]="currentPage" [length]="resultsLength" [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons (page)="pageEvent = cargarDatos($event)"></mat-paginator> -->
                 </div>
             </mat-card>
             </section>
